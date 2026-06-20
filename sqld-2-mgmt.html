@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SQLD · 제2과목 PART3 관리 구문 · 빈칸 노트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --bg:#E8E9E3;
+    --surface:#FCFCFA;
+    --ink:#15171C;
+    --muted:#757a83;
+    --faint:#a4a8ae;
+    --line:#dcddd6;
+    --line-strong:#cfd0c8;
+    --accent:#2438d6;
+    --accent-soft:#e6e8fb;
+    --mark:#fbe25a;
+    --mark-done:#a9e7bf;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    line-height:1.6;-webkit-font-smoothing:antialiased;
+    padding-bottom:80px;
+  }
+
+  /* ---------- top bar ---------- */
+  header{
+    position:sticky;top:0;z-index:30;background:rgba(232,233,227,.86);
+    backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-strong);
+  }
+  .bar{max-width:860px;margin:0 auto;padding:14px 20px 12px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:8px}
+  .kicker::before{content:"";width:18px;height:2px;background:var(--accent);display:inline-block}
+  .badge{font-family:var(--mono);font-size:10px;letter-spacing:.06em;background:var(--accent);color:#fff;padding:2px 7px;border-radius:6px;text-transform:none}
+  h1{font-size:19px;margin:6px 0 2px;letter-spacing:-.01em;font-weight:700}
+  .sub{font-size:13px;color:var(--muted);margin:0}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+  button.ctl{
+    font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);
+    background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;
+    padding:7px 13px;cursor:pointer;transition:background .15s,border-color .15s,transform .05s;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  button.ctl:hover{border-color:var(--accent);color:var(--accent)}
+  button.ctl:active{transform:translateY(1px)}
+  button.ctl.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  button.ctl.primary:hover{background:#1b2bb0;color:#fff}
+  button.ctl .dot{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  button.ctl.primary .dot{color:#cdd2f7}
+  .progwrap{flex:1 1 140px;min-width:120px}
+  .progmeta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:4px}
+  .progbar{height:6px;border-radius:999px;background:var(--line-strong);overflow:hidden}
+  .progfill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#5566ec);border-radius:999px;transition:width .35s ease}
+  @media (prefers-reduced-motion:reduce){.progfill{transition:none}}
+
+  /* ---------- lecture nav ---------- */
+  nav.chips{max-width:860px;margin:0 auto;padding:10px 20px 0;display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav.chips::-webkit-scrollbar{display:none}
+  nav.chips a{
+    flex:0 0 auto;font-family:var(--mono);font-size:12px;font-weight:500;text-decoration:none;
+    color:var(--muted);border:1px solid var(--line-strong);background:var(--surface);
+    padding:5px 11px;border-radius:8px;transition:all .15s;white-space:nowrap;
+  }
+  nav.chips a:hover{border-color:var(--accent);color:var(--accent)}
+  nav.chips a.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* ---------- content ---------- */
+  main{max-width:860px;margin:0 auto;padding:8px 20px 0}
+  section.lec{margin:30px 0}
+  .lechead{display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:4px}
+  .lecno{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.05em}
+  .lectitle{font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .lecstat{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:14px}
+  h2.blk{font-size:15.5px;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
+  h2.blk:not(:first-child){margin-top:22px}
+  h3.blk{font-size:13.5px;font-weight:700;color:#3a3d44;margin:14px 0 4px}
+  h3.blk:first-child{margin-top:0}
+
+  .line{display:flex;gap:9px;align-items:flex-start;margin:3px 0;font-size:14.5px}
+  .line .bul{color:var(--accent);flex:0 0 auto;line-height:1.6;font-weight:700;font-size:12px;margin-top:1px}
+  .line .bul.sub{color:var(--faint)}
+  .line.indent{margin-left:20px}
+  .line .txt{flex:1}
+
+  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:10px 13px;background:var(--accent-soft);border-radius:10px;font-size:13.5px}
+  .note .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;flex:0 0 auto;margin-top:3px}
+
+  /* ---------- tables ---------- */
+  .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 2px;border:1px solid var(--line);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:380px}
+  thead th{background:#f3f3ee;text-align:left;font-weight:700;color:#3a3d44;padding:9px 12px;border-bottom:1px solid var(--line-strong);white-space:nowrap;font-size:12.5px}
+  tbody td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  td:first-child{font-weight:600;white-space:nowrap}
+
+  /* ---------- the blank (signature) ---------- */
+  .blank{
+    font-family:inherit;font-size:inherit;line-height:inherit;
+    border:none;padding:0 2px;margin:0 1px;cursor:pointer;color:var(--muted);
+    background-image:linear-gradient(var(--mark),var(--mark));
+    background-repeat:no-repeat;background-position:0 88%;background-size:0% 42%;
+    border-bottom:2px solid var(--accent);border-radius:1px;
+    transition:background-size .32s ease,color .15s,border-color .2s;
+    display:inline;font-weight:600;
+  }
+  @media (prefers-reduced-motion:reduce){.blank{transition:color .15s}}
+  .blank:hover{color:var(--accent)}
+  .blank:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .blank.on{
+    color:var(--ink);border-bottom-color:transparent;background-size:100% 42%;font-weight:700;cursor:pointer;
+  }
+  .blank.on:hover{color:var(--ink);opacity:.82}
+  .blank .ph{color:var(--faint);font-weight:500;letter-spacing:.02em}
+
+  /* ---------- footer ---------- */
+  footer{max-width:860px;margin:34px auto 0;padding:18px 20px 0;border-top:1px solid var(--line-strong);color:var(--muted);font-size:12.5px}
+  footer .legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-family:var(--mono);font-size:11px}
+  footer .legend b{color:var(--ink);font-weight:700}
+  .swatch{display:inline-block;width:22px;height:11px;border-radius:2px;background:var(--mark);vertical-align:middle;margin-right:5px}
+
+  /* floating back-to-top */
+  .totop{position:fixed;right:18px;bottom:18px;z-index:40;width:44px;height:44px;border-radius:50%;
+    background:var(--ink);color:#fff;border:none;cursor:pointer;font-size:18px;display:none;
+    box-shadow:0 6px 18px rgba(0,0,0,.18);align-items:center;justify-content:center}
+  .totop.show{display:flex}
+
+  @media (max-width:560px){
+    h1{font-size:17px}.lectitle{font-size:16px}
+    .card{padding:15px 15px}
+    main,.bar,nav.chips,footer{padding-left:14px;padding-right:14px}
+    .lecstat{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="kicker">SQLD · 제2과목 PART3 <span class="badge">관리 구문</span></div>
+    <h1>관리 구문 빈칸 채우기 노트</h1>
+    <p class="sub" id="subline">불러오는 중…</p>
+    <div class="controls">
+      <button class="ctl primary" id="toggleAll">전체 보기 <span class="dot" id="toggleHint">show</span></button>
+      <button class="ctl" id="resetAll">처음부터 다시</button>
+      <div class="progwrap">
+        <div class="progmeta"><span>진도</span><span id="progNum">0 / 0</span></div>
+        <div class="progbar"><div class="progfill" id="progFill"></div></div>
+      </div>
+    </div>
+  </div>
+  <nav class="chips" id="chips"></nav>
+</header>
+
+<main id="main"></main>
+
+<footer>
+  <div class="legend">
+    <span><span class="swatch"></span><b>형광펜</b> = 확인한 답</span>
+    <span><b>·</b> 빈칸 클릭 = 정답 토글</span>
+    <span><b>·</b> 키보드 Enter / Space 지원</span>
+  </div>
+  <p style="margin:12px 0 0;font-size:11.5px;color:var(--faint)">출처: 직접 정리한 Cornell Notes 1–10강 · 빈칸은 시험 빈출 핵심어 기준</p>
+</footer>
+
+<button class="totop" id="toTop" aria-label="맨 위로">↑</button>
+
+<script>
+/* ============================================================
+   DATA  —  blanks are written as {{정답}}  or  {{정답::힌트}}
+   block types: h2 / h3 / li / sub(li) / note / table
+   ============================================================ */
+const LECTURES = [
+{ no:"01", tag:"DML", title:"2-17. DML", blocks:[
+  {t:"h3",x:"개념"},
+  {t:"li",x:"DML: 데이터를 삽입(INSERT)·수정(UPDATE)·삭제(DELETE)·병합(MERGE)하는 명령어"},
+  {t:"li",x:"{{트랜잭션}}을 발생시키므로 작업 후 반드시 {{COMMIT 또는 ROLLBACK}} 필요"},
+  {t:"note",tag:"함정",x:"{{TRUNCATE}}는 데이터를 지우지만 AUTO COMMIT 특성 때문에 DML이 아니라 {{DDL}}이다(단골 오답)."},
+
+  {t:"h2",x:"INSERT"},
+  {t:"li",x:"Oracle은 서브쿼리 없이 쓸 때 한 번에 {{한 행}}만 삽입 (SQL Server는 여러 행 동시 가능)"},
+  {t:"li",x:"컬럼명 명시 시 일부만 입력 가능(나머지 NULL), {{컬럼명 생략 시}}엔 전체 컬럼에 순서대로 {{모두}} 입력해야 함"},
+  {t:"li",x:"{{INSERT ALL}}: 여러 테이블에 동시 입력 (서브쿼리 필수)"},
+
+  {t:"h2",x:"UPDATE / DELETE"},
+  {t:"li",x:"UPDATE: 컬럼 단위 수정, 하나의 문으로 여러 컬럼 동시 수정 가능"},
+  {t:"li",x:"DELETE: 행 단위 삭제, {{WHERE 생략 시 전체 행 삭제}}"},
+
+  {t:"h2",x:"MERGE"},
+  {t:"li",x:"{{ON}} 절 조건 기준으로 INSERT·UPDATE·DELETE를 동시에 수행"},
+  {t:"li",x:"{{WHEN MATCHED}}: UPDATE만 또는 UPDATE+DELETE (DELETE {{단독 불가}}, UPDATE 후 DELETE 수행)"},
+  {t:"li",x:"{{WHEN NOT MATCHED}}: INSERT만 가능, 생략 가능"},
+]},
+
+{ no:"02", tag:"TCL", title:"2-18. TCL", blocks:[
+  {t:"h3",x:"개념"},
+  {t:"li",x:"TCL: 트랜잭션 제어어, {{COMMIT}}·{{ROLLBACK}}(+SAVEPOINT)이 포함됨"},
+  {t:"li",x:"DML 결과를 작업 단위(트랜잭션)별로 제어, 정상 종료 안 하면 {{LOCK}} 발생 가능"},
+
+  {t:"h2",x:"트랜잭션 / ACID"},
+  {t:"li",x:"하나의 분할할 수 없는 논리 연산 단위, 모두 COMMIT 또는 전체 ROLLBACK ({{All or Nothing}})"},
+  {t:"li",x:"{{원자성}}(전부 또는 전무) · {{일관성}} · {{고립성}}(다른 트랜잭션 영향 X) · {{지속성}}(COMMIT 후 영구)"},
+
+  {t:"h2",x:"COMMIT / ROLLBACK / SAVEPOINT"},
+  {t:"li",x:"{{COMMIT}}: 변경을 영구 확정 / {{ROLLBACK}}: 변경을 취소하고 이전 상태로 복구"},
+  {t:"li",x:"{{SAVEPOINT}}: 롤백 시점을 지정 — {{ROLLBACK TO A}}로 특정 지점까지만 복구"},
+  {t:"note",tag:"함정",x:"SAVEPOINT는 {{부분 커밋이 아니다}}. 단지 ROLLBACK 시점을 만들어줄 뿐이며, 확정은 COMMIT만 한다."},
+]},
+
+{ no:"03", tag:"DDL", title:"2-19. DDL", blocks:[
+  {t:"h3",x:"개념"},
+  {t:"li",x:"DDL: 객체 구조를 정의·변경·삭제 — CREATE·ALTER·DROP·TRUNCATE"},
+  {t:"li",x:"DDL은 {{AUTO COMMIT}}되어 실행 즉시 저장 → {{ROLLBACK 불가}}"},
+
+  {t:"h2",x:"CREATE / CTAS"},
+  {t:"li",x:"CREATE: 테이블명·{{컬럼명·컬럼 순서·데이터 타입}} 정의 필수, 제약조건·기본값은 생략 가능"},
+  {t:"li",x:"{{CTAS}}(Create Table As Select): 서브쿼리로 컬럼 구조와 데이터를 복제"},
+  {t:"note",tag:"빈출",x:"CTAS는 컬럼 구조·데이터·{{NULL 속성}}은 복제되지만, {{제약조건과 INDEX는 복제되지 않는다}}."},
+
+  {t:"h2",x:"데이터 타입"},
+  {t:"table",head:["타입","설명"],rows:[
+    ["{{CHAR(n)}}","고정 길이, 짧으면 {{공백으로 채움}}"],
+    ["{{VARCHAR2(n)}}","가변 길이, 입력한 만큼만 저장"],
+    ["{{NUMBER(p,s)}}","p=전체 자릿수, s=소수점 이하 자릿수"],
+    ["DATE / TIMESTAMP","날짜·시간 / 컬럼 사이즈 {{지정 불가}}"],
+  ]},
+
+  {t:"h2",x:"ALTER"},
+  {t:"li",x:"컬럼명·타입·사이즈·DEFAULT·추가·삭제·제약 변경 가능, 단 {{컬럼 순서 변경 불가}}"},
+  {t:"li",x:"컬럼 추가({{ADD}}, ADD COLUMN 아님): 위치는 항상 {{맨 마지막}}, 데이터 타입 필수"},
+  {t:"li",x:"컬럼 이름 변경: 데이터 있어도 가능, 한 번에 {{하나만}} / 컬럼 사이즈 {{증가는 항상 가능}}"},
+
+  {t:"h2",x:"DELETE vs TRUNCATE vs DROP"},
+  {t:"table",head:["명령","분류","대상","ROLLBACK"],rows:[
+    ["{{DELETE}}","DML","행(WHERE 가능)","{{가능}}"],
+    ["{{TRUNCATE}}","DDL","전체 데이터(구조 유지)","{{불가}}"],
+    ["{{DROP}}","DDL","{{구조+데이터}} 모두","불가"],
+  ]},
+  {t:"note",tag:"함정",x:"{{UNIQUE}} 제약은 중복은 막지만 {{NULL은 허용}}. 뷰는 기본 테이블이 삭제돼도 {{자동 삭제되지 않음}}(사용만 불가)."},
+]},
+
+{ no:"04", tag:"DCL", title:"2-20. DCL", blocks:[
+  {t:"h3",x:"개념"},
+  {t:"li",x:"DCL: 객체 권한을 부여({{GRANT}})하거나 회수({{REVOKE}})하는 데이터 제어어"},
+  {t:"li",x:"본인 소유가 아닌 테이블은 조회·수정 불가 → 소유자가 타 계정에 권한 부여 시 접근 가능"},
+
+  {t:"h2",x:"권한의 종류"},
+  {t:"li",x:"{{오브젝트 권한}}: 특정 객체 접근(SELECT·INSERT 등), 테이블 소유자가 부여·회수 가능"},
+  {t:"li",x:"{{시스템 권한}}: 시스템 작업(테이블 생성 등), {{관리자}} 권한 계정만 부여·회수 가능"},
+
+  {t:"h2",x:"GRANT / REVOKE"},
+  {t:"li",x:"여러 사용자·여러 권한 동시 부여(회수) 가능, 단 여러 {{객체}}에 대한 권한을 하나의 GRANT로 부여 {{불가}}"},
+
+  {t:"h2",x:"ROLE / 권한 부여 옵션"},
+  {t:"li",x:"{{ROLE}}(롤): 여러 권한을 하나로 묶은 권한 집합 → 간접 부여로 관리 편의성↑"},
+  {t:"li",x:"롤로 부여된 권한은 사용자에게 {{직접 회수 불가}} (롤에서 제거하거나 롤 자체를 회수)"},
+  {t:"li",x:"{{WITH GRANT OPTION}}: 받은 {{오브젝트}} 권한을 제3자에게 재부여 / {{WITH ADMIN OPTION}}: {{시스템}} 권한에 사용"},
+]},
+];
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const main = document.getElementById('main');
+const chips = document.getElementById('chips');
+let total = 0;
+const blanks = []; // all blank elements
+
+function escapeHTML(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// turn a string with {{answer::hint}} into HTML + register blanks
+function renderText(str){
+  const parts = str.split(/(\{\{.+?\}\})/g);
+  let html = '';
+  for(const p of parts){
+    const m = p.match(/^\{\{(.+?)\}\}$/);
+    if(m){
+      const raw = m[1];
+      const [ans, hint] = raw.split('::');
+      const ph = hint ? escapeHTML(hint) : '＿＿＿';
+      html += `<button type="button" class="blank" data-ans="${escapeHTML(ans)}" aria-pressed="false"><span class="ph">${ph}</span></button>`;
+      total++;
+    } else if(p){
+      html += escapeHTML(p);
+    }
+  }
+  return html;
+}
+
+function blockHTML(b){
+  if(b.t==='h2') return `<h2 class="blk">${escapeHTML(b.x)}</h2>`;
+  if(b.t==='h3') return `<h3 class="blk">${escapeHTML(b.x)}</h3>`;
+  if(b.t==='li'){
+    return `<div class="line"><span class="bul">▸</span><span class="txt">${renderText(b.x)}</span></div>`;
+  }
+  if(b.t==='note'){
+    return `<div class="note"><span class="tag">${escapeHTML(b.tag||'TIP')}</span><span class="txt">${renderText(b.x)}</span></div>`;
+  }
+  if(b.t==='table'){
+    let h = '<div class="tablewrap"><table><thead><tr>';
+    h += b.head.map(c=>`<th>${escapeHTML(c)}</th>`).join('');
+    h += '</tr></thead><tbody>';
+    h += b.rows.map(r=>'<tr>'+r.map(c=>`<td>${renderText(c)}</td>`).join('')+'</tr>').join('');
+    h += '</tbody></table></div>';
+    return h;
+  }
+  return '';
+}
+
+LECTURES.forEach((lec,i)=>{
+  const id = 'lec'+i;
+  // group blocks into cards: a new card starts at each h2, plus a lead card for pre-h2 blocks
+  const sec = document.createElement('section');
+  sec.className = 'lec'; sec.id = id;
+  sec.innerHTML = `<div class="lechead"><span class="lecno">${escapeHTML(lec.no)}</span><span class="lectitle">${escapeHTML(lec.title)}</span><span class="lecstat" data-stat="${id}"></span></div>`;
+
+  let cardHTML = '';
+  let cards = [];
+  lec.blocks.forEach(b=>{
+    if(b.t==='h2' && cardHTML){ cards.push(cardHTML); cardHTML=''; }
+    cardHTML += blockHTML(b);
+  });
+  if(cardHTML) cards.push(cardHTML);
+  cards.forEach(c=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML = c;
+    sec.appendChild(div);
+  });
+  main.appendChild(sec);
+
+  // nav chip
+  const a = document.createElement('a');
+  a.href = '#'+id; a.textContent = lec.tag; a.dataset.target = id;
+  chips.appendChild(a);
+});
+
+// collect blanks + wire interactions
+document.querySelectorAll('.blank').forEach(el=>{
+  blanks.push(el);
+  el.addEventListener('click',()=>toggleBlank(el));
+  el.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleBlank(el); }
+  });
+});
+
+function toggleBlank(el){
+  const on = el.classList.toggle('on');
+  el.setAttribute('aria-pressed', on?'true':'false');
+  if(on){
+    el.dataset.ph = el.querySelector('.ph') ? el.querySelector('.ph').outerHTML : '';
+    el.textContent = el.dataset.ans;
+  } else {
+    el.innerHTML = el.dataset.ph || `<span class="ph">＿＿＿</span>`;
+  }
+  updateProgress();
+}
+
+function setAll(on){
+  blanks.forEach(el=>{
+    const isOn = el.classList.contains('on');
+    if(on && !isOn) toggleBlank(el);
+    if(!on && isOn) toggleBlank(el);
+  });
+}
+
+/* ---------- progress ---------- */
+const progNum = document.getElementById('progNum');
+const progFill = document.getElementById('progFill');
+function updateProgress(){
+  const done = blanks.filter(b=>b.classList.contains('on')).length;
+  progNum.textContent = `${done} / ${blanks.length}`;
+  progFill.style.width = blanks.length ? (done/blanks.length*100)+'%' : '0%';
+  // per-lecture stat
+  LECTURES.forEach((lec,i)=>{
+    const sec = document.getElementById('lec'+i);
+    const bs = sec.querySelectorAll('.blank');
+    const d = sec.querySelectorAll('.blank.on').length;
+    const stat = sec.querySelector('[data-stat]');
+    if(stat) stat.textContent = `${d}/${bs.length}`;
+  });
+  // toggle-all button label
+  const allOn = done===blanks.length && blanks.length>0;
+  toggleBtn.firstChild.textContent = allOn ? '전체 숨기기 ' : '전체 보기 ';
+  toggleHint.textContent = allOn ? 'hide' : 'show';
+}
+
+/* ---------- controls ---------- */
+const toggleBtn = document.getElementById('toggleAll');
+const toggleHint = document.getElementById('toggleHint');
+toggleBtn.addEventListener('click',()=>{
+  const done = blanks.filter(b=>b.classList.contains('on')).length;
+  setAll(done!==blanks.length);
+});
+document.getElementById('resetAll').addEventListener('click',()=>{
+  setAll(false);
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ---------- active chip on scroll ---------- */
+const chipLinks = [...chips.querySelectorAll('a')];
+const secs = LECTURES.map((_,i)=>document.getElementById('lec'+i));
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id = e.target.id;
+      chipLinks.forEach(a=>a.classList.toggle('active', a.dataset.target===id));
+      const active = chips.querySelector('a.active');
+      if(active) active.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+    }
+  });
+},{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>io.observe(s));
+
+/* ---------- back to top ---------- */
+const toTop = document.getElementById('toTop');
+window.addEventListener('scroll',()=>{
+  toTop.classList.toggle('show', window.scrollY>500);
+},{passive:true});
+toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+// subject subline — auto-updates as lectures are appended
+(function(){
+  const lecOnly = LECTURES.filter(l=>l.no!=='★');
+  const sl = document.getElementById('subline');
+  if(sl) sl.textContent = `요구사항·화면·아키텍처·객체지향·인터페이스 전 범위 · 주제 ${lecOnly.length}개 · 빈칸 ${blanks.length}개 — 같은 과목 수업이 오면 이어 붙어요.`;
+})();
+
+updateProgress();
+</script>
+</body>
+</html>
