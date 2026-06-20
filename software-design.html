@@ -1,0 +1,907 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>정보처리기사 필기 · 제1과목 소프트웨어 설계 · 빈칸 노트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --bg:#E8E9E3;
+    --surface:#FCFCFA;
+    --ink:#15171C;
+    --muted:#757a83;
+    --faint:#a4a8ae;
+    --line:#dcddd6;
+    --line-strong:#cfd0c8;
+    --accent:#2438d6;
+    --accent-soft:#e6e8fb;
+    --mark:#fbe25a;
+    --mark-done:#a9e7bf;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    line-height:1.6;-webkit-font-smoothing:antialiased;
+    padding-bottom:80px;
+  }
+
+  /* ---------- top bar ---------- */
+  header{
+    position:sticky;top:0;z-index:30;background:rgba(232,233,227,.86);
+    backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-strong);
+  }
+  .bar{max-width:860px;margin:0 auto;padding:14px 20px 12px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:8px}
+  .kicker::before{content:"";width:18px;height:2px;background:var(--accent);display:inline-block}
+  .badge{font-family:var(--mono);font-size:10px;letter-spacing:.06em;background:var(--accent);color:#fff;padding:2px 7px;border-radius:6px;text-transform:none}
+  h1{font-size:19px;margin:6px 0 2px;letter-spacing:-.01em;font-weight:700}
+  .sub{font-size:13px;color:var(--muted);margin:0}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+  button.ctl{
+    font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);
+    background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;
+    padding:7px 13px;cursor:pointer;transition:background .15s,border-color .15s,transform .05s;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  button.ctl:hover{border-color:var(--accent);color:var(--accent)}
+  button.ctl:active{transform:translateY(1px)}
+  button.ctl.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  button.ctl.primary:hover{background:#1b2bb0;color:#fff}
+  button.ctl .dot{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  button.ctl.primary .dot{color:#cdd2f7}
+  .progwrap{flex:1 1 140px;min-width:120px}
+  .progmeta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:4px}
+  .progbar{height:6px;border-radius:999px;background:var(--line-strong);overflow:hidden}
+  .progfill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#5566ec);border-radius:999px;transition:width .35s ease}
+  @media (prefers-reduced-motion:reduce){.progfill{transition:none}}
+
+  /* ---------- lecture nav ---------- */
+  nav.chips{max-width:860px;margin:0 auto;padding:10px 20px 0;display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav.chips::-webkit-scrollbar{display:none}
+  nav.chips a{
+    flex:0 0 auto;font-family:var(--mono);font-size:12px;font-weight:500;text-decoration:none;
+    color:var(--muted);border:1px solid var(--line-strong);background:var(--surface);
+    padding:5px 11px;border-radius:8px;transition:all .15s;white-space:nowrap;
+  }
+  nav.chips a:hover{border-color:var(--accent);color:var(--accent)}
+  nav.chips a.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* ---------- content ---------- */
+  main{max-width:860px;margin:0 auto;padding:8px 20px 0}
+  section.lec{margin:30px 0}
+  .lechead{display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:4px}
+  .lecno{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.05em}
+  .lectitle{font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .lecstat{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:14px}
+  h2.blk{font-size:15.5px;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
+  h2.blk:not(:first-child){margin-top:22px}
+  h3.blk{font-size:13.5px;font-weight:700;color:#3a3d44;margin:14px 0 4px}
+  h3.blk:first-child{margin-top:0}
+
+  .line{display:flex;gap:9px;align-items:flex-start;margin:3px 0;font-size:14.5px}
+  .line .bul{color:var(--accent);flex:0 0 auto;line-height:1.6;font-weight:700;font-size:12px;margin-top:1px}
+  .line .bul.sub{color:var(--faint)}
+  .line.indent{margin-left:20px}
+  .line .txt{flex:1}
+
+  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:10px 13px;background:var(--accent-soft);border-radius:10px;font-size:13.5px}
+  .note .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;flex:0 0 auto;margin-top:3px}
+
+  /* ---------- tables ---------- */
+  .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 2px;border:1px solid var(--line);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:380px}
+  thead th{background:#f3f3ee;text-align:left;font-weight:700;color:#3a3d44;padding:9px 12px;border-bottom:1px solid var(--line-strong);white-space:nowrap;font-size:12.5px}
+  tbody td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  td:first-child{font-weight:600;white-space:nowrap}
+
+  /* ---------- the blank (signature) ---------- */
+  .blank{
+    font-family:inherit;font-size:inherit;line-height:inherit;
+    border:none;padding:0 2px;margin:0 1px;cursor:pointer;color:var(--muted);
+    background-image:linear-gradient(var(--mark),var(--mark));
+    background-repeat:no-repeat;background-position:0 88%;background-size:0% 42%;
+    border-bottom:2px solid var(--accent);border-radius:1px;
+    transition:background-size .32s ease,color .15s,border-color .2s;
+    display:inline;font-weight:600;
+  }
+  @media (prefers-reduced-motion:reduce){.blank{transition:color .15s}}
+  .blank:hover{color:var(--accent)}
+  .blank:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .blank.on{
+    color:var(--ink);border-bottom-color:transparent;background-size:100% 42%;font-weight:700;cursor:pointer;
+  }
+  .blank.on:hover{color:var(--ink);opacity:.82}
+  .blank .ph{color:var(--faint);font-weight:500;letter-spacing:.02em}
+
+  /* ---------- footer ---------- */
+  footer{max-width:860px;margin:34px auto 0;padding:18px 20px 0;border-top:1px solid var(--line-strong);color:var(--muted);font-size:12.5px}
+  footer .legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-family:var(--mono);font-size:11px}
+  footer .legend b{color:var(--ink);font-weight:700}
+  .swatch{display:inline-block;width:22px;height:11px;border-radius:2px;background:var(--mark);vertical-align:middle;margin-right:5px}
+
+  /* floating back-to-top */
+  .totop{position:fixed;right:18px;bottom:18px;z-index:40;width:44px;height:44px;border-radius:50%;
+    background:var(--ink);color:#fff;border:none;cursor:pointer;font-size:18px;display:none;
+    box-shadow:0 6px 18px rgba(0,0,0,.18);align-items:center;justify-content:center}
+  .totop.show{display:flex}
+
+  @media (max-width:560px){
+    h1{font-size:17px}.lectitle{font-size:16px}
+    .card{padding:15px 15px}
+    main,.bar,nav.chips,footer{padding-left:14px;padding-right:14px}
+    .lecstat{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="kicker">정보처리기사 필기 · 제1과목 <span class="badge">소프트웨어 설계</span></div>
+    <h1>소프트웨어 설계 빈칸 채우기 노트</h1>
+    <p class="sub" id="subline">불러오는 중…</p>
+    <div class="controls">
+      <button class="ctl primary" id="toggleAll">전체 보기 <span class="dot" id="toggleHint">show</span></button>
+      <button class="ctl" id="resetAll">처음부터 다시</button>
+      <div class="progwrap">
+        <div class="progmeta"><span>진도</span><span id="progNum">0 / 0</span></div>
+        <div class="progbar"><div class="progfill" id="progFill"></div></div>
+      </div>
+    </div>
+  </div>
+  <nav class="chips" id="chips"></nav>
+</header>
+
+<main id="main"></main>
+
+<footer>
+  <div class="legend">
+    <span><span class="swatch"></span><b>형광펜</b> = 확인한 답</span>
+    <span><b>·</b> 빈칸 클릭 = 정답 토글</span>
+    <span><b>·</b> 키보드 Enter / Space 지원</span>
+  </div>
+  <p style="margin:12px 0 0;font-size:11.5px;color:var(--faint)">출처: 직접 정리한 Cornell Notes 1–10강 · 빈칸은 시험 빈출 핵심어 기준</p>
+</footer>
+
+<button class="totop" id="toTop" aria-label="맨 위로">↑</button>
+
+<script>
+/* ============================================================
+   DATA  —  blanks are written as {{정답}}  or  {{정답::힌트}}
+   block types: h2 / h3 / li / sub(li) / note / table
+   ============================================================ */
+const LECTURES = [
+{ no:"01", tag:"SDLC", title:"소프트웨어 생명주기 (SDLC)", blocks:[
+  {t:"h3",x:"소프트웨어 공학의 정의 (3가지 관점)"},
+  {t:"li",x:"{{IEEE}}: 개발·운용·유지·보수·폐기에 대한 체계적 접근"},
+  {t:"li",x:"{{Fairley}}: 지정된 비용과 기간 내에 소프트웨어를 체계적으로 생산·유지보수"},
+  {t:"li",x:"{{Boehm}}: 과학적 지식을 설계·제작에 응용하고 필요한 문서 작성"},
+  {t:"h3",x:"소프트웨어 공학 기본 원칙 (3가지)"},
+  {t:"li",x:"현대적 {{프로그래밍 기술}} 지속적 적용"},
+  {t:"li",x:"개발 소프트웨어의 {{품질}} 지속적 검증"},
+  {t:"li",x:"개발 사항 및 결과에 대한 명확한 {{기록}} 유지"},
+
+  {t:"h2",x:"1) 폭포수(Waterfall) 모형"},
+  {t:"table",head:["특징","내용"],rows:[
+    ["정의","한 번 지나간 단계는 {{되돌아갈 수 없음}} (폭포가 떨어지듯)"],
+    ["성격","{{선형·순차적}} 모형"],
+    ["프로세스","{{계획}} → {{분석}} → {{설계}} → {{구현}} → {{테스트}} → 운영"],
+    ["단점","개발 완료 시점에서 오류 발견 시 {{대응 어려움}}"],
+  ]},
+
+  {t:"h2",x:"2) 프로토타입(Prototype) 모형"},
+  {t:"table",head:["특징","내용"],rows:[
+    ["목적","사용자 요구사항을 정확히 파악하기 위해 {{견본품·시제품}} 제작"],
+    ["보완","폭포수 모형의 단점 → 최종 개발 시점 {{이전}}에 오류 발견·수정 가능"],
+    ["프로세스","요구 수집 → 설계 → {{프로토타입 구축}} → 고객 평가 → {{프로토타입 조정}} → 구현"],
+  ]},
+
+  {t:"h2",x:"3) 나선형(Spiral) 모형"},
+  {t:"table",head:["특징","내용"],rows:[
+    ["개발자","{{Boehm}}이 제안"],
+    ["통합","폭포수 + 프로토타입 + {{위험 분석}} 기능 추가"],
+    ["프로세스","계획 및 정의 → {{위험 분석}} → 공학적 개발 → 고객 평가 (반복)"],
+    ["다른 이름","{{점진적}} 모형"],
+    ["장점","{{위험 최소화}}, 누락된 요구사항 점검 가능"],
+  ]},
+
+  {t:"h2",x:"4) 애자일(Agile) 모형"},
+  {t:"li",x:"일정한 주기({{Sprint}}/Iteration)로 반복 개발 · 고객 중심·소통 중심"},
+  {t:"h3",x:"4가지 핵심 가치 (왼쪽 < 오른쪽)"},
+  {t:"li",x:"프로세스와 도구 < {{개인과 상호작용}}"},
+  {t:"li",x:"형식적 문서 < {{소프트웨어}} (실제 작동하는 프로그램)"},
+  {t:"li",x:"계약 협상 < {{고객 협업}}"},
+  {t:"li",x:"계획 준수 < {{변화에의 대응}}"},
+  {t:"note",tag:"빈출",x:"실행 지침은 총 {{12}}가지. ‘작동하는 소프트웨어가 진척도 1차 기준’이 핵심 문장."},
+
+  {t:"h2",x:"폭포수 vs 애자일"},
+  {t:"table",head:["구분","폭포수","애자일"],rows:[
+    ["요구 변화 대응","{{어려움}}","{{지속적 반영}}"],
+    ["테스트","{{마지막에 전체}}","{{일정 주기마다}}"],
+    ["개발 중심","계획·문서","{{고객}}"],
+  ]},
+]},
+
+{ no:"02", tag:"Scrum", title:"Scrum 기법", blocks:[
+  {t:"li",x:"어원: 럭비에서 반칙 시 공을 두고 대치하는 상황 → 의미는 팀의 {{중요성과 협력}} 강조"},
+  {t:"li",x:"위치: {{Agile}} 모형의 한 종류 (다른 예: XP 기법)"},
+
+  {t:"h2",x:"Scrum 팀의 3가지 역할"},
+  {t:"h3",x:"1) Product Owner (PO, 제품 책임자)"},
+  {t:"li",x:"주요 업무: {{Product Backlog}} 작성 및 관리"},
+  {t:"li",x:"백로그: 새로운 요구사항 발생 시 {{지속적 업데이트}}"},
+  {t:"li",x:"Product Backlog = 요구사항을 모아 {{우선순위}} 부여한 목록, {{스토리(Story)}} 형태로 작성"},
+  {t:"h3",x:"2) Scrum Master (SM)"},
+  {t:"li",x:"역할: Scrum이 잘 수행되도록 {{객관적 시각}}에서 조언"},
+  {t:"li",x:"책임: 팀을 통제하기보다 {{가이드}} 역할 / 장애 요소 공론화·처리"},
+  {t:"h3",x:"3) Development Team (개발팀)"},
+  {t:"li",x:"구성: {{PO와 SM}}을 제외한 모든 팀원 (디자이너·테스터 등)"},
+  {t:"li",x:"적정 규모: {{7~8명}}"},
+
+  {t:"h2",x:"Scrum 개발 프로세스 (6단계)"},
+  {t:"li",x:"1단계: {{Product Backlog}} 작성 (담당: PO)"},
+  {t:"li",x:"2단계: {{Sprint 계획 회의}} — Backlog 중 수행 작업 선정, Task 단위 분할"},
+  {t:"li",x:"3단계: {{Sprint 수행}} — 보통 {{2~4주}}"},
+  {t:"li",x:"4단계: {{일일 Scrum 회의}} (Daily Scrum) — 매일, 약 {{15분}}"},
+  {t:"li",x:"5단계: {{Sprint 검토 회의}} (Review) — 사용자 포함, 완성 제품 테스팅"},
+  {t:"li",x:"6단계: {{Sprint 회고}} (Retrospective) — Sprint 되돌아보며 개선점 확인"},
+]},
+
+{ no:"03", tag:"XP", title:"XP (Extreme Programming)", blocks:[
+  {t:"li",x:"위치: {{Agile}} 모형의 한 종류 (Scrum과 동일 수준)"},
+  {t:"li",x:"적합 규모: {{소규모}} 프로젝트 (큰 규모에는 부적합)"},
+
+  {t:"h2",x:"XP의 5가지 핵심 가치"},
+  {t:"table",head:["가치","의미"],rows:[
+    ["{{의사소통}}","개발자와 고객 간의 중요한 관점 부각"],
+    ["{{단순성}}","불필요한 복잡성 제거"],
+    ["{{용기}}","변화에 대한 용감한 대응"],
+    ["{{존중}}","팀원 간의 상호 존중"],
+    ["{{피드백}}","지속적인 피드백 반영"],
+  ]},
+
+  {t:"h2",x:"XP 개발 프로세스"},
+  {t:"li",x:"1단계: {{사용자 스토리}} (User Story) — 요구사항을 간단한 시나리오로"},
+  {t:"li",x:"2단계: {{Release 계획}} 수립 / Release = 고객에게 제공하는 부분 완성 제품"},
+  {t:"li",x:"3단계: {{Spike}} (스파이크) — 기술 위험 감소, 별도의 간단한 프로그램 작성"},
+  {t:"li",x:"4단계: {{Iteration}} (주기) — Release를 세분화, 1~3주"},
+  {t:"li",x:"5단계: {{승인 검사}} (Acceptance Test)"},
+  {t:"li",x:"6단계: {{소규모 Release}} (Small Release)"},
+
+  {t:"h2",x:"XP의 7가지 주요 실천 방법"},
+  {t:"li",x:"1) {{짝 프로그래밍}} (Pair Programming) — 책임을 공동으로 나눔"},
+  {t:"li",x:"2) {{공동 코드 소유}} (Collective Code Ownership)"},
+  {t:"li",x:"3) {{테스트 주도 개발}} (TDD) — {{테스트 케이스}} 작성 → 실제 코드 작성"},
+  {t:"li",x:"4) {{전체 팀}} (Whole Team) — 역할 기반 책임"},
+  {t:"li",x:"5) {{계속적인 통합}} (Continuous Integration)"},
+  {t:"li",x:"6) {{리팩토링}} (Refactoring) — 기능 변경 없이 단순화·유용성 강화"},
+  {t:"li",x:"7) {{소규모 Release}} (Small Release)"},
+]},
+
+{ no:"04", tag:"현행시스템", title:"현행 시스템 파악", blocks:[
+  {t:"li",x:"목적: 새 시스템의 {{개발 범위}}를 명확히 설정, 기존 시스템 구조·기능 이해"},
+
+  {t:"h2",x:"7가지 파악 단계 (순서 빈출)"},
+  {t:"li",x:"1단계: {{시스템 구성}} 파악 — 업무를 기관 업무(핵심)와 지원 업무로 구분"},
+  {t:"li",x:"2단계: {{시스템 기능}} 파악 — 주요/하부/세부 기능 {{계층적}} 표현"},
+  {t:"li",x:"3단계: {{시스템 인터페이스}} 파악"},
+  {t:"li",x:"4단계: {{아키텍처}} 파악"},
+  {t:"li",x:"5단계: {{소프트웨어 구성}} 파악"},
+  {t:"li",x:"6단계: {{하드웨어 현황}} 파악"},
+  {t:"li",x:"7단계: {{네트워크 구성}} 파악"},
+
+  {t:"h3",x:"3단계 — 인터페이스 파악 항목"},
+  {t:"li",x:"데이터 형식: XML 등 / 통신 프로토콜: {{TCP/IP}}(유선), {{X25}}(무선)"},
+  {t:"li",x:"연계 유형: {{EA}} 방식, {{FEP}} 방식 / 연계 주기: 일·주·수시 단위"},
+
+  {t:"h3",x:"4단계 — 아키텍처 계층 구조"},
+  {t:"li",x:"{{Presentation Layer}} (프리젠테이션): UI, 사용자 인터페이스"},
+  {t:"li",x:"{{Business Layer}} (비즈니스): 내부 로직, 워크플로우"},
+  {t:"li",x:"{{Data Layer}} (데이터): 파일 시스템 또는 데이터베이스"},
+
+  {t:"h3",x:"6단계 — 이중화(Redundancy)란?"},
+  {t:"li",x:"응용 서버 장애 시 {{대기 서버}}로 서비스 계속 유지"},
+  {t:"li",x:"자료 변경이 {{예비 서버}}에도 동일하게 복제"},
+]},
+
+{ no:"05", tag:"개발환경", title:"개발 기술 환경 파악", blocks:[
+  {t:"h2",x:"1) 운영체제 (OS)"},
+  {t:"table",head:["OS","특성"],rows:[
+    ["Windows / Unix / macOS","{{상용}}"],
+    ["Linux","{{오픈소스}} (무료)"],
+    ["iOS","{{상용}}"],
+    ["Android","{{오픈소스}} (무료)"],
+  ]},
+  {t:"h3",x:"OS 선정 시 5가지 고려사항"},
+  {t:"li",x:"① {{가용성}} (Availability) — 주어진 시점에 시스템이 정상 운영될 수 있는 능력"},
+  {t:"li",x:"② {{성능}} (Performance)"},
+  {t:"li",x:"③ {{기술 지원}} — 상용 OS는 안정적, 오픈소스 OS는 불안정"},
+  {t:"li",x:"④ {{주변기기}} 지원"},
+  {t:"li",x:"⑤ {{구축 비용}} — TCO(총 소유 비용)까지 고려"},
+
+  {t:"h2",x:"2) DBMS"},
+  {t:"table",head:["DBMS","제조사 / 특성"],rows:[
+    ["Oracle","Oracle / 상용, 고성능"],
+    ["DB2","{{IBM}} / 상용"],
+    ["MS-SQL Server","{{Microsoft}} / Windows 기반"],
+    ["MySQL","{{오픈소스}}, 무료"],
+    ["SQLite","{{모바일}} 운영체제용"],
+    ["MongoDB","비정형 데이터 ({{NoSQL}})"],
+    ["Redis","{{빅데이터}} 처리용"],
+  ]},
+  {t:"h3",x:"DBMS 선정 5가지 — 호환 여부 포인트"},
+  {t:"li",x:"{{JDBC}} (Java DataBase Connectivity): Java 기반 표준 인터페이스"},
+  {t:"li",x:"{{ODBC}} (Open DataBase Connectivity): C 언어 계열 표준 인터페이스"},
+  {t:"li",x:"질의 최적화: 규칙 기반(Rule-based) vs {{비용 기반}}(Cost-based) → {{비용 기반}}이 더 정확·효율적"},
+
+  {t:"h2",x:"3) 웹 애플리케이션 서버 (WAS)"},
+  {t:"li",x:"정적 콘텐츠(웹 서버) vs {{동적 콘텐츠}}(WAS) 처리용 미들웨어"},
+  {t:"table",head:["WAS","특성"],rows:[
+    ["Tomcat","{{오픈소스}}, 무료 (가장 많이 사용)"],
+    ["JBoss","{{오픈소스}}"],
+    ["JEUS / WebLogic / WebSphere","{{상용}}"],
+    ["IIS","Windows 기반 상용"],
+  ]},
+  {t:"li",x:"성능 — {{Garbage Collection}} (GC): 사용되지 않는 메모리 수거 및 운영체제에 반납"},
+
+  {t:"h3",x:"4) 오픈소스 소프트웨어 선정 시 주의"},
+  {t:"li",x:"① 라이선스 종류 ({{GPL}}, {{Apache}}, {{MIT}} 등)"},
+  {t:"li",x:"② 지원되는 사용자 수 (커뮤니티 규모) ③ 기술의 {{지속 가능성}} ④ 기술 지원 안정성"},
+  {t:"note",tag:"주의",x:"무료라는 이유만으로 선택하면 안 됨 → {{신중한 검토}} 필요"},
+]},
+
+{ no:"06", tag:"요구사항정의", title:"요구사항 정의", blocks:[
+  {t:"h2",x:"요구사항의 분류"},
+  {t:"li",x:"{{기능적}} 요구사항: 시스템이 제공해야 할 {{구체적 기능}} 명시, 빠짐없이 작성"},
+  {t:"li",x:"{{비기능적}} 요구사항: 성능·인터페이스·보안·품질 등, {{필요한 것만}} 작성"},
+
+  {t:"h2",x:"기술 관점에 따른 분류"},
+  {t:"table",head:["구분","사용자 요구사항","시스템 요구사항"],rows:[
+    ["관점","{{사용자}} 입장","{{개발자}} 입장"],
+    ["표현","친숙한·이해하기 쉬운 언어","{{기술적·전문적}} 표현"],
+    ["용어","일반적인 용어","{{기술적}} 용어 사용 가능"],
+  ]},
+
+  {t:"h2",x:"요구사항 개발 프로세스 (4단계)"},
+  {t:"li",x:"1단계: 요구사항 {{도출}} (Elicitation) — 필요한 요구사항 뽑아내기"},
+  {t:"li",x:"2단계: 요구사항 {{분석}} (Analysis) — 범위 파악, 요구사항 간 {{충돌}} 해소"},
+  {t:"li",x:"3단계: 요구사항 {{명세}} (Specification) — 체계적으로 문서화"},
+  {t:"li",x:"4단계: 요구사항 {{확인}} (Verification) — 정확·안전하게 작성됐는지 검증"},
+  {t:"h3",x:"도출(Elicitation) 주요 기법"},
+  {t:"li",x:"{{인터뷰}}, {{설문조사}}, {{브레인스토밍}}(3명 이상 창의적 아이디어), 워크숍, {{프로토타이핑}}, {{유즈케이스}}"},
+
+  {t:"h2",x:"요구공학 / SRS"},
+  {t:"li",x:"{{요구공학}} (Requirements Engineering): 요구사항을 정리·분석·관리하는 프로세스 연구 학문"},
+  {t:"li",x:"{{SRS}} (Software Requirements Specification): 소프트웨어가 제공할 기능·특징·제약을 명시한 업계 표준 문서"},
+
+  {t:"h2",x:"요구사항 명세 기법"},
+  {t:"table",head:["구분","정형(Formal)","비정형(Informal)"],rows:[
+    ["기반","{{수학}}","{{자연어}}/그래픽"],
+    ["일관성","{{높음}}","{{낮음}}"],
+    ["이해도","{{어려움}}","{{쉬움}}"],
+    ["완전성 검증","{{가능}}","{{어려움}}"],
+    ["주요 기법","{{VDM}}, {{Z}}, 페트리넷, CSP","{{FSM}}, 결정 테이블, ER 모델, 상태 차트"],
+  ]},
+]},
+
+{ no:"07", tag:"요구사항분석", title:"요구사항 분석", blocks:[
+  {t:"h2",x:"구조적 분석 기법 (Structured Analysis)"},
+  {t:"li",x:"표현 방식: {{도형}} 중심 (DFD, ER 모델 등)"},
+  {t:"li",x:"분석 방법: {{하향식}}(Top-Down) 접근 — 전체 기능 → 상세 기능으로 단계별 분해"},
+  {t:"h3",x:"주요 도구"},
+  {t:"li",x:"{{DFD}}(자료 흐름도), {{DD}}(자료 사전), {{Mini-Spec}}(소단위 명세서), {{ERD}}(객체 관계도), STD(상태 전이도), 제어 명세서"},
+
+  {t:"h2",x:"자료 흐름도 (DFD)"},
+  {t:"li",x:"다른 이름: {{버블 차트}} (Bubble Chart)"},
+  {t:"li",x:"특성: 단계적 세분화 가능 (상위 DFD → 하위 DFD로 {{점진적 분해}})"},
+  {t:"h3",x:"DFD의 4가지 기본 기호"},
+  {t:"table",head:["기호","의미","표기법"],rows:[
+    ["{{프로세스}} (Process)","자료를 변환시키는 시스템의 한 부분","{{원}} 또는 둥근 사각형"],
+    ["{{자료 흐름}} (Data Flow)","자료의 이동·연관 관계","{{화살표}}"],
+    ["{{자료 저장소}} (Data Store)","시스템에서의 자료 저장소","{{평행선}} 2개 또는 사각형"],
+    ["{{단말}} (Terminator)","시스템과 교신하는 외부 개체","사각형 또는 원"],
+  ]},
+  {t:"h3",x:"2가지 DFD 표기법"},
+  {t:"li",x:"{{Yourdon & DeMarco}}: 프로세스=원, 자료저장소=평행선 (많이 사용)"},
+  {t:"li",x:"{{Gane & Sarson}}: 프로세스=둥근 사각형, 자료저장소=사각형"},
+
+  {t:"h2",x:"자료 사전 (DD, Data Dictionary)"},
+  {t:"li",x:"DFD에 있는 자료를 더 자세히 정의·기록 / 다른 이름: {{메타 데이터}}"},
+  {t:"h3",x:"자료 사전 기호 (의미를 맞춰보기)"},
+  {t:"table",head:["기호","의미","예시"],rows:[
+    ["=","자료 {{정의}} (구성)","Name = First Name + Last Name"],
+    ["+","자료 {{연결}} (AND)","성명 = 성 + 이름"],
+    ["( )","자료 {{생략}} (Optional)","(전화번호)"],
+    ["[ | ]","자료 {{선택}} (OR)","[남 | 여]"],
+    ["{ }","자료 {{반복}} (Repetition)","{상품} — 1회 이상 반복"],
+    ["n{ }","최소 {{n회 이상}} 반복","5{상품}"],
+    ["{ }^m","최대 {{m회}} 반복","{상품}^10"],
+    ["/ /","{{주석}} (설명)","/* 고객 정보 */"],
+  ]},
+]},
+
+{ no:"08", tag:"CASE·HIPO", title:"요구사항 분석 도구 (CASE · HIPO)", blocks:[
+  {t:"li",x:"CASE 도구: 요구사항을 {{자동}}으로 분석하고 명세서 기술 → 수작업 보완"},
+
+  {t:"h2",x:"주요 CASE 도구 (4가지)"},
+  {t:"table",head:["도구","개발사","기반 / 구성","특징"],rows:[
+    ["{{SADT}}","{{Softtech}}","블록 다이어그램","구조적 분석·설계의 가장 대표적 도구"],
+    ["{{SREM}}","{{TRW}}","{{RSL + REVS}}","언어 + 분석기"],
+    ["{{PSL/PSA}}","{{미시간 대학}}","{{PSL + PSA}}","언어 + 분석기"],
+    ["{{TAGS}}","–","{{IORL}} + 방법론","통합 자동화 도구"],
+  ]},
+  {t:"note",tag:"암기",x:"SADT=블록 / SREM=RSL·REVS / PSL·PSA / TAGS=통합·{{IORL}}. ‘언어로 작성 → 분석기로 분석’ 구조."},
+
+  {t:"h2",x:"HIPO (Hierarchy Input Process Output)"},
+  {t:"li",x:"기본 구조: {{입력(Input)}} – {{처리(Process)}} – {{출력(Output)}}"},
+  {t:"li",x:"개발 방향: {{하향식}}(Top-Down) 소프트웨어 개발"},
+  {t:"h3",x:"HIPO 차트 (3가지 종류 · 계층 순서)"},
+  {t:"li",x:"① {{가시적 도표}} (Visibility Chart) — 전체 기능·흐름, {{계층 구조}}"},
+  {t:"li",x:"② {{총체적 도표}} (Overview Diagram) — 입력-처리-출력 전반 정보"},
+  {t:"li",x:"③ {{세부적 도표}} (Detailed Diagram) — 기본 요소 상세, 가장 하위·상세 수준"},
+]},
+
+{ no:"09", tag:"UML", title:"UML (Unified Modeling Language)", blocks:[
+  {t:"li",x:"표준화 기구: {{OMG}} (Object Management Group)에서 표준 지정"},
+
+  {t:"h2",x:"UML의 4가지 사물 (Things)"},
+  {t:"li",x:"① {{구조 사물}} (Structural) — 클래스, 유즈케이스, 컴포넌트, 노드 (개념적·물리적 요소)"},
+  {t:"li",x:"② {{행동 사물}} (Behavioral) — 상호작용(Interaction), 상태 기계(State Machine)"},
+  {t:"li",x:"③ {{그룹 사물}} (Grouping) — 패키지(Package)"},
+  {t:"li",x:"④ {{주해 사물}} (Annotational) — 노트(Note)"},
+
+  {t:"h2",x:"UML의 6가지 관계 (Relationships)"},
+  {t:"table",head:["관계","표현(표기)","핵심"],rows:[
+    ["{{연관}} (Association)","실선/방향선","두 사물이 서로 관련 · {{다중도}} 표기"],
+    ["{{집합}} (Aggregation)","속이 {{빈}} 마름모","약한 포함 (양쪽 독립적)"],
+    ["{{포함}} (Composition)","속이 {{찬}} 마름모","강한 포함 (생명주기 함께)"],
+    ["{{일반화}} (Generalization)","속이 빈 {{화살표}}","부모-자식 (상속)"],
+    ["{{의존}} (Dependency)","{{점선}} 화살표","짧은 시간만 연관 (임시적)"],
+    ["{{실현}} (Realization)","속이 빈 {{점선}} 화살표","인터페이스 구현"],
+  ]},
+  {t:"h3",x:"연관관계 다중도 표기"},
+  {t:"li",x:"1 = {{정확히 1개}} · 0..1 = {{0개 또는 1개}} · 1..* = {{1개 이상}}(무제한) · n..m = {{n개 이상 m개 이하}}"},
+
+  {t:"h2",x:"UML 다이어그램의 분류"},
+  {t:"li",x:"{{구조}} 다이어그램 ({{6}}개) — 정적 모델링: 클래스, 객체, 컴포넌트, 배치, 복합체 구조, 패키지"},
+  {t:"li",x:"{{행위}} 다이어그램 ({{7}}개) — 동적 모델링: 유즈케이스, 시퀀스, 커뮤니케이션, 상태, 활동, 상호작용 개요, 타이밍"},
+
+  {t:"h2",x:"스테레오 타입 (Stereotype)"},
+  {t:"li",x:"표기: {{길로셰 괄호}}(겹화살괄호) « » 또는 << >>"},
+  {t:"table",head:["스테레오 타입","의미"],rows:[
+    ["«include»","{{포함}} 관계 (반드시 실행)"],
+    ["«extend»","{{확장}} 관계 (선택적 실행)"],
+    ["«interface»","{{인터페이스}}"],
+    ["«exception»","{{예외}} 처리"],
+    ["«Constructor»","{{생성자}} 역할"],
+  ]},
+]},
+
+{ no:"10", tag:"UML도해", title:"주요 UML 다이어그램", blocks:[
+  {t:"li",x:"주요 3가지: {{유즈케이스}}(사용자 관점) · {{클래스}}(클래스 구조) · {{시퀀스}}(객체 상호작용 시간 흐름)"},
+
+  {t:"h2",x:"1) 유즈케이스 다이어그램 — 4가지 구성요소"},
+  {t:"li",x:"① {{시스템}} / 시스템 범위 — {{사각형}}으로 경계 표시"},
+  {t:"li",x:"② {{액터}} (Actor) — 시스템과 상호작용하는 외부 요소, {{막대 인형}}(스틱맨)"},
+  {t:"li",x:"③ {{유즈케이스}} (Use Case) — 시스템이 제공하는 서비스, {{타원}}(Ellipse)"},
+  {t:"li",x:"④ {{관계}} (Relationship)"},
+  {t:"h3",x:"액터의 2가지 분류"},
+  {t:"li",x:"{{주 액터}} (Primary) — 이득을 얻는 대상, 주로 사람 (예: 고객·학생)"},
+  {t:"li",x:"{{부 액터}} (Secondary) — 서비스 제공, 외부 조직·시스템 (예: 결제·은행 시스템)"},
+  {t:"h3",x:"관계 표현"},
+  {t:"li",x:"포함 = «{{include}}» 실선 화살표 (반드시 실행) / 확장 = «{{extend}}» 점선 화살표 (선택적)"},
+
+  {t:"h2",x:"2) 클래스 다이어그램"},
+  {t:"li",x:"표현 구조 3구획: 구획1 {{클래스명}} / 구획2 {{속성}}(변수) / 구획3 {{연산}}(메서드)"},
+  {t:"li",x:"3가지 구성 요소: {{클래스}} · {{제약 조건}}(Constraint) · {{관계}}(Relationship)"},
+  {t:"h3",x:"클래스의 접근 제어자 (Access Modifiers) — 4가지"},
+  {t:"table",head:["제어자","기호","접근 범위"],rows:[
+    ["Public","{{+}}","모든 클래스"],
+    ["Private","{{-}}","해당 클래스 내부만"],
+    ["Protected","{{#}}","동일 패키지 + {{상속 클래스}}"],
+    ["Package","{{~}}","동일 패키지만"],
+  ]},
+
+  {t:"h2",x:"3) 시퀀스 다이어그램"},
+  {t:"li",x:"객체들이 {{메시지}}를 주고받으며 상호작용 / 메시지 = {{함수 호출}}"},
+  {t:"li",x:"시간: 위에서 아래로 {{시간 흐름}} 표현"},
+  {t:"h3",x:"주요 구성요소"},
+  {t:"li",x:"{{Lifeline}} (생명선) — 객체가 존재하는 기간, 점선"},
+  {t:"li",x:"{{Activation Box}} (실행 상자) — 메시지 받으며 활동 중, 사각형"},
+  {t:"li",x:"{{Message}} — 실선 화살표 / {{Return Message}}(반환) — 점선 화살표"},
+  {t:"li",x:"{{Control Block}} (제어 블록) — 반복 처리 영역을 사각형으로 표시"},
+]},
+
+{ no:"11–20", tag:"화면설계", title:"화면 설계 · UI", blocks:[
+  {t:"li",x:"UI 정의: 사용자와 시스템 간 {{상호작용}}을 원활하게 도와주는 장치"},
+  {t:"h3",x:"UI 활용 3분야"},
+  {t:"li",x:"① 정보 제공·전달 {{물리적 제어}} 분야 (예: Google Glass, Wearable)"},
+  {t:"li",x:"② 콘텐츠 상세 표현·전체 {{구성}} 분야 ③ 사용자 {{편의성}} 기능 분야"},
+  {t:"h2",x:"UI 종류 (상호작용 방식)"},
+  {t:"li",x:"{{CLI}} (Command Line) · {{GUI}} (Graphical) · {{MUI}} (Multi-modal) · {{VUI}} (Voice) · {{OUI}} (Object)"},
+  {t:"h2",x:"UI 기본 원칙 4가지"},
+  {t:"li",x:"{{직관성}}(Intuitiveness) · {{유효성}}(Effectiveness) · {{학습성}}(Learnability) · {{유연성}}(Flexibility)"},
+  {t:"note",tag:"참고",x:"UI 설계 지침은 12가지 (사용자 중심·일관성·단순성·가시성·표준화·접근성·명확성·오류 발생 해결 등)"},
+  {t:"h2",x:"UI 설계 도구 (진화 과정)"},
+  {t:"table",head:["도구","핵심"],rows:[
+    ["{{Wireframe}} (와이어프레임)","페이지 대략적 {{레이아웃}}·골격 (개략)"],
+    ["{{Mockup}} (목업)","실제 화면처럼, 상호작용 {{없음}} ({{정적}}/Static)"],
+    ["{{Storyboard}} (스토리보드)","좌측 화면 + 우측 {{Description}}, 화면 이동 흐름"],
+    ["{{Prototype}} (프로토타입)","Interaction 적용 {{동적}} 모형, 구현 전 테스트"],
+    ["{{Use Case}} (유즈케이스)","사용자 요구사항을 {{구조적}}으로 표현"],
+  ]},
+  {t:"li",x:"순서: {{Wireframe}} → {{Mockup}} → {{Storyboard}} → {{Prototype}} → Use Case"},
+  {t:"h2",x:"UI 상세 설계 — UI 시나리오 문서 요건 6가지"},
+  {t:"li",x:"{{완전성}}(Completeness) · {{일관성}}(Consistency) · {{이해성}}(Comprehensibility) · {{가독성}}(Readability) · 수정 용이성 · 추적 용이성"},
+]},
+{ no:"11–20", tag:"품질·UX", title:"SW 품질 · HCI · UX · 감성공학", blocks:[
+  {t:"h2",x:"ISO/IEC 9126 — 6대 품질 특성"},
+  {t:"li",x:"① {{기능성}}(Functionality) ② {{신뢰성}}(Reliability) ③ {{사용성}}(Usability) ④ {{효율성}}(Efficiency) ⑤ {{유지보수성}}(Maintainability) ⑥ {{이식성}}(Portability)"},
+  {t:"table",head:["기준","ISO/IEC 9126","ISO/IEC 25010"],rows:[
+    ["제정","국제표준화기구","{{2011}}년 개정"],
+    ["특성 수","{{6}}가지","{{8}}가지 ({{호환성}}·{{보안성}} 강화)"],
+  ]},
+  {t:"h2",x:"HCI · UX · 감성공학"},
+  {t:"li",x:"{{HCI}} (Human-Computer Interaction): 사람과 컴퓨터의 {{상호작용}} 연구 학문"},
+  {t:"li",x:"{{UX}} (User Experience): 사용자가 느끼고 생각하게 되는 {{총체적인 경험}}"},
+  {t:"li",x:"UX의 3가지 특징: {{주관성}}(Subjectivity) · {{정황성}}(Situatedness) · {{총체성}}(Holism)"},
+  {t:"li",x:"{{감성공학}} (Kansei): 제품·작업환경을 사용자 감성에 맞춰 설계 / 3대 기술: {{기반}}·{{구현}}·{{응용}} 기술"},
+]},
+{ no:"11–20", tag:"아키텍처", title:"소프트웨어 아키텍처 · 패턴", blocks:[
+  {t:"li",x:"아키텍처 정의: 소프트웨어의 {{골격}}이 되는 기본 구조"},
+  {t:"li",x:"모듈(Module): 전체 프로그램 기능 중 {{특정 기능}}을 처리하는 소스 코드 단위"},
+  {t:"h2",x:"아키텍처 설계 4대 기본 원리"},
+  {t:"li",x:"① {{모듈화}}(Modularity) — 기능을 모듈 단위로 분할"},
+  {t:"li",x:"② {{추상화}}(Abstraction) — 종류 3가지: {{과정}} 추상화 · {{데이터}} 추상화 · {{제어}} 추상화"},
+  {t:"li",x:"③ {{단계적 분해}}(Top-Down Design) — 하향식 설계"},
+  {t:"li",x:"④ {{정보 은닉}}(Information Hiding) — 모듈 내부 자료를 감춰 다른 모듈 접근 차단"},
+  {t:"table",head:["구분","상위 설계","하위 설계"],rows:[
+    ["다른 명칭","{{아키텍처}} 설계·예비 설계","{{모듈}} 설계·상세 설계"],
+    ["대상","전체 {{시스템}} 구조","시스템 {{내부}} 구조·행위"],
+  ]},
+  {t:"h2",x:"시스템 타입 4가지"},
+  {t:"li",x:"{{대화형}}(Interactive) · {{이벤트 중심}}(Event-Driven) · {{변환형}}(Transformational) · {{객체 영속성}}(Object Persistence)"},
+  {t:"li",x:"Design by Contract 명세 조건 3가지: {{선행 조건}}(Precondition) · {{결과 조건}}(Postcondition) · {{불변 조건}}(Invariant)"},
+  {t:"h2",x:"아키텍처 패턴 5가지"},
+  {t:"table",head:["패턴","핵심"],rows:[
+    ["{{Layer}} (계층화)","시스템을 계층으로 분할 · {{OSI 7 Layer}} 참조"],
+    ["{{Client-Server}} (클라이언트-서버)","하나의 서버 + 여러 {{클라이언트}}"],
+    ["{{Pipe-Filter}} (파이프-필터)","데이터 스트림을 필터로 캡슐화, {{파이프}}로 전송 · Unix Shell"],
+    ["{{MVC}} (모델-뷰-컨트롤러)","Model(핵심 기능·데이터) / View(정보 표시) / Controller(입력 처리)"],
+  ]},
+]},
+{ no:"11–20", tag:"객체지향", title:"객체 지향 · OOA · SOLID", blocks:[
+  {t:"li",x:"객체 지향: 현실 세계의 객체를 {{부품처럼}} 하나의 객체로 만들어 조립하는 기법 (구조적 기법은 {{함수}} 중심)"},
+  {t:"h2",x:"객체 지향 주요 구성 요소"},
+  {t:"li",x:"① {{객체}}(Object) — 데이터(속성)와 함수(메소드)를 묶은 SW 모듈"},
+  {t:"li",x:"② {{클래스}}(Class) — 공통 속성·연산을 갖는 객체들의 집합"},
+  {t:"li",x:"③ {{캡슐화}}(Encapsulation) — 핵심: {{정보 은닉}}(Information Hiding)"},
+  {t:"li",x:"④ {{상속}}(Inheritance) — 상위 클래스의 속성·연산을 하위가 물려받음 ({{단일}}/{{다중}} 상속)"},
+  {t:"li",x:"⑤ {{다형성}}(Polymorphism) — 동일 메시지에 각자 다르게 응답"},
+  {t:"h3",x:"관련 개념"},
+  {t:"li",x:"{{인스턴스}}: 클래스에 속한 각 객체 / {{인스턴스화}}: 클래스로부터 객체 생성 / {{슈퍼클래스}}=부모, {{서브클래스}}=자식"},
+  {t:"li",x:"객체의 특징 6가지: {{식별 가능성}} · {{상태 변화}} · 관계 형성 · 행위 특징 · 메모리 공간 · 메시지 수신"},
+  {t:"h2",x:"연관성 4가지 종류"},
+  {t:"li",x:"{{Is-Member-Of}}: 멤버·요소 관계 / {{Is-Instance-Of}}: 분류화 관계 / {{Is-Part-Of}}: 집단화 관계 / {{Generalization}}: 일반화·특수화 관계"},
+  {t:"h2",x:"객체 지향 분석(OOA) 5가지 방법"},
+  {t:"table",head:["방법","특징"],rows:[
+    ["{{Rumbaugh}} (럼바우)","가장 일반적 · 다른 명칭 {{OMT}} · 3가지 모델링"],
+    ["{{Booch}} (부치)","{{미시적}}·{{거시적}} 프로세스 모두 사용"],
+    ["{{Jacobson}} (야콥슨)","{{Use Case}}를 강조"],
+    ["{{Coad & Yourdon}}","{{E-R}} 다이어그램 사용"],
+    ["{{Wirfs-Brock}}","분석과 설계 간 {{구분이 없음}}"],
+  ]},
+  {t:"li",x:"Rumbaugh 3모델링: {{객체}} 모델링(객체 다이어그램) · {{동적}} 모델링(상태 다이어그램) · {{기능}} 모델링(자료 흐름도)"},
+  {t:"h2",x:"객체 지향 설계 5원칙 (SOLID)"},
+  {t:"table",head:["약자","원칙","핵심"],rows:[
+    ["S","{{단일 책임}} (SRP)","응집도 높게, 결합도 낮게"],
+    ["O","{{개방 폐쇄}} (OCP)","변경 없이 기능 확장"],
+    ["L","{{리스코프 치환}} (LSP)","자식이 부모를 대체 가능"],
+    ["I","{{인터페이스 분리}} (ISP)","사용 않는 기능 독립"],
+    ["D","{{의존성 역전}} (DIP)","추상화 의존, 구현체 독립"],
+  ]},
+]},
+{ no:"11–20", tag:"모듈설계", title:"모듈 설계 · 결합도/응집도", blocks:[
+  {t:"li",x:"모듈 독립성을 결정하는 2가지 지표: {{결합도}}(Coupling) · {{응집도}}(Cohesion)"},
+  {t:"li",x:"좋은 설계: 결합도는 {{낮게}}(Low Coupling), 응집도는 {{높게}}(High Cohesion)"},
+  {t:"h2",x:"결합도 6종 (약함 → 강함)"},
+  {t:"table",head:["순서","결합도","핵심"],rows:[
+    ["1 (가장 좋음)","{{자료}} 결합도 (Data)","Interface가 {{자료 요소}}만으로 전달"],
+    ["2","{{스탬프}} 결합도 (Stamp)","배열·레코드 등 {{자료 구조}} 전달"],
+    ["3","{{제어}} 결합도 (Control)","제어 신호({{플래그}}·스위치) 전달"],
+    ["4","{{외부}} 결합도 (External)","외부 다른 모듈에서 데이터 참조"],
+    ["5","{{공통}} 결합도 (Common)","{{공통 데이터 영역}}을 여러 모듈이 사용"],
+    ["6 (가장 나쁨)","{{내용}} 결합도 (Content)","다른 모듈 내부를 직접 참조·수정"],
+  ]},
+  {t:"note",tag:"암기",x:"자료 < 스탬프 < 제어 < 외부 < 공통 < {{내용}} (약함→강함)"},
+  {t:"h2",x:"응집도 7종 (강함 → 약함)"},
+  {t:"table",head:["순서","응집도","핵심"],rows:[
+    ["1 (가장 좋음)","{{기능적}} (Functional)","모든 요소가 단일 문제와 연관"],
+    ["2","{{순차적}} (Sequential)","출력 데이터가 다음 모듈 입력으로"],
+    ["3","{{교환적}}·통신적 (Communication)","동일 입·출력 사용"],
+    ["4","{{절차적}} (Procedural)","다수 기능을 순차적으로 수행"],
+    ["5","{{시간적}} (Temporal)","특정 시간에 처리되는 기능을 한 모듈로"],
+    ["6","{{논리적}} (Logical)","유사한 형태로 분류"],
+    ["7 (가장 나쁨)","{{우연적}} (Coincidental)","관련 없는 요소로만 구성"],
+  ]},
+  {t:"note",tag:"암기",x:"기능 > 순차 > 교환 > 절차 > 시간 > 논리 > {{우연}} (강함→약함)"},
+  {t:"h2",x:"Fan-In / Fan-Out · NS Chart"},
+  {t:"li",x:"{{Fan-In}}: 어떤 모듈을 제어하는 모듈 수(들어오는) → {{높게}} 설계"},
+  {t:"li",x:"{{Fan-Out}}: 어떤 모듈이 제어하는 모듈 수(나가는) → {{낮게}} 설계"},
+  {t:"li",x:"{{NS Chart}} (Nassi-Shneiderman): Flowchart 단순화, 다른 명칭 {{Box Diagram}}"},
+]},
+{ no:"21–27", tag:"공통모듈·코드", title:"공통 모듈 · 코드 · 디자인 패턴", blocks:[
+  {t:"li",x:"공통 모듈: 여러 프로그램에서 {{공통적}}으로 사용하는 모듈 · 명세 기법 5가지({{정확성}}·명확성·안정성·일관성·{{추적성}})"},
+  {t:"li",x:"재사용 모듈 핵심: 결합도 {{낮게}}, 응집도 {{높게}}"},
+  {t:"h2",x:"코드 (Code)"},
+  {t:"li",x:"코드 기능 5가지: {{식별}} · {{분류}} · {{배열}} · {{표준화}} · {{간소화}}"},
+  {t:"table",head:["코드 종류","핵심"],rows:[
+    ["{{순차}} 코드 (일련번호)","순서대로 번호 부여"],
+    ["{{블록}} 코드","구분 코드로 구간별 분할"],
+    ["{{10진}} 코드","도서 분류식, 0~9 자리 분할"],
+    ["{{그룹 분류}} 코드","대분류 → 중분류 → 소분류"],
+    ["{{연상}} 코드","숫자·문자 기호로 표현"],
+    ["{{합성}} 코드","2개 이상 코드 조합"],
+  ]},
+  {t:"h2",x:"GoF 디자인 패턴 (Gang of Four)"},
+  {t:"li",x:"구성: {{생성}} 패턴 {{5}}개 (객체 생성) · {{구조}} 패턴 {{7}}개 (클래스·객체 조합) · {{행위}} 패턴 {{11}}개 (객체 간 상호작용)"},
+  {t:"h3",x:"생성 패턴 5가지"},
+  {t:"table",head:["패턴","핵심"],rows:[
+    ["{{Abstract Factory}} (추상 팩토리)","연관 서브클래스를 한 번에 교체"],
+    ["{{Builder}} (빌더)","생성 과정과 표현 방법 분리"],
+    ["{{Factory Method}} (팩토리 메소드)","객체 생성을 서브클래스에서 처리(캡슐화)"],
+    ["{{Prototype}} (프로토타입)","원본 객체 복제로 생성"],
+    ["{{Singleton}} (싱글톤)","인스턴스가 {{하나}}뿐임을 보장"],
+  ]},
+  {t:"h3",x:"구조 패턴 7가지"},
+  {t:"table",head:["패턴","핵심"],rows:[
+    ["{{Adapter}} (어댑터)","호환 안 되는 클래스를 호환되게 변환 (110V↔220V)"],
+    ["{{Bridge}} (브릿지)","구현부에서 추상층 분리, 독립 확장"],
+    ["{{Composite}} (컴포지트)","복합 객체 안에 또 다른 복합 객체 (디렉토리 구조)"],
+    ["{{Decorator}} (데코레이터)","객체에 부가 기능 추가(장식)"],
+    ["{{Facade}} (퍼사드)","복잡한 서브클래스를 상위 인터페이스로 단순화"],
+    ["{{Flyweight}} (플라이웨이트)","인스턴스 최소화·공유, 메모리 절약"],
+    ["{{Proxy}} (프록시)","접근 어려운 객체와의 인터페이스 역할"],
+  ]},
+  {t:"h3",x:"행위 패턴 11가지"},
+  {t:"table",head:["패턴","핵심"],rows:[
+    ["{{Chain of Responsibility}} (책임 연쇄)","처리 못하면 다음 객체로 연결"],
+    ["{{Command}} (커맨드)","명령어를 캡슐화, 복잡한 명령 단순화"],
+    ["{{Interpreter}} (인터프리터)","언어 문법 표현 정의 (SQL 등)"],
+    ["{{Iterator}} (반복자)","동일 인터페이스로 자료 구조 순차 접근"],
+    ["{{Mediator}} (중재자)","복잡한 상호작용 캡슐화 → 결합도 감소"],
+    ["{{Memento}} (메멘토)","해당 시점 상태로 되돌림 (Undo)"],
+    ["{{Observer}} (옵저버)","상태 변화 시 연결된 객체에 전달"],
+    ["{{State}} (상태)","객체 상태에 따라 동작 다르게 처리"],
+    ["{{Strategy}} (전략)","알고리즘 캡슐화, 상호 교환 가능"],
+    ["{{Template Method}} (템플릿 메소드)","공통 내용을 상위 클래스에 정의"],
+    ["{{Visitor}} (비지터)","처리 기능 분리, 클래스 방문하여 수행"],
+  ]},
+]},
+{ no:"21–27", tag:"인터페이스", title:"인터페이스 요구사항 · 검증 · 미들웨어", blocks:[
+  {t:"li",x:"시스템 인터페이스: 여러 시스템이 서로 연동·상호작용하기 위한 {{접속 방법·규칙}}"},
+  {t:"h2",x:"인터페이스 요구사항 명세서 7가지 내용"},
+  {t:"li",x:"① Interface {{이름}} ② 연계 대상 {{시스템}} ③ 연계 {{범위·내용}} ④ {{송신 데이터}} ⑤ 연계 {{방식}}(송수신) ⑥ Interface {{주기}} ⑦ 기타 고려사항"},
+  {t:"li",x:"분석 절차 5단계: 요구사항 목록 생성 → 관련 자료 준비 → {{기능적/비기능적}} 분류 → 분석·수정 → 이해관계자 전달"},
+  {t:"h2",x:"인터페이스 요구사항 검증"},
+  {t:"li",x:"검증 4가지 방법: {{동료 검토}} · {{워크스루}}(Walk-through) · {{인스펙션}}(Inspection) · {{CASE 도구}} 활용"},
+  {t:"li",x:"검증 7항목: {{완전성}}·{{일관성}}·{{명확성}}·기능성·검증 가능성·추적 가능성·변경 용이성"},
+  {t:"h2",x:"미들웨어 송수신"},
+  {t:"li",x:"미들웨어: {{운영체제}}와 {{응용 프로그램}} 사이에서 중개·서비스 제공"},
+  {t:"table",head:["연계 기술","핵심"],rows:[
+    ["{{DB Link}}","DB 벤더 제공, 원격 DB 연결 (2tier)"],
+    ["{{API}}/Open API","송수신 시스템 DB에서 데이터 제공"],
+    ["{{연계 솔루션}}","{{EAI}} 서버·클라이언트 이용"],
+    ["{{소켓}} (Socket)","소켓 생성 → 포트 할당 → 연결 (네트워크)"],
+    ["{{웹 서비스}}","{{WSDL}}, {{UDDI}} 프로토콜 이용"],
+  ]},
+  {t:"li",x:"통신 유형 3: {{단방향}}(응답 없음) · {{동기}}(Synchronous, 응답 올 때까지 대기) · {{비동기}}(Asynchronous, 다른 작업 후 수신 처리)"},
+  {t:"li",x:"처리 유형 3: {{실시간}} · {{지연 처리}} · {{배치}}(대량 한 번에)"},
+  {t:"h2",x:"미들웨어 솔루션 6가지"},
+  {t:"table",head:["솔루션","핵심 / 대표 제품"],rows:[
+    ["{{DB 미들웨어}}","원격 DB 연결 (2tier) · ODBC, IDAPI"],
+    ["{{RPC}}","원격 프로시저를 로컬처럼 호출 · DCE RPC"],
+    ["{{MOM}}","메시지 기반 {{비동기}}형 · IBM MQ, JMS"],
+    ["{{TP 모니터}}","온라인 {{트랜잭션}} 처리 감시 · TUX, TMAX"],
+    ["{{ORB}}","객체 지향 미들웨어 · {{CORBA}} 표준"],
+    ["{{WAS}}","웹 서버, {{동적 콘텐츠}} 처리"],
+  ]},
+]},
+{ no:"★", tag:"요약", title:"종합 요약 — 전체 흐름", blocks:[
+  {t:"h3",x:"개발 방법론"},
+  {t:"li",x:"폭포수: {{순차적}}, 변화 대응 어려움 / 애자일·Scrum·XP: {{반복적}}, 고객 중심"},
+  {t:"h3",x:"요구사항 분석"},
+  {t:"li",x:"개발 프로세스: {{도출}} → {{분석}} → {{명세}} → {{확인}}"},
+  {t:"li",x:"구조적 분석: {{DFD}}, {{DD}} 등 도형 중심 / UML: {{객체 지향}} 모델링"},
+  {t:"h3",x:"시스템 설계 기반"},
+  {t:"li",x:"현행 시스템 파악 {{7}}단계 (구성·기능·인터페이스·아키텍처·소프트웨어·하드웨어·네트워크)"},
+  {t:"li",x:"기술 환경 파악: {{OS}}, {{DBMS}}, {{WAS}} 선정 시 고려사항"},
+  {t:"note",tag:"핵심",x:"각 단계의 {{순서}}와 활동 · 각 기법·도구의 특징 구분 · {{표기법}}과 기호 정확히 암기."},
+]},
+];
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const main = document.getElementById('main');
+const chips = document.getElementById('chips');
+let total = 0;
+const blanks = []; // all blank elements
+
+function escapeHTML(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// turn a string with {{answer::hint}} into HTML + register blanks
+function renderText(str){
+  const parts = str.split(/(\{\{.+?\}\})/g);
+  let html = '';
+  for(const p of parts){
+    const m = p.match(/^\{\{(.+?)\}\}$/);
+    if(m){
+      const raw = m[1];
+      const [ans, hint] = raw.split('::');
+      const ph = hint ? escapeHTML(hint) : '＿＿＿';
+      html += `<button type="button" class="blank" data-ans="${escapeHTML(ans)}" aria-pressed="false"><span class="ph">${ph}</span></button>`;
+      total++;
+    } else if(p){
+      html += escapeHTML(p);
+    }
+  }
+  return html;
+}
+
+function blockHTML(b){
+  if(b.t==='h2') return `<h2 class="blk">${escapeHTML(b.x)}</h2>`;
+  if(b.t==='h3') return `<h3 class="blk">${escapeHTML(b.x)}</h3>`;
+  if(b.t==='li'){
+    return `<div class="line"><span class="bul">▸</span><span class="txt">${renderText(b.x)}</span></div>`;
+  }
+  if(b.t==='note'){
+    return `<div class="note"><span class="tag">${escapeHTML(b.tag||'TIP')}</span><span class="txt">${renderText(b.x)}</span></div>`;
+  }
+  if(b.t==='table'){
+    let h = '<div class="tablewrap"><table><thead><tr>';
+    h += b.head.map(c=>`<th>${escapeHTML(c)}</th>`).join('');
+    h += '</tr></thead><tbody>';
+    h += b.rows.map(r=>'<tr>'+r.map(c=>`<td>${renderText(c)}</td>`).join('')+'</tr>').join('');
+    h += '</tbody></table></div>';
+    return h;
+  }
+  return '';
+}
+
+LECTURES.forEach((lec,i)=>{
+  const id = 'lec'+i;
+  // group blocks into cards: a new card starts at each h2, plus a lead card for pre-h2 blocks
+  const sec = document.createElement('section');
+  sec.className = 'lec'; sec.id = id;
+  sec.innerHTML = `<div class="lechead"><span class="lecno">${escapeHTML(lec.no)}</span><span class="lectitle">${escapeHTML(lec.title)}</span><span class="lecstat" data-stat="${id}"></span></div>`;
+
+  let cardHTML = '';
+  let cards = [];
+  lec.blocks.forEach(b=>{
+    if(b.t==='h2' && cardHTML){ cards.push(cardHTML); cardHTML=''; }
+    cardHTML += blockHTML(b);
+  });
+  if(cardHTML) cards.push(cardHTML);
+  cards.forEach(c=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML = c;
+    sec.appendChild(div);
+  });
+  main.appendChild(sec);
+
+  // nav chip
+  const a = document.createElement('a');
+  a.href = '#'+id; a.textContent = lec.tag; a.dataset.target = id;
+  chips.appendChild(a);
+});
+
+// collect blanks + wire interactions
+document.querySelectorAll('.blank').forEach(el=>{
+  blanks.push(el);
+  el.addEventListener('click',()=>toggleBlank(el));
+  el.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleBlank(el); }
+  });
+});
+
+function toggleBlank(el){
+  const on = el.classList.toggle('on');
+  el.setAttribute('aria-pressed', on?'true':'false');
+  if(on){
+    el.dataset.ph = el.querySelector('.ph') ? el.querySelector('.ph').outerHTML : '';
+    el.textContent = el.dataset.ans;
+  } else {
+    el.innerHTML = el.dataset.ph || `<span class="ph">＿＿＿</span>`;
+  }
+  updateProgress();
+}
+
+function setAll(on){
+  blanks.forEach(el=>{
+    const isOn = el.classList.contains('on');
+    if(on && !isOn) toggleBlank(el);
+    if(!on && isOn) toggleBlank(el);
+  });
+}
+
+/* ---------- progress ---------- */
+const progNum = document.getElementById('progNum');
+const progFill = document.getElementById('progFill');
+function updateProgress(){
+  const done = blanks.filter(b=>b.classList.contains('on')).length;
+  progNum.textContent = `${done} / ${blanks.length}`;
+  progFill.style.width = blanks.length ? (done/blanks.length*100)+'%' : '0%';
+  // per-lecture stat
+  LECTURES.forEach((lec,i)=>{
+    const sec = document.getElementById('lec'+i);
+    const bs = sec.querySelectorAll('.blank');
+    const d = sec.querySelectorAll('.blank.on').length;
+    const stat = sec.querySelector('[data-stat]');
+    if(stat) stat.textContent = `${d}/${bs.length}`;
+  });
+  // toggle-all button label
+  const allOn = done===blanks.length && blanks.length>0;
+  toggleBtn.firstChild.textContent = allOn ? '전체 숨기기 ' : '전체 보기 ';
+  toggleHint.textContent = allOn ? 'hide' : 'show';
+}
+
+/* ---------- controls ---------- */
+const toggleBtn = document.getElementById('toggleAll');
+const toggleHint = document.getElementById('toggleHint');
+toggleBtn.addEventListener('click',()=>{
+  const done = blanks.filter(b=>b.classList.contains('on')).length;
+  setAll(done!==blanks.length);
+});
+document.getElementById('resetAll').addEventListener('click',()=>{
+  setAll(false);
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ---------- active chip on scroll ---------- */
+const chipLinks = [...chips.querySelectorAll('a')];
+const secs = LECTURES.map((_,i)=>document.getElementById('lec'+i));
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id = e.target.id;
+      chipLinks.forEach(a=>a.classList.toggle('active', a.dataset.target===id));
+      const active = chips.querySelector('a.active');
+      if(active) active.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+    }
+  });
+},{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>io.observe(s));
+
+/* ---------- back to top ---------- */
+const toTop = document.getElementById('toTop');
+window.addEventListener('scroll',()=>{
+  toTop.classList.toggle('show', window.scrollY>500);
+},{passive:true});
+toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+// subject subline — auto-updates as lectures are appended
+(function(){
+  const lecOnly = LECTURES.filter(l=>l.no!=='★');
+  const sl = document.getElementById('subline');
+  if(sl) sl.textContent = `요구사항·화면·아키텍처·객체지향·인터페이스 전 범위 · 주제 ${lecOnly.length}개 · 빈칸 ${blanks.length}개 — 같은 과목 수업이 오면 이어 붙어요.`;
+})();
+
+updateProgress();
+</script>
+</body>
+</html>
