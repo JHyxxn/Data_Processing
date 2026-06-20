@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SQLD · 제1과목 데이터 모델링의 이해 · 빈칸 노트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --bg:#E8E9E3;
+    --surface:#FCFCFA;
+    --ink:#15171C;
+    --muted:#757a83;
+    --faint:#a4a8ae;
+    --line:#dcddd6;
+    --line-strong:#cfd0c8;
+    --accent:#2438d6;
+    --accent-soft:#e6e8fb;
+    --mark:#fbe25a;
+    --mark-done:#a9e7bf;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    line-height:1.6;-webkit-font-smoothing:antialiased;
+    padding-bottom:80px;
+  }
+
+  /* ---------- top bar ---------- */
+  header{
+    position:sticky;top:0;z-index:30;background:rgba(232,233,227,.86);
+    backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-strong);
+  }
+  .bar{max-width:860px;margin:0 auto;padding:14px 20px 12px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:8px}
+  .kicker::before{content:"";width:18px;height:2px;background:var(--accent);display:inline-block}
+  .badge{font-family:var(--mono);font-size:10px;letter-spacing:.06em;background:var(--accent);color:#fff;padding:2px 7px;border-radius:6px;text-transform:none}
+  h1{font-size:19px;margin:6px 0 2px;letter-spacing:-.01em;font-weight:700}
+  .sub{font-size:13px;color:var(--muted);margin:0}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+  button.ctl{
+    font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);
+    background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;
+    padding:7px 13px;cursor:pointer;transition:background .15s,border-color .15s,transform .05s;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  button.ctl:hover{border-color:var(--accent);color:var(--accent)}
+  button.ctl:active{transform:translateY(1px)}
+  button.ctl.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  button.ctl.primary:hover{background:#1b2bb0;color:#fff}
+  button.ctl .dot{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  button.ctl.primary .dot{color:#cdd2f7}
+  .progwrap{flex:1 1 140px;min-width:120px}
+  .progmeta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:4px}
+  .progbar{height:6px;border-radius:999px;background:var(--line-strong);overflow:hidden}
+  .progfill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#5566ec);border-radius:999px;transition:width .35s ease}
+  @media (prefers-reduced-motion:reduce){.progfill{transition:none}}
+
+  /* ---------- lecture nav ---------- */
+  nav.chips{max-width:860px;margin:0 auto;padding:10px 20px 0;display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav.chips::-webkit-scrollbar{display:none}
+  nav.chips a{
+    flex:0 0 auto;font-family:var(--mono);font-size:12px;font-weight:500;text-decoration:none;
+    color:var(--muted);border:1px solid var(--line-strong);background:var(--surface);
+    padding:5px 11px;border-radius:8px;transition:all .15s;white-space:nowrap;
+  }
+  nav.chips a:hover{border-color:var(--accent);color:var(--accent)}
+  nav.chips a.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* ---------- content ---------- */
+  main{max-width:860px;margin:0 auto;padding:8px 20px 0}
+  section.lec{margin:30px 0}
+  .lechead{display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:4px}
+  .lecno{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.05em}
+  .lectitle{font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .lecstat{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:14px}
+  h2.blk{font-size:15.5px;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
+  h2.blk:not(:first-child){margin-top:22px}
+  h3.blk{font-size:13.5px;font-weight:700;color:#3a3d44;margin:14px 0 4px}
+  h3.blk:first-child{margin-top:0}
+
+  .line{display:flex;gap:9px;align-items:flex-start;margin:3px 0;font-size:14.5px}
+  .line .bul{color:var(--accent);flex:0 0 auto;line-height:1.6;font-weight:700;font-size:12px;margin-top:1px}
+  .line .bul.sub{color:var(--faint)}
+  .line.indent{margin-left:20px}
+  .line .txt{flex:1}
+
+  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:10px 13px;background:var(--accent-soft);border-radius:10px;font-size:13.5px}
+  .note .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;flex:0 0 auto;margin-top:3px}
+
+  /* ---------- tables ---------- */
+  .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 2px;border:1px solid var(--line);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:380px}
+  thead th{background:#f3f3ee;text-align:left;font-weight:700;color:#3a3d44;padding:9px 12px;border-bottom:1px solid var(--line-strong);white-space:nowrap;font-size:12.5px}
+  tbody td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  td:first-child{font-weight:600;white-space:nowrap}
+
+  /* ---------- the blank (signature) ---------- */
+  .blank{
+    font-family:inherit;font-size:inherit;line-height:inherit;
+    border:none;padding:0 2px;margin:0 1px;cursor:pointer;color:var(--muted);
+    background-image:linear-gradient(var(--mark),var(--mark));
+    background-repeat:no-repeat;background-position:0 88%;background-size:0% 42%;
+    border-bottom:2px solid var(--accent);border-radius:1px;
+    transition:background-size .32s ease,color .15s,border-color .2s;
+    display:inline;font-weight:600;
+  }
+  @media (prefers-reduced-motion:reduce){.blank{transition:color .15s}}
+  .blank:hover{color:var(--accent)}
+  .blank:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .blank.on{
+    color:var(--ink);border-bottom-color:transparent;background-size:100% 42%;font-weight:700;cursor:pointer;
+  }
+  .blank.on:hover{color:var(--ink);opacity:.82}
+  .blank .ph{color:var(--faint);font-weight:500;letter-spacing:.02em}
+
+  /* ---------- footer ---------- */
+  footer{max-width:860px;margin:34px auto 0;padding:18px 20px 0;border-top:1px solid var(--line-strong);color:var(--muted);font-size:12.5px}
+  footer .legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-family:var(--mono);font-size:11px}
+  footer .legend b{color:var(--ink);font-weight:700}
+  .swatch{display:inline-block;width:22px;height:11px;border-radius:2px;background:var(--mark);vertical-align:middle;margin-right:5px}
+
+  /* floating back-to-top */
+  .totop{position:fixed;right:18px;bottom:18px;z-index:40;width:44px;height:44px;border-radius:50%;
+    background:var(--ink);color:#fff;border:none;cursor:pointer;font-size:18px;display:none;
+    box-shadow:0 6px 18px rgba(0,0,0,.18);align-items:center;justify-content:center}
+  .totop.show{display:flex}
+
+  @media (max-width:560px){
+    h1{font-size:17px}.lectitle{font-size:16px}
+    .card{padding:15px 15px}
+    main,.bar,nav.chips,footer{padding-left:14px;padding-right:14px}
+    .lecstat{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="kicker">SQLD · 제1과목 <span class="badge">데이터 모델링의 이해</span></div>
+    <h1>데이터 모델링의 이해 빈칸 채우기 노트</h1>
+    <p class="sub" id="subline">불러오는 중…</p>
+    <div class="controls">
+      <button class="ctl primary" id="toggleAll">전체 보기 <span class="dot" id="toggleHint">show</span></button>
+      <button class="ctl" id="resetAll">처음부터 다시</button>
+      <div class="progwrap">
+        <div class="progmeta"><span>진도</span><span id="progNum">0 / 0</span></div>
+        <div class="progbar"><div class="progfill" id="progFill"></div></div>
+      </div>
+    </div>
+  </div>
+  <nav class="chips" id="chips"></nav>
+</header>
+
+<main id="main"></main>
+
+<footer>
+  <div class="legend">
+    <span><span class="swatch"></span><b>형광펜</b> = 확인한 답</span>
+    <span><b>·</b> 빈칸 클릭 = 정답 토글</span>
+    <span><b>·</b> 키보드 Enter / Space 지원</span>
+  </div>
+  <p style="margin:12px 0 0;font-size:11.5px;color:var(--faint)">출처: 직접 정리한 Cornell Notes 1–10강 · 빈칸은 시험 빈출 핵심어 기준</p>
+</footer>
+
+<button class="totop" id="toTop" aria-label="맨 위로">↑</button>
+
+<script>
+/* ============================================================
+   DATA  —  blanks are written as {{정답}}  or  {{정답::힌트}}
+   block types: h2 / h3 / li / sub(li) / note / table
+   ============================================================ */
+const LECTURES = [
+{ no:"01", tag:"모델링", title:"1-1. 데이터 모델의 이해", blocks:[
+  {t:"h3",x:"데이터의 유형 (표현·구조 기준)"},
+  {t:"li",x:"{{정형}} 데이터: 행과 열로 구조가 명확 (예: 엑셀, 고객정보)"},
+  {t:"li",x:"{{비정형}} 데이터: 정해진 구조 없음 (예: 사진, 영상, 음성, 대화)"},
+  {t:"li",x:"{{반정형}} 데이터: 구조는 있으나 행·열 고정 아님 (예: HTML, XML, JSON)"},
+  {t:"h3",x:"DBMS 종류"},
+  {t:"li",x:"{{RDBMS}}: 정형 데이터를 테이블(행·열)로 저장 (Oracle, MySQL, PostgreSQL)"},
+  {t:"li",x:"{{NoSQL}}: 비정형·반정형을 유연하게 저장 (MongoDB, Redis, Cassandra)"},
+  {t:"h3",x:"제약조건(Constraint)"},
+  {t:"table",head:["제약조건","의미"],rows:[
+    ["PRIMARY KEY","각 행을 유일하게 식별 ({{중복 불가, NULL 불가}})"],
+    ["{{UNIQUE}}","중복된 값을 금지"],
+    ["{{CHECK}}","특정 조건만 허용"],
+    ["FOREIGN KEY","다른 테이블의 데이터를 {{참조}}"],
+    ["{{NOT NULL}}","빈 데이터(NULL) 삽입·수정 불가"],
+  ]},
+
+  {t:"h2",x:"모델링의 특징 (3가지)"},
+  {t:"li",x:"{{단순화}}: 불필요한 세부는 제거하고 핵심만 남김"},
+  {t:"li",x:"{{추상화}}: 일정한 규칙·표기법으로 간략히 표현"},
+  {t:"li",x:"{{명확화}}: 애매함을 줄이고 정확하게 표현"},
+  {t:"note",tag:"함정",x:"모델링 특징은 단순화·추상화·명확화. {{구체화}}는 모델링 특징이 아니다(단골 오답)."},
+
+  {t:"h2",x:"데이터 모델링 3가지 요소"},
+  {t:"li",x:"대상({{Entity}}) · 속성({{Attribute}}) · 관계({{Relationship}})"},
+  {t:"note",tag:"함정",x:"3요소는 Entity·Attribute·Relationship. {{Key}}는 3요소에 포함되지 않는다."},
+
+  {t:"h2",x:"데이터 모델링 3가지 관점"},
+  {t:"li",x:"{{데이터}} 관점: 데이터가 어떻게 저장·구조화·관리되는지"},
+  {t:"li",x:"{{프로세스}} 관점: 시스템이 무슨 일을 하고 작업이 어떻게 흐르는지"},
+  {t:"li",x:"데이터와 프로세스 관점: 둘을 통합하여 시스템 전체를 이해"},
+
+  {t:"h2",x:"데이터 모델링 유의점"},
+  {t:"li",x:"{{중복}}: 동일 정보는 한 곳에서만 관리"},
+  {t:"li",x:"{{비유연성}}: 작은 업무 변화에 구조를 계속 고치지 않도록 (데이터-프로세스 분리)"},
+  {t:"li",x:"{{비일관성}}: 데이터 간 모순이 없도록 연관성·규칙을 명확히 (데이터 품질 핵심)"},
+
+  {t:"h2",x:"데이터 모델링 3단계"},
+  {t:"table",head:["단계","특징","추상화 수준"],rows:[
+    ["{{개념적}} 모델링","핵심 엔터티 식별, ERD 초안","{{가장 높음}}"],
+    ["{{논리적}} 모델링","속성·식별자·관계 구체화, {{정규화}} 수행","중간"],
+    ["{{물리적}} 모델링","실제 DB 구조로 구현(성능·저장·보안)","{{가장 낮음}}"],
+  ]},
+
+  {t:"h2",x:"스키마의 3단계 구조"},
+  {t:"li",x:"{{외부}} 스키마: 개별 사용자·응용 관점 (View가 대표 예)"},
+  {t:"li",x:"{{개념}} 스키마: 전체 DB의 논리적 구조 (개체·속성·관계·제약)"},
+  {t:"li",x:"{{내부}} 스키마: 물리적 저장 방법 (저장구조·파일·인덱스)"},
+  {t:"h3",x:"스키마의 독립성"},
+  {t:"li",x:"{{논리적}} 독립성: 개념 스키마가 바뀌어도 외부 스키마·응용에 영향 없음"},
+  {t:"li",x:"{{물리적}} 독립성: 내부 스키마가 바뀌어도 개념·외부 스키마에 영향 없음"},
+
+  {t:"h2",x:"ERD (Entity Relationship Diagram)"},
+  {t:"li",x:"엔터티와 관계를 시각적으로 표현, {{1976}}년 {{피터 첸}}(Peter Chen)이 제안"},
+  {t:"li",x:"실무 표기법: {{IE}} 표기법, {{Barker}} 표기법"},
+  {t:"h3",x:"ERD 작성 절차 (6단계)"},
+  {t:"li",x:"① 엔터티 도출 → ② 엔터티 {{배치}} → ③ 관계 설정 → ④ 관계명 서술 → ⑤ 관계 {{참여도(카디널리티)}} 기술 → ⑥ 관계 {{필수 여부}} 확인"},
+]},
+
+{ no:"02", tag:"엔터티", title:"1-2. 엔터티", blocks:[
+  {t:"h3",x:"개념"},
+  {t:"li",x:"엔터티: 현실에서 독립적으로 {{식별 가능한}} 객체·사물의 집합"},
+  {t:"li",x:"{{인스턴스}}(Instance): 엔터티를 구성하는 개별 사례(속성 값들로 표현)"},
+  {t:"li",x:"예) 엔터티=학생, 속성=학번·이름·학과, 식별자={{학번}}, 인스턴스=한 명의 학생 데이터"},
+
+  {t:"h2",x:"엔터티의 특징 (6가지)"},
+  {t:"li",x:"① 유일한 {{식별자}}에 의해 식별 가능"},
+  {t:"li",x:"② 해당 업무에 필요하고 관리하려는 정보"},
+  {t:"li",x:"③ {{인스턴스}}들의 집합 ({{2}}개 이상 존재해야 함)"},
+  {t:"li",x:"④ 반드시 {{속성}}을 가짐 (2개 이상)"},
+  {t:"li",x:"⑤ 업무 {{프로세스}}에 의해 이용됨"},
+  {t:"li",x:"⑥ 다른 엔터티와 최소 {{1}}개 이상의 관계 성립"},
+  {t:"note",tag:"함정",x:"인스턴스가 {{1개뿐}}이면 집합으로 보기 어려워 엔터티로 부적합하다."},
+
+  {t:"h2",x:"엔터티의 분류"},
+  {t:"h3",x:"유형·무형에 따른 분류"},
+  {t:"li",x:"{{유형}} 엔터티: 물리적 형태 O (사원, 학생, 물품)"},
+  {t:"li",x:"{{개념}} 엔터티: 형태는 없으나 관리 대상 (부서, 요금제, 대출상품)"},
+  {t:"li",x:"{{사건}} 엔터티: 업무 중 발생하는 활동 (주문, 청구, 가입)"},
+  {t:"h3",x:"발생 시점에 따른 분류"},
+  {t:"li",x:"{{기본}} 엔터티: 원래 존재하는 핵심 정보, 독립 생성 (고객, 사원, 부서)"},
+  {t:"li",x:"{{중심}} 엔터티: 기본 엔터티 기반 생성, 핵심 역할 (계약, 주문, 매출)"},
+  {t:"li",x:"{{행위}} 엔터티: 2개 이상 부모에서 발생, 자주 변경 (주문이력, 결제이력)"},
+  {t:"note",tag:"함정",x:"유형·무형 분류는 유형/개념/사건. {{중심}} 엔터티는 ‘발생 시점’ 분류에 속한다(유무형 아님)."},
+
+  {t:"h2",x:"엔터티 명명 규칙"},
+  {t:"li",x:"현업 용어 사용 · 약어 {{최소화}} · {{단수}} 명사 · 고유한 이름 · 의미 반영"},
+  {t:"note",tag:"함정",x:"엔터티 이름은 {{중복될 수 없다}}(고유해야 함)."},
+]},
+
+{ no:"03", tag:"속성", title:"1-3. 속성", blocks:[
+  {t:"h3",x:"개념"},
+  {t:"li",x:"속성(Attribute): 더 이상 분리되지 않는 {{최소 단위}}의 데이터, {{컬럼}}으로 표현"},
+  {t:"li",x:"엔터티는 2개 이상 인스턴스 + 2개 이상 속성, 한 속성은 인스턴스마다 {{1}}개 값(원자성)"},
+
+  {t:"h2",x:"속성의 특징"},
+  {t:"li",x:"엔터티의 {{주식별자}}에 함수적으로 종속되어야 함"},
+  {t:"li",x:"속성은 {{단일값}}(Atomic)이어야 함 — 다중값이면 별도 엔터티로 분리"},
+
+  {t:"h2",x:"도메인(Domain)"},
+  {t:"li",x:"각 속성이 가질 수 있는 {{값의 범위}} (데이터 타입·길이·허용값·제약조건)"},
+
+  {t:"h2",x:"함수적 종속성 (FD: Functional Dependency)"},
+  {t:"li",x:"A의 값에 의해 B가 유일하게 결정되면 B는 A에 종속 → {{A → B}}로 표현"},
+  {t:"li",x:"{{완전}} 함수 종속: 어떤 속성이 복합키 {{전체}}에 의해 결정"},
+  {t:"li",x:"{{부분}} 함수 종속: 어떤 속성이 복합키의 {{일부}}에만 의해 결정"},
+
+  {t:"h2",x:"속성의 분류"},
+  {t:"h3",x:"① 특성에 따른 분류"},
+  {t:"li",x:"{{기본}} 속성: 원래 존재하는 데이터 (사번, 이름, 생년월일)"},
+  {t:"li",x:"{{설계}} 속성: 업무엔 없었지만 설계·운영 편의로 생성 (코드, 일련번호)"},
+  {t:"li",x:"{{파생}} 속성: 다른 속성을 계산·추론하여 도출 (나이, 이자, 총판매액)"},
+  {t:"h3",x:"② 엔터티 구성방식에 따른 분류"},
+  {t:"li",x:"{{기본키(PK)}} 속성 · {{외래키(FK)}} 속성 · 일반 속성"},
+  {t:"h3",x:"③ 분해 여부에 따른 분류"},
+  {t:"li",x:"{{단일}} 속성: 하나의 값만 저장"},
+  {t:"li",x:"{{복합}} 속성: 여러 하위 속성으로 분해 가능 (주소→도/시/구/동)"},
+  {t:"li",x:"{{다중값}} 속성: 하나의 속성이 여러 값 → 별도 엔터티 분리 필요"},
+  {t:"note",tag:"함정",x:"‘일반 속성’은 {{분해 여부}} 분류에 속하지 않는다. 매출금액·이자 등 계산값은 {{파생}} 속성."},
+]},
+
+{ no:"04", tag:"관계", title:"1-4. 관계", blocks:[
+  {t:"h3",x:"개념"},
+  {t:"li",x:"관계: 두 엔터티 간 업무적 연관성, {{인스턴스(행)}} 수준에서 연관 발생 여부로 판단"},
+
+  {t:"h2",x:"관계의 종류"},
+  {t:"li",x:"{{존재적}} 관계: 한 엔터티의 존재가 다른 엔터티 존재에 영향 (사원-부서)"},
+  {t:"li",x:"{{행위적}} 관계: 한 엔터티의 행동으로 다른 엔터티 발생 (고객-주문)"},
+  {t:"note",tag:"포인트",x:"{{ERD}}에서는 존재관계와 행위관계를 구분하지 않는다."},
+
+  {t:"h2",x:"관계의 구성"},
+  {t:"li",x:"① 관계명: 보통 {{동사}}형으로 표현"},
+  {t:"li",x:"② 차수({{Cardinality}}): 두 엔터티가 얼마나 연결되는지"},
+  {t:"li",x:"③ 선택성({{Optionality}}): 관계가 반드시 존재해야 하는지 여부"},
+  {t:"h3",x:"차수(Cardinality)"},
+  {t:"li",x:"{{1:1}}(일대일): 인스턴스가 하나씩만 연결 (사원-사원증, 국가-수도)"},
+  {t:"li",x:"{{1:N}}(일대다): 하나가 여러 개와 연결 (부서-사원, 고객-계좌)"},
+  {t:"li",x:"{{N:M}}(다대다): 서로 여러 개씩 연결 → 연결 엔터티로 {{두 개의 1:N}}으로 분해"},
+  {t:"h3",x:"선택성(Optionality)"},
+  {t:"li",x:"{{필수}}(Mandatory): 반드시 다른 엔터티와 연결되어야 함 (사원→부서)"},
+  {t:"li",x:"{{선택}}(Optional): 연결되지 않아도 존재 가능 (부서→사원)"},
+
+  {t:"h2",x:"ERD 표현"},
+  {t:"table",head:["구분","IE 표기법","Barker 표기법"],rows:[
+    ["차수 N","{{삼발이(<)}}","삼발이"],
+    ["차수 1","{{Bar(|)}}","Bar(|) 사용 안 함"],
+    ["선택 관계","관계선 끝에 {{원(○)}}","{{점선}}"],
+    ["필수 관계","원 없음","{{실선}}"],
+  ]},
+]},
+
+{ no:"05", tag:"식별자", title:"1-5. 식별자 · Key", blocks:[
+  {t:"h3",x:"개념"},
+  {t:"li",x:"식별자: 인스턴스를 유일하게 식별하는 속성, 논리 모델의 주식별자는 물리 모델에서 {{기본키(PK)}}로 구현"},
+
+  {t:"h2",x:"식별자 분류"},
+  {t:"li",x:"대표성: {{주}}식별자(유일성+최소성+대표성) / {{보조}}식별자(대표성 없음)"},
+  {t:"li",x:"생성 여부: {{내부}}식별자(자체 생성) / {{외부}}식별자(상속, FK로 구현)"},
+  {t:"li",x:"속성 수: {{단일}}식별자 / {{복합}}식별자"},
+  {t:"li",x:"대체 여부: {{본질}}식별자(원조) / {{인조}}식별자(인위적 생성)"},
+
+  {t:"h2",x:"주식별자의 특징 (4가지)"},
+  {t:"li",x:"{{유일성}}: 모든 인스턴스를 유일하게 구분"},
+  {t:"li",x:"{{최소성}}: 유일성에 필요한 최소한의 속성만으로 구성"},
+  {t:"li",x:"{{불변성}}: 값이 시간이 지나도 변경되지 않아야 함"},
+  {t:"li",x:"{{존재성}}: NULL이 될 수 없고 반드시 값이 존재"},
+
+  {t:"h2",x:"Key의 종류"},
+  {t:"table",head:["Key","유일성","최소성","설명"],rows:[
+    ["{{기본키(PK)}}","O","O","대표 키, NULL·중복 불가"],
+    ["{{후보키}}","O","O","기본키가 될 수 있는 키 집합"],
+    ["{{슈퍼키}}","O","{{X}}","유일성은 만족, 최소성은 불만족 가능"],
+    ["{{대체키}}","O","O","후보키 중 기본키로 선택되지 않은 키"],
+    ["{{외래키(FK)}}","-","-","다른 테이블의 PK 참조, 참조값만 입력 가능"],
+  ]},
+  {t:"note",tag:"함정",x:"{{슈퍼키}}는 최소성을 만족하지 않을 수 있다(유일성만 O). 후보키·대체키는 유일성+최소성 모두 O."},
+
+  {t:"h2",x:"식별 관계 vs 비식별 관계"},
+  {t:"li",x:"{{식별}} 관계: 부모 PK가 자식의 주식별자에 {{포함}}됨 → 부모 없이 자식 식별 불가 (실선)"},
+  {t:"li",x:"{{비식별}} 관계: 부모 PK가 자식의 주식별자에 포함 안 됨, 일반 속성(FK)로만 존재 (점선)"},
+  {t:"li",x:"{{강한}} 개체: 자체 PK로 식별, 부모 없이 존재 / {{약한}} 개체: 식별관계로 정의, 부모 PK 없이 식별 불가"},
+]},
+
+{ no:"06", tag:"정규화", title:"1-6. 정규화", blocks:[
+  {t:"h3",x:"개념"},
+  {t:"li",x:"정규화: 중복 제거 + {{이상(Anomaly)}} 방지 + 무결성↑를 위해 테이블을 분해하는 과정"},
+  {t:"li",x:"제1~5정규화까지 있으나 실무는 보통 제{{3}}정규화까지 수행"},
+  {t:"note",tag:"함정",x:"정규화가 쿼리 성능을 {{항상 향상}}시키는 것은 아니다 → 성능 위해 {{반정규화}}도 고려."},
+
+  {t:"h2",x:"이상현상(Anomaly) 3가지"},
+  {t:"li",x:"{{삽입}} 이상: 데이터 삽입 시 불필요한 데이터를 억지로 넣어야 함"},
+  {t:"li",x:"{{갱신}} 이상: 중복 데이터 중 한 곳만 수정해 불일치 발생"},
+  {t:"li",x:"{{삭제}} 이상: 삭제 시 의도치 않은 정보까지 함께 삭제"},
+
+  {t:"h2",x:"정규화 단계"},
+  {t:"table",head:["단계","제거 대상"],rows:[
+    ["제1정규화(1NF)","{{원자성}} 위배 제거 (다중값/반복 속성 분해)"],
+    ["제2정규화(2NF)","{{부분 함수 종속}} 제거 (복합키일 때만 발생)"],
+    ["제3정규화(3NF)","{{이행 함수 종속}} 제거"],
+    ["{{BCNF}}","모든 결정자가 {{후보키}}가 되도록"],
+    ["제4정규화(4NF)","{{다중값 종속}} 제거"],
+    ["제5정규화(5NF)","{{조인 종속}} 제거"],
+  ]},
+  {t:"note",tag:"암기",x:"2NF 부분종속은 기본키가 {{복합키}}일 때만 발생. 이행 종속: A→B, B→C이면 A→C ⇒ {{제3정규화}}로 제거."},
+]},
+
+{ no:"07", tag:"조인이해", title:"1-7. 관계와 조인의 이해", blocks:[
+  {t:"h3",x:"관계와 조인"},
+  {t:"li",x:"관계를 맺는다 = 부모 식별자를 자식이 상속받아 {{매핑키(조인키)}}로 활용"},
+  {t:"li",x:"{{조인(JOIN)}}: 관계 기반으로 분리된 엔터티 데이터를 하나로 결합하는 연산"},
+  {t:"li",x:"조인이 필요한 이유: 엔터티가 {{정규화}}로 여러 개로 분리·저장되기 때문"},
+
+  {t:"h2",x:"계층형 데이터 모델"},
+  {t:"li",x:"같은 엔터티 내부에서 인스턴스끼리 {{계층(상위-하위)}} 구조를 가지는 경우"},
+  {t:"li",x:"계층 구조 조회 시 동일 테이블을 여러 번 조인하는 {{셀프 조인(Self Join)}} 사용"},
+  {t:"note",tag:"함정",x:"계층 구조 인스턴스끼리 연결하는 조인은 {{셀프 조인}}이다(내부조인 아님)."},
+
+  {t:"h2",x:"상호배타적 관계"},
+  {t:"li",x:"두 엔터티 중 {{하나만}} 선택적으로 관계를 맺는 구조 (동시에 둘 다 연결 불가)"},
+  {t:"li",x:"예) 주문에 개인고객번호 또는 법인고객번호 중 단 하나만 상속"},
+]},
+
+{ no:"08", tag:"트랜잭션", title:"1-8. 트랜잭션의 이해", blocks:[
+  {t:"h3",x:"개념"},
+  {t:"li",x:"트랜잭션: 하나의 논리적 기능을 수행하는 업무 단위, 전부 수행되거나 전부 취소 → {{All or Nothing}}"},
+  {t:"li",x:"트랜잭션에 의한 관계는 {{필수}}적 관계 형태를 가짐"},
+
+  {t:"h2",x:"ACID 속성 (4가지)"},
+  {t:"table",head:["속성","의미"],rows:[
+    ["{{원자성(Atomicity)}}","모든 연산은 전부 수행 또는 전부 ROLLBACK (부분 완료 없음)"],
+    ["{{일관성(Consistency)}}","수행 전후 데이터가 일관된 상태 유지 (제약·규칙 만족)"],
+    ["{{격리성(Isolation)}}","동시 수행 트랜잭션이 서로 간섭하지 않도록 분리"],
+    ["{{지속성(Durability)}}","COMMIT되면 결과가 영구 저장, 장애에도 보존"],
+  ]},
+  {t:"note",tag:"함정",x:"ACID = 원자성·일관성·격리성·지속성. {{독립성/휘발성}}은 트랜잭션 성질이 아니다(단골 오답)."},
+
+  {t:"h2",x:"주요 명령어"},
+  {t:"li",x:"{{COMMIT}}: 모든 작업을 확정(영구 반영)"},
+  {t:"li",x:"{{ROLLBACK}}: 모든 작업을 취소하고 시작 직전 상태로 복구"},
+]},
+
+{ no:"09", tag:"NULL", title:"1-9. NULL 속성의 이해", blocks:[
+  {t:"h3",x:"개념"},
+  {t:"li",x:"NULL: 아직 값이 정해지지 않은 {{미정(Unknown)}}을 의미, {{0이나 공백(' ')}}과는 전혀 다른 개념"},
+
+  {t:"h2",x:"NULL의 특성"},
+  {t:"li",x:"① NULL을 포함한 {{산술 연산}} 결과는 항상 {{NULL}} (예: NULL + 300 = NULL)"},
+  {t:"li",x:"② 집계 함수(SUM·AVG·MIN·MAX)는 NULL을 {{제외(무시)}}하고 연산"},
+  {t:"li",x:"③ {{COUNT(컬럼)}}은 NULL이 아닌 값만 세고, {{COUNT(*)}}는 NULL 여부와 무관하게 전체 행 수를 반환"},
+  {t:"li",x:"④ NULL은 =, <>, > 등으로 비교 불가 → 반드시 {{IS NULL / IS NOT NULL}} 사용"},
+  {t:"note",tag:"빈출",x:"AVG는 NULL을 빼고 평균 → NULL 포함 컬럼은 AVG 결과와 (총합÷전체행수)가 {{다르게}} 나온다."},
+
+  {t:"h2",x:"NULL 정렬 (DBMS별)"},
+  {t:"li",x:"오름차순 정렬 시 — {{Oracle}}: NULL을 마지막에 배치 / {{SQL Server}}: NULL을 처음에 배치"},
+  {t:"note",tag:"함정",x:"기본키는 NULL 불가, 외래키는 NULL {{가능}}, 고유키(UNIQUE)도 NULL {{가능}}."},
+]},
+
+{ no:"10", tag:"인조식별자", title:"1-10. 본질식별자와 인조식별자", blocks:[
+  {t:"h3",x:"구분"},
+  {t:"li",x:"{{본질}}식별자: 업무에서 원래 필요해 자연스럽게 부여되는 식별자 (주민번호, ISBN, 차량등록번호)"},
+  {t:"li",x:"{{인조}}식별자: 관리 편의·단순화 위해 인위적으로 생성 (자동 증가 번호, 주문번호)"},
+  {t:"note",tag:"함정",x:"본질식별자는 유일성을 {{보장하지 못할 수도}} 있고, 인조식별자는 시스템 생성이라 유일성을 {{보장}}한다. 주민번호는 {{본질}}식별자."},
+
+  {t:"h2",x:"인조식별자 생성 과정"},
+  {t:"li",x:"본질식별자 조합(예: 학생명+강의명+수강일자)이 복잡·변경 가능 → 단순 신규 식별자(수강ID)를 만들어 {{PK}}로 적용"},
+
+  {t:"h2",x:"인조식별자의 단점"},
+  {t:"li",x:"① 업무적 {{의미}}를 잃어버림 (숫자만 보고 무엇인지 파악 어려움)"},
+  {t:"li",x:"② 본질식별자 {{검증}}을 소홀히 하게 됨"},
+  {t:"li",x:"③ 본질값 조합 {{중복}}을 막지 못함 → 본질식별자를 {{UNIQUE}} 제약으로 따로 관리 필요"},
+  {t:"li",x:"④ 불필요한 {{인덱스}} 생성으로 성능 부담 발생 가능"},
+]},
+];
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const main = document.getElementById('main');
+const chips = document.getElementById('chips');
+let total = 0;
+const blanks = []; // all blank elements
+
+function escapeHTML(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// turn a string with {{answer::hint}} into HTML + register blanks
+function renderText(str){
+  const parts = str.split(/(\{\{.+?\}\})/g);
+  let html = '';
+  for(const p of parts){
+    const m = p.match(/^\{\{(.+?)\}\}$/);
+    if(m){
+      const raw = m[1];
+      const [ans, hint] = raw.split('::');
+      const ph = hint ? escapeHTML(hint) : '＿＿＿';
+      html += `<button type="button" class="blank" data-ans="${escapeHTML(ans)}" aria-pressed="false"><span class="ph">${ph}</span></button>`;
+      total++;
+    } else if(p){
+      html += escapeHTML(p);
+    }
+  }
+  return html;
+}
+
+function blockHTML(b){
+  if(b.t==='h2') return `<h2 class="blk">${escapeHTML(b.x)}</h2>`;
+  if(b.t==='h3') return `<h3 class="blk">${escapeHTML(b.x)}</h3>`;
+  if(b.t==='li'){
+    return `<div class="line"><span class="bul">▸</span><span class="txt">${renderText(b.x)}</span></div>`;
+  }
+  if(b.t==='note'){
+    return `<div class="note"><span class="tag">${escapeHTML(b.tag||'TIP')}</span><span class="txt">${renderText(b.x)}</span></div>`;
+  }
+  if(b.t==='table'){
+    let h = '<div class="tablewrap"><table><thead><tr>';
+    h += b.head.map(c=>`<th>${escapeHTML(c)}</th>`).join('');
+    h += '</tr></thead><tbody>';
+    h += b.rows.map(r=>'<tr>'+r.map(c=>`<td>${renderText(c)}</td>`).join('')+'</tr>').join('');
+    h += '</tbody></table></div>';
+    return h;
+  }
+  return '';
+}
+
+LECTURES.forEach((lec,i)=>{
+  const id = 'lec'+i;
+  // group blocks into cards: a new card starts at each h2, plus a lead card for pre-h2 blocks
+  const sec = document.createElement('section');
+  sec.className = 'lec'; sec.id = id;
+  sec.innerHTML = `<div class="lechead"><span class="lecno">${escapeHTML(lec.no)}</span><span class="lectitle">${escapeHTML(lec.title)}</span><span class="lecstat" data-stat="${id}"></span></div>`;
+
+  let cardHTML = '';
+  let cards = [];
+  lec.blocks.forEach(b=>{
+    if(b.t==='h2' && cardHTML){ cards.push(cardHTML); cardHTML=''; }
+    cardHTML += blockHTML(b);
+  });
+  if(cardHTML) cards.push(cardHTML);
+  cards.forEach(c=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML = c;
+    sec.appendChild(div);
+  });
+  main.appendChild(sec);
+
+  // nav chip
+  const a = document.createElement('a');
+  a.href = '#'+id; a.textContent = lec.tag; a.dataset.target = id;
+  chips.appendChild(a);
+});
+
+// collect blanks + wire interactions
+document.querySelectorAll('.blank').forEach(el=>{
+  blanks.push(el);
+  el.addEventListener('click',()=>toggleBlank(el));
+  el.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleBlank(el); }
+  });
+});
+
+function toggleBlank(el){
+  const on = el.classList.toggle('on');
+  el.setAttribute('aria-pressed', on?'true':'false');
+  if(on){
+    el.dataset.ph = el.querySelector('.ph') ? el.querySelector('.ph').outerHTML : '';
+    el.textContent = el.dataset.ans;
+  } else {
+    el.innerHTML = el.dataset.ph || `<span class="ph">＿＿＿</span>`;
+  }
+  updateProgress();
+}
+
+function setAll(on){
+  blanks.forEach(el=>{
+    const isOn = el.classList.contains('on');
+    if(on && !isOn) toggleBlank(el);
+    if(!on && isOn) toggleBlank(el);
+  });
+}
+
+/* ---------- progress ---------- */
+const progNum = document.getElementById('progNum');
+const progFill = document.getElementById('progFill');
+function updateProgress(){
+  const done = blanks.filter(b=>b.classList.contains('on')).length;
+  progNum.textContent = `${done} / ${blanks.length}`;
+  progFill.style.width = blanks.length ? (done/blanks.length*100)+'%' : '0%';
+  // per-lecture stat
+  LECTURES.forEach((lec,i)=>{
+    const sec = document.getElementById('lec'+i);
+    const bs = sec.querySelectorAll('.blank');
+    const d = sec.querySelectorAll('.blank.on').length;
+    const stat = sec.querySelector('[data-stat]');
+    if(stat) stat.textContent = `${d}/${bs.length}`;
+  });
+  // toggle-all button label
+  const allOn = done===blanks.length && blanks.length>0;
+  toggleBtn.firstChild.textContent = allOn ? '전체 숨기기 ' : '전체 보기 ';
+  toggleHint.textContent = allOn ? 'hide' : 'show';
+}
+
+/* ---------- controls ---------- */
+const toggleBtn = document.getElementById('toggleAll');
+const toggleHint = document.getElementById('toggleHint');
+toggleBtn.addEventListener('click',()=>{
+  const done = blanks.filter(b=>b.classList.contains('on')).length;
+  setAll(done!==blanks.length);
+});
+document.getElementById('resetAll').addEventListener('click',()=>{
+  setAll(false);
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ---------- active chip on scroll ---------- */
+const chipLinks = [...chips.querySelectorAll('a')];
+const secs = LECTURES.map((_,i)=>document.getElementById('lec'+i));
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id = e.target.id;
+      chipLinks.forEach(a=>a.classList.toggle('active', a.dataset.target===id));
+      const active = chips.querySelector('a.active');
+      if(active) active.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+    }
+  });
+},{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>io.observe(s));
+
+/* ---------- back to top ---------- */
+const toTop = document.getElementById('toTop');
+window.addEventListener('scroll',()=>{
+  toTop.classList.toggle('show', window.scrollY>500);
+},{passive:true});
+toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+// subject subline — auto-updates as lectures are appended
+(function(){
+  const lecOnly = LECTURES.filter(l=>l.no!=='★');
+  const sl = document.getElementById('subline');
+  if(sl) sl.textContent = `요구사항·화면·아키텍처·객체지향·인터페이스 전 범위 · 주제 ${lecOnly.length}개 · 빈칸 ${blanks.length}개 — 같은 과목 수업이 오면 이어 붙어요.`;
+})();
+
+updateProgress();
+</script>
+</body>
+</html>
