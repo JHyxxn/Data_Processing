@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>정보처리기사 필기 · 제3과목 데이터베이스 구축 · 빈칸 노트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --bg:#E8E9E3;
+    --surface:#FCFCFA;
+    --ink:#15171C;
+    --muted:#757a83;
+    --faint:#a4a8ae;
+    --line:#dcddd6;
+    --line-strong:#cfd0c8;
+    --accent:#2438d6;
+    --accent-soft:#e6e8fb;
+    --mark:#fbe25a;
+    --mark-done:#a9e7bf;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    line-height:1.6;-webkit-font-smoothing:antialiased;
+    padding-bottom:80px;
+  }
+
+  /* ---------- top bar ---------- */
+  header{
+    position:sticky;top:0;z-index:30;background:rgba(232,233,227,.86);
+    backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-strong);
+  }
+  .bar{max-width:860px;margin:0 auto;padding:14px 20px 12px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:8px}
+  .kicker::before{content:"";width:18px;height:2px;background:var(--accent);display:inline-block}
+  .badge{font-family:var(--mono);font-size:10px;letter-spacing:.06em;background:var(--accent);color:#fff;padding:2px 7px;border-radius:6px;text-transform:none}
+  h1{font-size:19px;margin:6px 0 2px;letter-spacing:-.01em;font-weight:700}
+  .sub{font-size:13px;color:var(--muted);margin:0}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+  button.ctl{
+    font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);
+    background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;
+    padding:7px 13px;cursor:pointer;transition:background .15s,border-color .15s,transform .05s;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  button.ctl:hover{border-color:var(--accent);color:var(--accent)}
+  button.ctl:active{transform:translateY(1px)}
+  button.ctl.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  button.ctl.primary:hover{background:#1b2bb0;color:#fff}
+  button.ctl .dot{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  button.ctl.primary .dot{color:#cdd2f7}
+  .progwrap{flex:1 1 140px;min-width:120px}
+  .progmeta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:4px}
+  .progbar{height:6px;border-radius:999px;background:var(--line-strong);overflow:hidden}
+  .progfill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#5566ec);border-radius:999px;transition:width .35s ease}
+  @media (prefers-reduced-motion:reduce){.progfill{transition:none}}
+
+  /* ---------- lecture nav ---------- */
+  nav.chips{max-width:860px;margin:0 auto;padding:10px 20px 0;display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav.chips::-webkit-scrollbar{display:none}
+  nav.chips a{
+    flex:0 0 auto;font-family:var(--mono);font-size:12px;font-weight:500;text-decoration:none;
+    color:var(--muted);border:1px solid var(--line-strong);background:var(--surface);
+    padding:5px 11px;border-radius:8px;transition:all .15s;white-space:nowrap;
+  }
+  nav.chips a:hover{border-color:var(--accent);color:var(--accent)}
+  nav.chips a.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* ---------- content ---------- */
+  main{max-width:860px;margin:0 auto;padding:8px 20px 0}
+  section.lec{margin:30px 0}
+  .lechead{display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:4px}
+  .lecno{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.05em}
+  .lectitle{font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .lecstat{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:14px}
+  h2.blk{font-size:15.5px;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
+  h2.blk:not(:first-child){margin-top:22px}
+  h3.blk{font-size:13.5px;font-weight:700;color:#3a3d44;margin:14px 0 4px}
+  h3.blk:first-child{margin-top:0}
+
+  .line{display:flex;gap:9px;align-items:flex-start;margin:3px 0;font-size:14.5px}
+  .line .bul{color:var(--accent);flex:0 0 auto;line-height:1.6;font-weight:700;font-size:12px;margin-top:1px}
+  .line .bul.sub{color:var(--faint)}
+  .line.indent{margin-left:20px}
+  .line .txt{flex:1}
+
+  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:10px 13px;background:var(--accent-soft);border-radius:10px;font-size:13.5px}
+  .note .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;flex:0 0 auto;margin-top:3px}
+
+  /* ---------- tables ---------- */
+  .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 2px;border:1px solid var(--line);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:380px}
+  thead th{background:#f3f3ee;text-align:left;font-weight:700;color:#3a3d44;padding:9px 12px;border-bottom:1px solid var(--line-strong);white-space:nowrap;font-size:12.5px}
+  tbody td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  td:first-child{font-weight:600;white-space:nowrap}
+
+  /* ---------- the blank (signature) ---------- */
+  .blank{
+    font-family:inherit;font-size:inherit;line-height:inherit;
+    border:none;padding:0 2px;margin:0 1px;cursor:pointer;color:var(--muted);
+    background-image:linear-gradient(var(--mark),var(--mark));
+    background-repeat:no-repeat;background-position:0 88%;background-size:0% 42%;
+    border-bottom:2px solid var(--accent);border-radius:1px;
+    transition:background-size .32s ease,color .15s,border-color .2s;
+    display:inline;font-weight:600;
+  }
+  @media (prefers-reduced-motion:reduce){.blank{transition:color .15s}}
+  .blank:hover{color:var(--accent)}
+  .blank:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .blank.on{
+    color:var(--ink);border-bottom-color:transparent;background-size:100% 42%;font-weight:700;cursor:pointer;
+  }
+  .blank.on:hover{color:var(--ink);opacity:.82}
+  .blank .ph{color:var(--faint);font-weight:500;letter-spacing:.02em}
+
+  /* ---------- footer ---------- */
+  footer{max-width:860px;margin:34px auto 0;padding:18px 20px 0;border-top:1px solid var(--line-strong);color:var(--muted);font-size:12.5px}
+  footer .legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-family:var(--mono);font-size:11px}
+  footer .legend b{color:var(--ink);font-weight:700}
+  .swatch{display:inline-block;width:22px;height:11px;border-radius:2px;background:var(--mark);vertical-align:middle;margin-right:5px}
+
+  /* floating back-to-top */
+  .totop{position:fixed;right:18px;bottom:18px;z-index:40;width:44px;height:44px;border-radius:50%;
+    background:var(--ink);color:#fff;border:none;cursor:pointer;font-size:18px;display:none;
+    box-shadow:0 6px 18px rgba(0,0,0,.18);align-items:center;justify-content:center}
+  .totop.show{display:flex}
+
+  @media (max-width:560px){
+    h1{font-size:17px}.lectitle{font-size:16px}
+    .card{padding:15px 15px}
+    main,.bar,nav.chips,footer{padding-left:14px;padding-right:14px}
+    .lecstat{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="kicker">정보처리기사 필기 · 제3과목 <span class="badge">데이터베이스 구축</span></div>
+    <h1>데이터베이스 구축 빈칸 채우기 노트</h1>
+    <p class="sub" id="subline">불러오는 중…</p>
+    <div class="controls">
+      <button class="ctl primary" id="toggleAll">전체 보기 <span class="dot" id="toggleHint">show</span></button>
+      <button class="ctl" id="resetAll">처음부터 다시</button>
+      <div class="progwrap">
+        <div class="progmeta"><span>진도</span><span id="progNum">0 / 0</span></div>
+        <div class="progbar"><div class="progfill" id="progFill"></div></div>
+      </div>
+    </div>
+  </div>
+  <nav class="chips" id="chips"></nav>
+</header>
+
+<main id="main"></main>
+
+<footer>
+  <div class="legend">
+    <span><span class="swatch"></span><b>형광펜</b> = 확인한 답</span>
+    <span><b>·</b> 빈칸 클릭 = 정답 토글</span>
+    <span><b>·</b> 키보드 Enter / Space 지원</span>
+  </div>
+  <p style="margin:12px 0 0;font-size:11.5px;color:var(--faint)">출처: 직접 정리한 Cornell Notes 1–10강 · 빈칸은 시험 빈출 핵심어 기준</p>
+</footer>
+
+<button class="totop" id="toTop" aria-label="맨 위로">↑</button>
+
+<script>
+/* ============================================================
+   DATA  —  blanks are written as {{정답}}  or  {{정답::힌트}}
+   block types: h2 / h3 / li / sub(li) / note / table
+   ============================================================ */
+const LECTURES = [
+{ no:"51~80", tag:"DB설계·모델", title:"DB 설계 · 데이터 모델", blocks:[
+  {t:"h3",x:"데이터베이스 설계 순서 (5단계)"},
+  {t:"li",x:"요구사항 분석 → {{개념적}} 설계(E-R, DBMS 독립적) → {{논리적}} 설계({{정규화}}·스키마 변환) → {{물리적}} 설계(인덱스·응답시간 최소화) → 구현(DDL)"},
+  {t:"li",x:"설계 고려사항: 무결성·일관성·{{회복}}·보안·효율성·확장성"},
+  {t:"h2",x:"데이터 모델"},
+  {t:"li",x:"데이터 모델 3요소: {{개체}}(Entity)·{{속성}}(Attribute)·{{관계}}(Relationship)"},
+  {t:"li",x:"표시 요소 3: {{구조}}(Structure)·{{연산}}(Operation)·{{제약조건}}(Constraint)"},
+  {t:"li",x:"개념적 모델 대표: {{E-R}}(개체-관계) 모델"},
+  {t:"li",x:"논리적 모델: {{관계형}}(테이블)·{{계층형}}(트리, 한 부모)·{{네트워크형}}(그래프)"},
+  {t:"h3",x:"E-R 다이어그램 기호"},
+  {t:"li",x:"개체={{사각형}} · 관계={{마름모}} · 속성={{타원}}"},
+]},
+{ no:"51~80", tag:"관계형·키", title:"관계형 DB 용어 · 키", blocks:[
+  {t:"h3",x:"관계형 DB 용어"},
+  {t:"li",x:"{{릴레이션}}=테이블 · {{튜플}}(Tuple)=행(Row) · {{속성}}(Attribute)=열(Column)"},
+  {t:"li",x:"{{차수}}(Degree)=속성(열)의 개수 · {{카디널리티}}(Cardinality)=튜플(행)의 개수 · {{도메인}}(Domain)=속성이 취할 수 있는 값의 범위"},
+  {t:"h2",x:"키 (Key) 5종"},
+  {t:"li",x:"{{후보키}}(Candidate Key): 튜플 유일 식별 / {{유일성}} + {{최소성}} 모두 만족"},
+  {t:"li",x:"{{기본키}}(Primary Key): 후보키 중 선정 / {{NULL 불가}}·중복 불가"},
+  {t:"li",x:"{{대체키}}(Alternate Key): 기본키가 아닌 후보키(보조키)"},
+  {t:"li",x:"{{슈퍼키}}(Super Key): 유일성 O · 최소성 X"},
+  {t:"li",x:"{{외래키}}(Foreign Key): 다른 릴레이션의 {{기본키}} 참조 / 같은 값 여러 개 가능"},
+]},
+{ no:"51~80", tag:"무결성", title:"무결성 · 관계대수", blocks:[
+  {t:"h3",x:"무결성 (Integrity) 4종"},
+  {t:"li",x:"{{개체}} 무결성: 기본키는 NULL·중복 불가"},
+  {t:"li",x:"{{도메인}} 무결성: 속성값이 정의된 범위 내 / {{참조}} 무결성: 외래키는 참조된 기본키에 존재 / {{사용자 정의}} 무결성: 사용자 정의 제약 만족"},
+  {t:"h2",x:"관계대수 (절차적)"},
+  {t:"li",x:"순수 관계 연산자 4: {{Select}}(σ, 행 선택)·{{Project}}(π, 열 선택)·{{Join}}(⋈, 결합)·{{Division}}(÷)"},
+  {t:"li",x:"집합 연산자 4: Union(∪)·Intersection(∩)·Difference(−)·{{Cartesian Product}}(×, 교차곱)"},
+  {t:"li",x:"{{관계해석}}: 비절차적 언어 / {{SQL}}이 대표적 관계해석 언어"},
+]},
+{ no:"67", tag:"정규화", title:"정규화 · 이상현상", blocks:[
+  {t:"li",x:"{{정규화}}(Normalization): 데이터 중복·이상현상을 최소화하려 테이블을 분해 / {{논리적}} 설계 단계에서 수행"},
+  {t:"h3",x:"이상현상 (Anomaly) 3종"},
+  {t:"li",x:"{{삽입}} 이상: 원하지 않는 값도 함께 삽입 / {{삭제}} 이상: 의도와 무관한 데이터까지 연쇄 삭제 / {{갱신}} 이상: 일부만 갱신되어 데이터 불일치"},
+  {t:"h2",x:"정규화 6단계"},
+  {t:"table",head:["단계","조건","제거 대상"],rows:[
+    ["{{1NF}}","모든 속성이 {{원자값}}(Atomic Value)","반복되는 그룹"],
+    ["{{2NF}}","1NF + {{완전 함수 종속}}","{{부분}} 함수 종속"],
+    ["{{3NF}}","2NF + 이행 종속 제거","{{이행}} 함수 종속"],
+    ["{{BCNF}}","모든 {{결정자}}가 {{후보키}}","비후보키 결정자"],
+    ["{{4NF}}","BCNF + 다치 종속 제거","다치 종속(MVD)"],
+    ["{{5NF}}","4NF + 조인 종속 제거","조인 종속(JD)"],
+  ]},
+  {t:"li",x:"실무 권장: {{BCNF}}까지가 적절 / 4NF·5NF는 거의 안 씀"},
+  {t:"note",tag:"암기",x:"원자값 → 부분 → 이행 → 결정자=후보키 → 다치 → 조인 ({{원·부·이·결·다·조}})"},
+]},
+{ no:"51~80", tag:"반정규화", title:"반정규화 · 트랜잭션", blocks:[
+  {t:"li",x:"{{반정규화}}(Denormalization): 정규화를 의도적으로 위반해 {{성능 향상}} / 방법: 테이블 통합·분할(수평/수직)·중복 추가"},
+  {t:"h3",x:"트랜잭션 특성 (ACID)"},
+  {t:"li",x:"{{Atomicity}}(원자성): 전부 수행 or 전혀 안 함 / {{Consistency}}(일관성): 수행 후 일관성 유지"},
+  {t:"li",x:"{{Isolation}}(독립성): 다른 트랜잭션 간섭 차단 / {{Durability}}(영속성): 장애 후에도 유지"},
+  {t:"li",x:"트랜잭션 상태 5: 활동·실패·철회·부분 완료·완료"},
+  {t:"li",x:"{{CRUD}}: Create·Read·Update·Delete 기준 분석 (프로세스별 테이블 접근 매트릭스)"},
+  {t:"li",x:"{{시스템 카탈로그}}(=데이터 사전): 객체 정보 저장소 / SQL 조회 가능, INSERT/UPDATE 직접 {{불가}}(DBMS 자동 관리)"},
+]},
+{ no:"51~80", tag:"인덱스·뷰", title:"인덱스 · 뷰 · 파티션", blocks:[
+  {t:"h3",x:"인덱스 (Index)"},
+  {t:"li",x:"{{Clustered}} 인덱스: 데이터 자체 정렬({{하나}}만 가능) / {{Non-Clustered}}: 별도 구조(다중 가능)"},
+  {t:"li",x:"종류: {{B-Tree}}·{{B+ Tree}}(리프 노드 링크드 리스트)·{{비트맵}}(0,1 인코딩)·함수 기반·비트맵 조인"},
+  {t:"li",x:"컬럼 선정: 분포도 {{10~15%}} 이내, WHERE·ORDER BY 자주 쓰는 컬럼"},
+  {t:"h2",x:"뷰 (View)"},
+  {t:"li",x:"{{뷰}}: 물리적으로 존재하지 않는 {{가상 테이블}} / 목적: SQL 간소화·보안·{{논리적 독립성}}"},
+  {t:"li",x:"단점: 독립적 {{인덱스 불가}}·뷰 정의 변경 불가"},
+  {t:"h2",x:"파티션 (Partition)"},
+  {t:"li",x:"방식 4: {{범위}}(Range)·{{해시}}(Hash)·조합(Composite)·{{목록}}(List)"},
+]},
+{ no:"51~80", tag:"분산DB", title:"분산 DB · 스토리지", blocks:[
+  {t:"h3",x:"분산 DB 투명성 4종"},
+  {t:"li",x:"{{위치}} 투명성(위치 몰라도 됨)·{{중복}} 투명성(중복도 하나처럼)·{{병행}} 투명성(동시 트랜잭션 영향 차단)·{{장애}} 투명성(장애 극복)"},
+  {t:"li",x:"분산 DB 구성: 분산 처리기·분산 데이터베이스·통신 네트워크"},
+  {t:"li",x:"분산 설계: 테이블 위치 분산·{{분할}}(Fragmentation, 수평/수직)·{{할당}}(Replication, 복제)"},
+  {t:"h2",x:"스토리지 3종"},
+  {t:"li",x:"{{DAS}}(직접 연결, 공유 불가)·{{NAS}}(이더넷, 파일 공유)·{{SAN}}(파이버 채널, 고속)"},
+]},
+{ no:"51~80", tag:"보안·접근통제", title:"DB 보안 · 접근 통제 · 백업", blocks:[
+  {t:"h3",x:"암호화"},
+  {t:"li",x:"{{개인키}}(대칭): 동일 키 / 빠름·키 작음 / {{DES·AES}}"},
+  {t:"li",x:"{{공개키}}(비대칭): 다른 키 / 느림·키 분배 용이 / {{RSA}}"},
+  {t:"h2",x:"접근 통제 (Access Control)"},
+  {t:"li",x:"{{DAC}}(임의, 신분 기반, GRANT/REVOKE)·{{MAC}}(강제, 보안 등급)·{{RBAC}}(역할 기반)"},
+  {t:"li",x:"{{Bell-LaPadula}}: {{기밀성}} 모델(군사) / {{Biba}}: {{무결성}} 모델"},
+  {t:"h2",x:"백업 · 복구"},
+  {t:"li",x:"복구: {{Undo}}(취소)·{{Redo}}(재실행) / 백업: 물리(파일 직접)·논리(객체 단위)"},
+]},
+{ no:"51~80", tag:"SQL·DDL", title:"SQL 개념 · DDL", blocks:[
+  {t:"h3",x:"SQL 분류 3종"},
+  {t:"li",x:"{{DDL}}(정의): CREATE·ALTER·DROP"},
+  {t:"li",x:"{{DML}}(조작): SELECT·INSERT·UPDATE·DELETE"},
+  {t:"li",x:"{{DCL}}(제어): COMMIT·ROLLBACK·GRANT·REVOKE"},
+  {t:"h2",x:"DDL 명령어"},
+  {t:"li",x:"{{CREATE}}: SCHEMA·DOMAIN·TABLE·VIEW·INDEX 생성"},
+  {t:"li",x:"{{ALTER}}: 속성 추가/변경(ADD·MODIFY) / {{DROP}}: 삭제"},
+  {t:"h3",x:"ON DELETE/UPDATE 옵션 4종"},
+  {t:"li",x:"{{NO ACTION}}(참조 있으면 거부)·{{CASCADE}}(함께 삭제/갱신)·{{SET NULL}}(NULL로)·{{SET DEFAULT}}(기본값으로)"},
+]},
+{ no:"★", tag:"요약", title:"종합 요약 — 3과목 핵심", blocks:[
+  {t:"h3",x:"설계 · 키 · 무결성"},
+  {t:"li",x:"설계 5단계(개념→논리→물리) / 키: 후보키({{유일성+최소성}})·기본키·외래키 / 무결성: 개체·도메인·참조"},
+  {t:"h3",x:"정규화 (SQLD 빈출)"},
+  {t:"li",x:"이상현상 3종(삽입·삭제·갱신) / 1NF({{원자값}})→2NF({{부분 함수 종속 제거}})→3NF({{이행 종속 제거}})→BCNF({{결정자=후보키}})"},
+  {t:"h3",x:"트랜잭션 · SQL"},
+  {t:"li",x:"ACID(원자성·일관성·독립성·영속성) / SQL: DDL·DML·DCL / 인덱스: 클러스터드(하나)·논클러스터드"},
+  {t:"note",tag:"핵심",x:"정규화와 키, 트랜잭션 ACID, SQL 분류가 3과목 + SQLD 최빈출."},
+]},
+];
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const main = document.getElementById('main');
+const chips = document.getElementById('chips');
+let total = 0;
+const blanks = []; // all blank elements
+
+function escapeHTML(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// turn a string with {{answer::hint}} into HTML + register blanks
+function renderText(str){
+  const parts = str.split(/(\{\{.+?\}\})/g);
+  let html = '';
+  for(const p of parts){
+    const m = p.match(/^\{\{(.+?)\}\}$/);
+    if(m){
+      const raw = m[1];
+      const [ans, hint] = raw.split('::');
+      const ph = hint ? escapeHTML(hint) : '＿＿＿';
+      html += `<button type="button" class="blank" data-ans="${escapeHTML(ans)}" aria-pressed="false"><span class="ph">${ph}</span></button>`;
+      total++;
+    } else if(p){
+      html += escapeHTML(p);
+    }
+  }
+  return html;
+}
+
+function blockHTML(b){
+  if(b.t==='h2') return `<h2 class="blk">${escapeHTML(b.x)}</h2>`;
+  if(b.t==='h3') return `<h3 class="blk">${escapeHTML(b.x)}</h3>`;
+  if(b.t==='li'){
+    return `<div class="line"><span class="bul">▸</span><span class="txt">${renderText(b.x)}</span></div>`;
+  }
+  if(b.t==='note'){
+    return `<div class="note"><span class="tag">${escapeHTML(b.tag||'TIP')}</span><span class="txt">${renderText(b.x)}</span></div>`;
+  }
+  if(b.t==='table'){
+    let h = '<div class="tablewrap"><table><thead><tr>';
+    h += b.head.map(c=>`<th>${escapeHTML(c)}</th>`).join('');
+    h += '</tr></thead><tbody>';
+    h += b.rows.map(r=>'<tr>'+r.map(c=>`<td>${renderText(c)}</td>`).join('')+'</tr>').join('');
+    h += '</tbody></table></div>';
+    return h;
+  }
+  return '';
+}
+
+LECTURES.forEach((lec,i)=>{
+  const id = 'lec'+i;
+  // group blocks into cards: a new card starts at each h2, plus a lead card for pre-h2 blocks
+  const sec = document.createElement('section');
+  sec.className = 'lec'; sec.id = id;
+  sec.innerHTML = `<div class="lechead"><span class="lecno">${escapeHTML(lec.no)}</span><span class="lectitle">${escapeHTML(lec.title)}</span><span class="lecstat" data-stat="${id}"></span></div>`;
+
+  let cardHTML = '';
+  let cards = [];
+  lec.blocks.forEach(b=>{
+    if(b.t==='h2' && cardHTML){ cards.push(cardHTML); cardHTML=''; }
+    cardHTML += blockHTML(b);
+  });
+  if(cardHTML) cards.push(cardHTML);
+  cards.forEach(c=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML = c;
+    sec.appendChild(div);
+  });
+  main.appendChild(sec);
+
+  // nav chip
+  const a = document.createElement('a');
+  a.href = '#'+id; a.textContent = lec.tag; a.dataset.target = id;
+  chips.appendChild(a);
+});
+
+// collect blanks + wire interactions
+document.querySelectorAll('.blank').forEach(el=>{
+  blanks.push(el);
+  el.addEventListener('click',()=>toggleBlank(el));
+  el.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleBlank(el); }
+  });
+});
+
+function toggleBlank(el){
+  const on = el.classList.toggle('on');
+  el.setAttribute('aria-pressed', on?'true':'false');
+  if(on){
+    el.dataset.ph = el.querySelector('.ph') ? el.querySelector('.ph').outerHTML : '';
+    el.textContent = el.dataset.ans;
+  } else {
+    el.innerHTML = el.dataset.ph || `<span class="ph">＿＿＿</span>`;
+  }
+  updateProgress();
+}
+
+function setAll(on){
+  blanks.forEach(el=>{
+    const isOn = el.classList.contains('on');
+    if(on && !isOn) toggleBlank(el);
+    if(!on && isOn) toggleBlank(el);
+  });
+}
+
+/* ---------- progress ---------- */
+const progNum = document.getElementById('progNum');
+const progFill = document.getElementById('progFill');
+function updateProgress(){
+  const done = blanks.filter(b=>b.classList.contains('on')).length;
+  progNum.textContent = `${done} / ${blanks.length}`;
+  progFill.style.width = blanks.length ? (done/blanks.length*100)+'%' : '0%';
+  // per-lecture stat
+  LECTURES.forEach((lec,i)=>{
+    const sec = document.getElementById('lec'+i);
+    const bs = sec.querySelectorAll('.blank');
+    const d = sec.querySelectorAll('.blank.on').length;
+    const stat = sec.querySelector('[data-stat]');
+    if(stat) stat.textContent = `${d}/${bs.length}`;
+  });
+  // toggle-all button label
+  const allOn = done===blanks.length && blanks.length>0;
+  toggleBtn.firstChild.textContent = allOn ? '전체 숨기기 ' : '전체 보기 ';
+  toggleHint.textContent = allOn ? 'hide' : 'show';
+}
+
+/* ---------- controls ---------- */
+const toggleBtn = document.getElementById('toggleAll');
+const toggleHint = document.getElementById('toggleHint');
+toggleBtn.addEventListener('click',()=>{
+  const done = blanks.filter(b=>b.classList.contains('on')).length;
+  setAll(done!==blanks.length);
+});
+document.getElementById('resetAll').addEventListener('click',()=>{
+  setAll(false);
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ---------- active chip on scroll ---------- */
+const chipLinks = [...chips.querySelectorAll('a')];
+const secs = LECTURES.map((_,i)=>document.getElementById('lec'+i));
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id = e.target.id;
+      chipLinks.forEach(a=>a.classList.toggle('active', a.dataset.target===id));
+      const active = chips.querySelector('a.active');
+      if(active) active.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+    }
+  });
+},{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>io.observe(s));
+
+/* ---------- back to top ---------- */
+const toTop = document.getElementById('toTop');
+window.addEventListener('scroll',()=>{
+  toTop.classList.toggle('show', window.scrollY>500);
+},{passive:true});
+toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+// subject subline — auto-updates as lectures are appended
+(function(){
+  const lecOnly = LECTURES.filter(l=>l.no!=='★');
+  const sl = document.getElementById('subline');
+  if(sl) sl.textContent = `키·정규화·트랜잭션·인덱스·SQL 전 범위 · 주제 ${lecOnly.length}개 · 빈칸 ${blanks.length}개 — 같은 과목 수업이 오면 이어 붙어요.`;
+})();
+
+updateProgress();
+</script>
+</body>
+</html>
