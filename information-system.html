@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>정보처리기사 필기 · 제5과목 정보시스템 구축관리 · 빈칸 노트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --bg:#E8E9E3;
+    --surface:#FCFCFA;
+    --ink:#15171C;
+    --muted:#757a83;
+    --faint:#a4a8ae;
+    --line:#dcddd6;
+    --line-strong:#cfd0c8;
+    --accent:#2438d6;
+    --accent-soft:#e6e8fb;
+    --mark:#fbe25a;
+    --mark-done:#a9e7bf;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    line-height:1.6;-webkit-font-smoothing:antialiased;
+    padding-bottom:80px;
+  }
+
+  /* ---------- top bar ---------- */
+  header{
+    position:sticky;top:0;z-index:30;background:rgba(232,233,227,.86);
+    backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-strong);
+  }
+  .bar{max-width:860px;margin:0 auto;padding:14px 20px 12px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:8px}
+  .kicker::before{content:"";width:18px;height:2px;background:var(--accent);display:inline-block}
+  .badge{font-family:var(--mono);font-size:10px;letter-spacing:.06em;background:var(--accent);color:#fff;padding:2px 7px;border-radius:6px;text-transform:none}
+  h1{font-size:19px;margin:6px 0 2px;letter-spacing:-.01em;font-weight:700}
+  .sub{font-size:13px;color:var(--muted);margin:0}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+  button.ctl{
+    font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);
+    background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;
+    padding:7px 13px;cursor:pointer;transition:background .15s,border-color .15s,transform .05s;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  button.ctl:hover{border-color:var(--accent);color:var(--accent)}
+  button.ctl:active{transform:translateY(1px)}
+  button.ctl.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  button.ctl.primary:hover{background:#1b2bb0;color:#fff}
+  button.ctl .dot{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  button.ctl.primary .dot{color:#cdd2f7}
+  .progwrap{flex:1 1 140px;min-width:120px}
+  .progmeta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:4px}
+  .progbar{height:6px;border-radius:999px;background:var(--line-strong);overflow:hidden}
+  .progfill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#5566ec);border-radius:999px;transition:width .35s ease}
+  @media (prefers-reduced-motion:reduce){.progfill{transition:none}}
+
+  /* ---------- lecture nav ---------- */
+  nav.chips{max-width:860px;margin:0 auto;padding:10px 20px 0;display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav.chips::-webkit-scrollbar{display:none}
+  nav.chips a{
+    flex:0 0 auto;font-family:var(--mono);font-size:12px;font-weight:500;text-decoration:none;
+    color:var(--muted);border:1px solid var(--line-strong);background:var(--surface);
+    padding:5px 11px;border-radius:8px;transition:all .15s;white-space:nowrap;
+  }
+  nav.chips a:hover{border-color:var(--accent);color:var(--accent)}
+  nav.chips a.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* ---------- content ---------- */
+  main{max-width:860px;margin:0 auto;padding:8px 20px 0}
+  section.lec{margin:30px 0}
+  .lechead{display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:4px}
+  .lecno{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.05em}
+  .lectitle{font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .lecstat{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:14px}
+  h2.blk{font-size:15.5px;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
+  h2.blk:not(:first-child){margin-top:22px}
+  h3.blk{font-size:13.5px;font-weight:700;color:#3a3d44;margin:14px 0 4px}
+  h3.blk:first-child{margin-top:0}
+
+  .line{display:flex;gap:9px;align-items:flex-start;margin:3px 0;font-size:14.5px}
+  .line .bul{color:var(--accent);flex:0 0 auto;line-height:1.6;font-weight:700;font-size:12px;margin-top:1px}
+  .line .bul.sub{color:var(--faint)}
+  .line.indent{margin-left:20px}
+  .line .txt{flex:1}
+
+  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:10px 13px;background:var(--accent-soft);border-radius:10px;font-size:13.5px}
+  .note .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;flex:0 0 auto;margin-top:3px}
+
+  /* ---------- tables ---------- */
+  .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 2px;border:1px solid var(--line);border-radius:10px}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:380px}
+  thead th{background:#f3f3ee;text-align:left;font-weight:700;color:#3a3d44;padding:9px 12px;border-bottom:1px solid var(--line-strong);white-space:nowrap;font-size:12.5px}
+  tbody td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  td:first-child{font-weight:600;white-space:nowrap}
+
+  /* ---------- the blank (signature) ---------- */
+  .blank{
+    font-family:inherit;font-size:inherit;line-height:inherit;
+    border:none;padding:0 2px;margin:0 1px;cursor:pointer;color:var(--muted);
+    background-image:linear-gradient(var(--mark),var(--mark));
+    background-repeat:no-repeat;background-position:0 88%;background-size:0% 42%;
+    border-bottom:2px solid var(--accent);border-radius:1px;
+    transition:background-size .32s ease,color .15s,border-color .2s;
+    display:inline;font-weight:600;
+  }
+  @media (prefers-reduced-motion:reduce){.blank{transition:color .15s}}
+  .blank:hover{color:var(--accent)}
+  .blank:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .blank.on{
+    color:var(--ink);border-bottom-color:transparent;background-size:100% 42%;font-weight:700;cursor:pointer;
+  }
+  .blank.on:hover{color:var(--ink);opacity:.82}
+  .blank .ph{color:var(--faint);font-weight:500;letter-spacing:.02em}
+
+  /* ---------- footer ---------- */
+  footer{max-width:860px;margin:34px auto 0;padding:18px 20px 0;border-top:1px solid var(--line-strong);color:var(--muted);font-size:12.5px}
+  footer .legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-family:var(--mono);font-size:11px}
+  footer .legend b{color:var(--ink);font-weight:700}
+  .swatch{display:inline-block;width:22px;height:11px;border-radius:2px;background:var(--mark);vertical-align:middle;margin-right:5px}
+
+  /* floating back-to-top */
+  .totop{position:fixed;right:18px;bottom:18px;z-index:40;width:44px;height:44px;border-radius:50%;
+    background:var(--ink);color:#fff;border:none;cursor:pointer;font-size:18px;display:none;
+    box-shadow:0 6px 18px rgba(0,0,0,.18);align-items:center;justify-content:center}
+  .totop.show{display:flex}
+
+  @media (max-width:560px){
+    h1{font-size:17px}.lectitle{font-size:16px}
+    .card{padding:15px 15px}
+    main,.bar,nav.chips,footer{padding-left:14px;padding-right:14px}
+    .lecstat{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="kicker">정보처리기사 필기 · 제5과목 <span class="badge">정보시스템 구축관리</span></div>
+    <h1>정보시스템 구축관리 빈칸 채우기 노트</h1>
+    <p class="sub" id="subline">불러오는 중…</p>
+    <div class="controls">
+      <button class="ctl primary" id="toggleAll">전체 보기 <span class="dot" id="toggleHint">show</span></button>
+      <button class="ctl" id="resetAll">처음부터 다시</button>
+      <div class="progwrap">
+        <div class="progmeta"><span>진도</span><span id="progNum">0 / 0</span></div>
+        <div class="progbar"><div class="progfill" id="progFill"></div></div>
+      </div>
+    </div>
+  </div>
+  <nav class="chips" id="chips"></nav>
+</header>
+
+<main id="main"></main>
+
+<footer>
+  <div class="legend">
+    <span><span class="swatch"></span><b>형광펜</b> = 확인한 답</span>
+    <span><b>·</b> 빈칸 클릭 = 정답 토글</span>
+    <span><b>·</b> 키보드 Enter / Space 지원</span>
+  </div>
+  <p style="margin:12px 0 0;font-size:11.5px;color:var(--faint)">출처: 직접 정리한 Cornell Notes 1–10강 · 빈칸은 시험 빈출 핵심어 기준</p>
+</footer>
+
+<button class="totop" id="toTop" aria-label="맨 위로">↑</button>
+
+<script>
+/* ============================================================
+   DATA  —  blanks are written as {{정답}}  or  {{정답::힌트}}
+   block types: h2 / h3 / li / sub(li) / note / table
+   ============================================================ */
+const LECTURES = [
+{ no:"126~130", tag:"SW방법론", title:"SW 개발 방법론", blocks:[
+  {t:"h3",x:"개발 방법론 6종"},
+  {t:"li",x:"{{구조적}}(절차·DFD 중심)·{{정보공학}}(자료 중심, 대규모)·{{객체지향}}(현실 객체)·{{컴포넌트}}(CBD, 재사용)·{{애자일}}(반복·고객 중심)·제품계열(임베디드)"},
+  {t:"li",x:"객체지향 원칙: {{캡슐화}}·{{정보은닉}}·{{추상화}}·{{상속성}}·{{다형성}}"},
+  {t:"li",x:"2가지 공학: {{영역공학}}(Domain, 핵심자산)·{{응용공학}}(Application, 제품)"},
+  {t:"note",tag:"선택",x:"대규모→구조적 / 재사용→컴포넌트 / 변하는 요구→애자일 / 임베디드→제품계열"},
+]},
+{ no:"128~130", tag:"비용·일정", title:"비용 산정 · 일정 계획", blocks:[
+  {t:"h3",x:"비용 산정 기법"},
+  {t:"li",x:"{{LOC}}: 원시 코드 라인 수 / 예측치=(낙관치+{{4×기대치}}+비관치)/6"},
+  {t:"li",x:"{{COCOMO}}(Boehm): {{조직형}}(5만 라인↓)·{{반분리형}}(30만↓)·{{내장형}}(30만↑, 실시간)"},
+  {t:"li",x:"{{FP}}(기능점수, Albrecht): 기능별 가중치로 산정"},
+  {t:"h2",x:"일정 계획 도구"},
+  {t:"li",x:"{{WBS}}(작업 분할)·{{PERT}}(확률적, 3점 추정)·{{CPM}}(결정적, {{임계 경로}})·{{간트 차트}}(막대)"},
+  {t:"li",x:"PERT 공식: (낙관+{{4×기대}}+비관)/6 / CPM은 비용 중점, PERT는 일정 중점"},
+]},
+{ no:"135~137", tag:"신기술·네트워크", title:"신기술 · 네트워크 구축", blocks:[
+  {t:"h3",x:"네트워크 구조"},
+  {t:"li",x:"{{성형}}(중앙 집중)·버스형(케이블 공유)·{{망형}}(Mesh, n(n-1)/2 회선)·트리형·링형"},
+  {t:"li",x:"IEEE 802: 802.3({{CSMA/CD}} 이더넷)·802.11({{무선 LAN}}/WiFi) / 유선 CSMA/CD(충돌 감지)·무선 {{CSMA/CA}}(충돌 회피)"},
+  {t:"h2",x:"경로 제어 · 트래픽 제어"},
+  {t:"li",x:"경로제어: {{IGP}}(내부: RIP-15홉 제한, OSPF-대규모)·{{EGP}}·{{BGP}}(외부)"},
+  {t:"li",x:"트래픽: {{흐름 제어}}(Stop-and-Wait·{{슬라이딩 윈도우}})·{{혼잡 제어}}(느린 시작-지수 증가)"},
+]},
+{ no:"138", tag:"DB신기술", title:"DB 신기술 · 빅데이터", blocks:[
+  {t:"li",x:"{{빅데이터}} 3V: {{Volume}}(양)·{{Velocity}}(속도)·{{Variety}}(다양성)"},
+  {t:"li",x:"{{Hadoop}}: 오픈소스 분산 컴퓨팅 / {{MapReduce}}(구글, 분산 처리 모델)·Tajo"},
+  {t:"li",x:"{{데이터 웨어하우스}}: 여러 시스템 데이터를 주제별 통합 / {{데이터 마이닝}}: 유용한 패턴 발견"},
+  {t:"li",x:"{{OLAP}}: 다차원 데이터 분석 도구(의사결정)"},
+]},
+{ no:"142", tag:"회복·병행", title:"회복 · 병행 제어", blocks:[
+  {t:"li",x:"장애 3종: {{Transaction}}·{{시스템}}(DB 손상 없음)·{{미디어}}(물리적 손상)"},
+  {t:"h3",x:"회복 기법 4종"},
+  {t:"li",x:"{{연기 갱신}}(완료까지 미연기, Redo)·{{즉각 갱신}}(즉시 반영, Undo+Redo)·{{그림자 페이징}}(Shadow Page)·{{검사점}}(Checkpoint)"},
+  {t:"h2",x:"병행 제어 (Concurrency Control)"},
+  {t:"li",x:"{{로킹}}(Locking, 잠금)·{{타임스탬프}}(시간표 부여, 교착 X)·다중 버전"},
+  {t:"li",x:"락킹 단위: 크면 {{병행성↓}}·관리 쉬움 / 작으면 {{병행성↑}}·오버헤드↑"},
+]},
+{ no:"143", tag:"교착상태", title:"교착 상태 (Deadlock)", blocks:[
+  {t:"li",x:"정의: 둘 이상 프로세스가 자원 점유한 채 서로 점유 자원 요구하며 {{무한 대기}}"},
+  {t:"h3",x:"발생 필요충분조건 4가지"},
+  {t:"li",x:"{{상호 배제}}(Mutual Exclusion)·{{점유와 대기}}(Hold and Wait)·{{비선점}}(No Preemption)·{{순환 대기}}(Circular Wait)"},
+  {t:"h3",x:"해결 방법 4가지"},
+  {t:"li",x:"{{예방}}(조건 제거)·{{회피}}({{은행원 알고리즘}}, Dijkstra)·{{발견}}(자원 할당 그래프)·{{회복}}(종료·자원 선점)"},
+]},
+{ no:"144", tag:"SecureSDLC", title:"Secure SDLC · 보안 요소", blocks:[
+  {t:"li",x:"{{Secure SDLC}}: SDLC 각 단계에 보안 강화 / 대표 {{Microsoft SDL}}"},
+  {t:"h3",x:"보안 3대 요소 + 추가"},
+  {t:"li",x:"{{기밀성}}(Confidentiality, 인가자만 열람)·{{무결성}}(Integrity, 인가자만 수정)·{{가용성}}(Availability, 언제든 사용)"},
+  {t:"li",x:"+ {{인증}}(Authentication)·{{부인 방지}}(Non-repudiation, 송수신 증거)"},
+  {t:"li",x:"단계별: 구현 단계 {{시큐어 코딩}} / 테스트 단계 {{침투 테스트}}(Penetration Testing)"},
+]},
+{ no:"146~150", tag:"SW보안약점", title:"SW 보안 약점 (입력·코드·캡슐화)", blocks:[
+  {t:"h3",x:"입력 데이터 검증"},
+  {t:"li",x:"{{SQL 삽입}}(injection)·{{XSS}}(Cross-Site Scripting, 스크립트 탈취)·경로 조작·OS 명령어 삽입·파일 업로드"},
+  {t:"h3",x:"코드 오류"},
+  {t:"li",x:"{{Null 포인터 역참조}}·부적절한 자원 해제·초기화 안 된 변수 / {{스택 카나리}}(Stack Canary): 스택 값 변경 감지"},
+  {t:"h3",x:"캡슐화 — 접근 지정자"},
+  {t:"li",x:"{{public}}(전체)·{{protected}}(패키지+하위 클래스)·{{default}}(패키지 내)·{{private}}(클래스 내만)"},
+]},
+{ no:"151", tag:"암호화", title:"암호 알고리즘", blocks:[
+  {t:"li",x:"분류: 양방향(복호화 O)=대칭·비대칭 / 단방향(복호화 X)={{해시}}"},
+  {t:"h3",x:"대칭 (개인키) — 빠름, 키 관리 복잡"},
+  {t:"li",x:"{{DES}}(구식)·{{AES}}(현재 표준)·{{ARIA}}(한국)·{{SEED}}(KISA) / 동일 키 사용"},
+  {t:"h3",x:"비대칭 (공개키) — 느림, 키 분배 용이"},
+  {t:"li",x:"{{RSA}}(소인수 분해)·{{ECC}}(이산대수)·Rabin / 다른 키 / {{PKI}}(공개키 기반 구조)"},
+  {t:"li",x:"해시: {{SHA}}·{{MD5}}·MAC·HMAC / 단방향, 같은 입력→같은 값"},
+]},
+{ no:"152~156", tag:"공격·솔루션", title:"공격 유형 · 인증 · 보안 솔루션", blocks:[
+  {t:"h3",x:"DoS 공격"},
+  {t:"li",x:"{{Ping of Death}}(ICMP 초과)·{{SYN Flooding}}(3-Way 중단)·Land(송수신 IP 동일)·{{DDoS}}(분산)"},
+  {t:"li",x:"침해: {{웜}}(자동 복제)·{{랜섬웨어}}(암호화 후 금전)·{{제로데이}}(미공개 취약점)·백도어·트로이 목마·{{좀비 PC}}·봇넷"},
+  {t:"h3",x:"인증 4유형"},
+  {t:"li",x:"{{지식}} 기반(패스워드)·{{소유}} 기반(OTP)·{{생체}} 기반(지문)·위치 기반(GPS)"},
+  {t:"h3",x:"보안 솔루션"},
+  {t:"li",x:"{{방화벽}}·{{IDS}}(탐지)·{{IPS}}(차단)·{{WAF}}(웹)·{{VPN}}(터널)·{{ESM}}(통합 관리)·DMZ"},
+]},
+{ no:"★", tag:"요약", title:"종합 요약 — 5과목 핵심", blocks:[
+  {t:"h3",x:"SW 공학"},
+  {t:"li",x:"COCOMO({{조직형/반분리형/내장형}})·PERT(확률)/CPM(결정)·방법론 6종"},
+  {t:"h3",x:"DB · 보안 기초"},
+  {t:"li",x:"회복(연기/즉각/그림자/검사점)·교착 4조건({{상호배제·점유대기·비선점·순환대기}})·은행원 알고리즘"},
+  {t:"h3",x:"SW 개발 보안 (최빈출)"},
+  {t:"li",x:"입력 검증(SQL삽입·XSS)·암호화({{대칭 AES·비대칭 RSA·해시}})·DoS·접근 지정자·보안 솔루션"},
+  {t:"note",tag:"핵심",x:"SW 개발 보안(암호 알고리즘·입력 검증·공격 유형)이 5과목 최빈출."},
+]},
+];
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const main = document.getElementById('main');
+const chips = document.getElementById('chips');
+let total = 0;
+const blanks = []; // all blank elements
+
+function escapeHTML(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// turn a string with {{answer::hint}} into HTML + register blanks
+function renderText(str){
+  const parts = str.split(/(\{\{.+?\}\})/g);
+  let html = '';
+  for(const p of parts){
+    const m = p.match(/^\{\{(.+?)\}\}$/);
+    if(m){
+      const raw = m[1];
+      const [ans, hint] = raw.split('::');
+      const ph = hint ? escapeHTML(hint) : '＿＿＿';
+      html += `<button type="button" class="blank" data-ans="${escapeHTML(ans)}" aria-pressed="false"><span class="ph">${ph}</span></button>`;
+      total++;
+    } else if(p){
+      html += escapeHTML(p);
+    }
+  }
+  return html;
+}
+
+function blockHTML(b){
+  if(b.t==='h2') return `<h2 class="blk">${escapeHTML(b.x)}</h2>`;
+  if(b.t==='h3') return `<h3 class="blk">${escapeHTML(b.x)}</h3>`;
+  if(b.t==='li'){
+    return `<div class="line"><span class="bul">▸</span><span class="txt">${renderText(b.x)}</span></div>`;
+  }
+  if(b.t==='note'){
+    return `<div class="note"><span class="tag">${escapeHTML(b.tag||'TIP')}</span><span class="txt">${renderText(b.x)}</span></div>`;
+  }
+  if(b.t==='table'){
+    let h = '<div class="tablewrap"><table><thead><tr>';
+    h += b.head.map(c=>`<th>${escapeHTML(c)}</th>`).join('');
+    h += '</tr></thead><tbody>';
+    h += b.rows.map(r=>'<tr>'+r.map(c=>`<td>${renderText(c)}</td>`).join('')+'</tr>').join('');
+    h += '</tbody></table></div>';
+    return h;
+  }
+  return '';
+}
+
+LECTURES.forEach((lec,i)=>{
+  const id = 'lec'+i;
+  // group blocks into cards: a new card starts at each h2, plus a lead card for pre-h2 blocks
+  const sec = document.createElement('section');
+  sec.className = 'lec'; sec.id = id;
+  sec.innerHTML = `<div class="lechead"><span class="lecno">${escapeHTML(lec.no)}</span><span class="lectitle">${escapeHTML(lec.title)}</span><span class="lecstat" data-stat="${id}"></span></div>`;
+
+  let cardHTML = '';
+  let cards = [];
+  lec.blocks.forEach(b=>{
+    if(b.t==='h2' && cardHTML){ cards.push(cardHTML); cardHTML=''; }
+    cardHTML += blockHTML(b);
+  });
+  if(cardHTML) cards.push(cardHTML);
+  cards.forEach(c=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML = c;
+    sec.appendChild(div);
+  });
+  main.appendChild(sec);
+
+  // nav chip
+  const a = document.createElement('a');
+  a.href = '#'+id; a.textContent = lec.tag; a.dataset.target = id;
+  chips.appendChild(a);
+});
+
+// collect blanks + wire interactions
+document.querySelectorAll('.blank').forEach(el=>{
+  blanks.push(el);
+  el.addEventListener('click',()=>toggleBlank(el));
+  el.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleBlank(el); }
+  });
+});
+
+function toggleBlank(el){
+  const on = el.classList.toggle('on');
+  el.setAttribute('aria-pressed', on?'true':'false');
+  if(on){
+    el.dataset.ph = el.querySelector('.ph') ? el.querySelector('.ph').outerHTML : '';
+    el.textContent = el.dataset.ans;
+  } else {
+    el.innerHTML = el.dataset.ph || `<span class="ph">＿＿＿</span>`;
+  }
+  updateProgress();
+}
+
+function setAll(on){
+  blanks.forEach(el=>{
+    const isOn = el.classList.contains('on');
+    if(on && !isOn) toggleBlank(el);
+    if(!on && isOn) toggleBlank(el);
+  });
+}
+
+/* ---------- progress ---------- */
+const progNum = document.getElementById('progNum');
+const progFill = document.getElementById('progFill');
+function updateProgress(){
+  const done = blanks.filter(b=>b.classList.contains('on')).length;
+  progNum.textContent = `${done} / ${blanks.length}`;
+  progFill.style.width = blanks.length ? (done/blanks.length*100)+'%' : '0%';
+  // per-lecture stat
+  LECTURES.forEach((lec,i)=>{
+    const sec = document.getElementById('lec'+i);
+    const bs = sec.querySelectorAll('.blank');
+    const d = sec.querySelectorAll('.blank.on').length;
+    const stat = sec.querySelector('[data-stat]');
+    if(stat) stat.textContent = `${d}/${bs.length}`;
+  });
+  // toggle-all button label
+  const allOn = done===blanks.length && blanks.length>0;
+  toggleBtn.firstChild.textContent = allOn ? '전체 숨기기 ' : '전체 보기 ';
+  toggleHint.textContent = allOn ? 'hide' : 'show';
+}
+
+/* ---------- controls ---------- */
+const toggleBtn = document.getElementById('toggleAll');
+const toggleHint = document.getElementById('toggleHint');
+toggleBtn.addEventListener('click',()=>{
+  const done = blanks.filter(b=>b.classList.contains('on')).length;
+  setAll(done!==blanks.length);
+});
+document.getElementById('resetAll').addEventListener('click',()=>{
+  setAll(false);
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ---------- active chip on scroll ---------- */
+const chipLinks = [...chips.querySelectorAll('a')];
+const secs = LECTURES.map((_,i)=>document.getElementById('lec'+i));
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id = e.target.id;
+      chipLinks.forEach(a=>a.classList.toggle('active', a.dataset.target===id));
+      const active = chips.querySelector('a.active');
+      if(active) active.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+    }
+  });
+},{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>io.observe(s));
+
+/* ---------- back to top ---------- */
+const toTop = document.getElementById('toTop');
+window.addEventListener('scroll',()=>{
+  toTop.classList.toggle('show', window.scrollY>500);
+},{passive:true});
+toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+// subject subline — auto-updates as lectures are appended
+(function(){
+  const lecOnly = LECTURES.filter(l=>l.no!=='★');
+  const sl = document.getElementById('subline');
+  if(sl) sl.textContent = `SW 공학·회복·교착·SW 개발 보안 전 범위 · 주제 ${lecOnly.length}개 · 빈칸 ${blanks.length}개 — 같은 과목 수업이 오면 이어 붙어요.`;
+})();
+
+updateProgress();
+</script>
+</body>
+</html>
