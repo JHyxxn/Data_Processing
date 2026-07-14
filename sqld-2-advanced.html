@@ -298,21 +298,27 @@ const LECTURES = [
   {t:"li",x:"{{CONNECT_BY_ROOT}} 컬럼: 루트 값 반환 / {{SYS_CONNECT_BY_PATH}}(컬럼, 구분자): 루트→현재 경로 출력"},
   {t:"note",tag:"빈출",x:"{{ORDER SIBLINGS BY}}: 계층 구조 유지한 채 같은 {{LEVEL}} 내에서만 정렬 — '레벨 기준 정렬은 ORDER BY 절' = {{틀린}} 설명 (기출 정답)"},
 ]},
-{ no:"07", tag:"PIVOT", title:"2-15. PIVOT / UNPIVOT", blocks:[
+{ no:"15", tag:"PIVOT", title:"2-15. PIVOT / UNPIVOT", blocks:[
   {t:"h3",x:"데이터 구조"},
-  {t:"li",x:"{{LONG}} DATA: 속성 하나가 컬럼 하나, 값은 행으로 쌓임 (정규화, 조인 가능)"},
-  {t:"li",x:"{{WIDE}} DATA: 교차표(Cross Table), 값이 여러 컬럼으로 분리 (요약·보고서용, 조인 어려움)"},
-
-  {t:"h2",x:"변환"},
-  {t:"li",x:"{{PIVOT}}: LONG → WIDE (행을 열로)"},
-  {t:"li",x:"{{UNPIVOT}}: WIDE → LONG (열을 행으로)"},
-
-  {t:"h2",x:"PIVOT 문법"},
-  {t:"li",x:"PIVOT ({{집계함수}}(VALUE) FOR {{UNSTACK컬럼}} IN (값1, 값2)) — VALUE는 반드시 집계 함수 형태"},
-  {t:"note",tag:"함정",x:"FROM 절(서브쿼리)에 STACK·UNSTACK·VALUE 컬럼만 남겨야 함. 불필요한 컬럼이 있으면 모두 {{STACK 컬럼}}으로 처리돼 결과가 세분화됨."},
+  {t:"table",head:["구조","특징"],rows:[
+    ["LONG (Tidy)","속성 1개=컬럼 1개, 값은 행으로 누적 — RDBMS 기본, {{정규화}} 형태, {{조인}} 가능, 분석·집계 유리"],
+    ["WIDE (Cross table)","교차표, 속성값이 여러 컬럼으로 분리 — 조인 사실상 {{불가능}}, 요약·보고서용"],
+  ]},
+  {t:"li",x:"PIVOT: {{LONG → WIDE}} / UNPIVOT: {{WIDE → LONG}}"},
+  {t:"h3",x:"PIVOT — 3요소 구분이 핵심 ★"},
+  {t:"li",x:"{{STACK}} 컬럼 = 행 방향 유지 / {{UNSTACK}} 컬럼 = 값들이 컬럼명으로 펼쳐짐 / {{VALUE}} = 교차표에 표시될 값"},
+  {t:"li",x:"VALUE는 반드시 {{집계 함수}} 형태(SUM·COUNT 등)로 작성"},
+  {t:"note",tag:"함정",x:"FROM 절엔 3요소 컬럼만! 서브쿼리로 제한 안 하면(FROM EMP 통째) 나머지 컬럼이 전부 {{STACK}}으로 처리돼 행이 불필요하게 세분화 — 기출 오답 ③ 단골"},
+  {t:"note",tag:"빈출",x:"FROM 서브쿼리에서 STACK 컬럼(JOB)을 빼면 → STACK 없음 → 결과가 {{한 행}}으로 집계됨"},
+  {t:"li",x:"기출 정답 패턴: FROM (SELECT 지점,지역,실적 FROM 실적) PIVOT (SUM(실적) FOR 지역 IN ('서울' AS 서울, …))"},
+  {t:"h3",x:"UNPIVOT"},
+  {t:"li",x:"여러 컬럼 값을 행으로 풀어냄 → 행 수 {{늘어남}} ('행이 줄어든다' = 틀린 설명 기출)"},
+  {t:"li",x:"UNPIVOT ({{VALUE}}컬럼명 FOR {{STACK}}컬럼명 IN (컬럼들)) — 새 컬럼명 2개는 {{사용자}}가 정의"},
+  {t:"li",x:"IN에 지정한 컬럼만 대상, 기존 {{컬럼명}}이 STACK 컬럼의 값으로 저장됨"},
+  {t:"note",tag:"암기",x:"숫자 컬럼명(2008 등)은 Oracle에서 {{쌍따옴표}}로 감싸야 식별자 인식 / IN (서울 AS '서울') 같은 문자열 별칭은 {{허용 안 됨}} (기출 오답 ②)"},
 ]},
-
 { no:"08", tag:"정규식", title:"2-16. 정규 표현식", blocks:[
+  {t:"note",tag:"포인트",x:"⏭️ 전략적 스킵(7/14 결정) — 투입 대비 1~2문제. 기출 회독에서 나온 패턴만 암기"},
   {t:"h3",x:"함수"},
   {t:"li",x:"{{REGEXP_LIKE}}(조건), {{REGEXP_SUBSTR}}(추출), {{REGEXP_REPLACE}}(치환), {{REGEXP_INSTR}}(위치), {{REGEXP_COUNT}}(개수)"},
   {t:"li",x:"REGEXP_SUBSTR은 패턴 만족 문자열 중 가장 {{왼쪽에서 처음}} 발견되는 것을 반환"},
