@@ -182,42 +182,45 @@
    block types: h2 / h3 / li / sub(li) / note / table
    ============================================================ */
 const LECTURES = [
-{ no:"01", tag:"DML", title:"2-17. DML", blocks:[
+{ no:"17", tag:"DML", title:"2-17. DML", blocks:[
   {t:"h3",x:"개념"},
-  {t:"li",x:"DML: 데이터를 삽입(INSERT)·수정(UPDATE)·삭제(DELETE)·병합(MERGE)하는 명령어"},
-  {t:"li",x:"{{트랜잭션}}을 발생시키므로 작업 후 반드시 {{COMMIT 또는 ROLLBACK}} 필요"},
-  {t:"note",tag:"함정",x:"{{TRUNCATE}}는 데이터를 지우지만 AUTO COMMIT 특성 때문에 DML이 아니라 {{DDL}}이다(단골 오답)."},
-
-  {t:"h2",x:"INSERT"},
-  {t:"li",x:"Oracle은 서브쿼리 없이 쓸 때 한 번에 {{한 행}}만 삽입 (SQL Server는 여러 행 동시 가능)"},
-  {t:"li",x:"컬럼명 명시 시 일부만 입력 가능(나머지 NULL), {{컬럼명 생략 시}}엔 전체 컬럼에 순서대로 {{모두}} 입력해야 함"},
-  {t:"li",x:"{{INSERT ALL}}: 여러 테이블에 동시 입력 (서브쿼리 필수)"},
-
-  {t:"h2",x:"UPDATE / DELETE"},
-  {t:"li",x:"UPDATE: 컬럼 단위 수정, 하나의 문으로 여러 컬럼 동시 수정 가능"},
-  {t:"li",x:"DELETE: 행 단위 삭제, {{WHERE 생략 시 전체 행 삭제}}"},
-
-  {t:"h2",x:"MERGE"},
-  {t:"li",x:"{{ON}} 절 조건 기준으로 INSERT·UPDATE·DELETE를 동시에 수행"},
-  {t:"li",x:"{{WHEN MATCHED}}: UPDATE만 또는 UPDATE+DELETE (DELETE {{단독 불가}}, UPDATE 후 DELETE 수행)"},
-  {t:"li",x:"{{WHEN NOT MATCHED}}: INSERT만 가능, 생략 가능"},
+  {t:"li",x:"INSERT·UPDATE·DELETE·MERGE — {{트랜잭션}} 발생, 작업 후 반드시 {{COMMIT/ROLLBACK}} 필요"},
+  {t:"note",tag:"함정",x:"TRUNCATE는 데이터 삭제 명령이지만 {{AUTO COMMIT}} 특성 때문에 {{DDL}}에 속함 (단원문제 1번 그대로)"},
+  {t:"h3",x:"INSERT ★"},
+  {t:"li",x:"Oracle은 서브쿼리 없으면 한 번에 {{한 행}}만 (SQL Server는 여러 행 가능) / {{INSERT ALL}}로 여러 테이블 동시 입력(서브쿼리 필수)"},
+  {t:"li",x:"컬럼명 명시 → 일부 컬럼만 입력 가능, 생략된 컬럼은 {{NULL}} (단, {{NOT NULL}} 컬럼이면 오류)"},
+  {t:"note",tag:"빈출",x:"컬럼 리스트 {{생략}} 시 전체 컬럼 개수·순서대로 모두 입력해야 함 — '생략해도 일부만 입력 가능' = {{틀린}} 설명 (단원문제 4번 ④)"},
+  {t:"li",x:"타입 안 맞는 값은 {{암묵적 형 변환}} 발생 — 가능하지만 권장 안 함"},
+  {t:"h3",x:"UPDATE · DELETE"},
+  {t:"li",x:"UPDATE는 {{컬럼}} 단위, 여러 컬럼 동시 수정 가능 / 서브쿼리·연관 서브쿼리로 SET 가능"},
+  {t:"li",x:"DELETE는 {{행}} 단위, WHERE 생략 시 {{전체 행}} 삭제"},
+  {t:"note",tag:"포인트",x:"풀이팁(단원문제 2번 유형): 🟠UPDATE 연관 서브쿼리부터 — 행마다 그룹 {{MAX}}로 갱신값 표에 적기 → 🔵DELETE 조건 행 지우기 → 🟢남은 값 합산"},
+  {t:"h3",x:"MERGE ★★"},
+  {t:"li",x:"MERGE INTO {{수정 대상}} USING {{참조 테이블}} ON (조건) — ON 절 괄호 {{필수}}"},
+  {t:"li",x:"UPDATE 절엔 테이블명 명시 {{안 함}} / SET 왼쪽={{수정 테이블}} 컬럼, 오른쪽=참조 컬럼 / INSERT는 INTO 없이 {{VALUES}}만"},
+  {t:"table",head:["절","가능한 작업"],rows:[
+    ["WHEN MATCHED","{{UPDATE}}만 or UPDATE+DELETE (DELETE 단독 {{불가}})"],
+    ["WHEN NOT MATCHED","{{INSERT}}만 · 절 자체는 {{생략 가능}}"],
+  ]},
+  {t:"note",tag:"빈출",x:"UPDATE+DELETE 함께 쓰면 {{UPDATE가 먼저}} 수행 → 수정된 행 대상으로만 DELETE 평가 (단원문제 3번 정답 ④)"},
 ]},
-
-{ no:"02", tag:"TCL", title:"2-18. TCL", blocks:[
-  {t:"h3",x:"개념"},
-  {t:"li",x:"TCL: 트랜잭션 제어어, {{COMMIT}}·{{ROLLBACK}}(+SAVEPOINT)이 포함됨"},
-  {t:"li",x:"DML 결과를 작업 단위(트랜잭션)별로 제어, 정상 종료 안 하면 {{LOCK}} 발생 가능"},
-
-  {t:"h2",x:"트랜잭션 / ACID"},
-  {t:"li",x:"하나의 분할할 수 없는 논리 연산 단위, 모두 COMMIT 또는 전체 ROLLBACK ({{All or Nothing}})"},
-  {t:"li",x:"{{원자성}}(전부 또는 전무) · {{일관성}} · {{고립성}}(다른 트랜잭션 영향 X) · {{지속성}}(COMMIT 후 영구)"},
-
-  {t:"h2",x:"COMMIT / ROLLBACK / SAVEPOINT"},
-  {t:"li",x:"{{COMMIT}}: 변경을 영구 확정 / {{ROLLBACK}}: 변경을 취소하고 이전 상태로 복구"},
-  {t:"li",x:"{{SAVEPOINT}}: 롤백 시점을 지정 — {{ROLLBACK TO A}}로 특정 지점까지만 복구"},
-  {t:"note",tag:"함정",x:"SAVEPOINT는 {{부분 커밋이 아니다}}. 단지 ROLLBACK 시점을 만들어줄 뿐이며, 확정은 COMMIT만 한다."},
+{ no:"18", tag:"TCL", title:"2-18. TCL", blocks:[
+  {t:"h3",x:"트랜잭션"},
+  {t:"li",x:"분할할 수 없는 {{논리적 연산 단위}}, SQL 1문장 이상 포함 — {{ALL OR NOTHING}}"},
+  {t:"li",x:"DML 수행 후 트랜잭션을 안 끝내면 {{LOCK}} 발생 가능"},
+  {t:"table",head:["특성","의미"],rows:[
+    ["{{원자성}}(Atomicity)","모두 실행되거나 전혀 실행되지 않아야"],
+    ["{{일관성}}(Consistency)","실행 전 문제 없으면 실행 후에도 문제 없어야"],
+    ["{{고립성}}(Isolation)","다른 트랜잭션의 영향 받으면 안 됨 — '격리가 없다'는 {{틀린}} 설명"],
+    ["{{지속성}}(Durability)","성공 결과는 영구 저장"],
+  ]},
+  {t:"h3",x:"COMMIT · ROLLBACK · SAVEPOINT ★"},
+  {t:"li",x:"COMMIT 후엔 ROLLBACK으로 {{되돌릴 수 없음}} / DDL은 자동 COMMIT이라 트랜잭션 제어 {{대상 아님}}"},
+  {t:"li",x:"ROLLBACK: 미커밋 변경 취소 → 최종 COMMIT 이전 or 지정 {{SAVEPOINT}}로 원복"},
+  {t:"li",x:"SAVEPOINT는 부분 {{커밋}}이 아니라 부분 {{ROLLBACK}} 기준점 (단원문제 1번 ④가 틀린 이유)"},
+  {t:"li",x:"COMMIT 이후엔 어떤 SAVEPOINT로도 원복 {{불가}}"},
+  {t:"note",tag:"포인트",x:"풀이팁(SAL 총합 유형): 🟠COMMIT 라인마다 {{가로선}} 긋고 확정값 고정 → 🟡ROLLBACK/ROLLBACK TO가 지우는 범위 표시 → 🔵행별 최종값 표로 정리 → 🟢합산 (예: 3000+... 아니라 4000+2000+1500={{7500}})"},
 ]},
-
 { no:"03", tag:"DDL", title:"2-19. DDL", blocks:[
   {t:"h3",x:"개념"},
   {t:"li",x:"DDL: 객체 구조를 정의·변경·삭제 — CREATE·ALTER·DROP·TRUNCATE"},
