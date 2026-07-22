@@ -142,6 +142,7 @@
     main,.bar,nav.chips,footer{padding-left:14px;padding-right:14px}
     .lecstat{display:none}
   }
+.shp{vertical-align:-4px;margin-right:5px;flex:none}
 </style>
 </head>
 <body>
@@ -206,12 +207,12 @@ const LECTURES = [
   {t:"li",x:"③ {{바커}}(Barker) 표기법: 둥근 사각형 + 실선·점선으로 관계·선택성 표현(오라클 계열)"},
   {t:"h3",x:"피터 첸 표기법 기호 ★빈출"},
   {t:"table",head:["기호","의미"],rows:[
-    ["{{사각형}}","{{개체}}(Entity)"],
-    ["{{마름모}}","{{관계}}(Relationship)"],
-    ["{{타원}}","{{속성}}(Attribute)"],
-    ["{{이중 타원}}","{{다중값}}(다치) 속성"],
-    ["{{밑줄 타원}}","{{기본키}} 속성"],
-    ["{{선}}·링크","개체·속성·관계 {{연결}}"],
+    ["[[rect]] {{사각형}}","{{개체}}(Entity)"],
+    ["[[diamond]] {{마름모}}","{{관계}}(Relationship)"],
+    ["[[ellipse]] {{타원}}","{{속성}}(Attribute)"],
+    ["[[ellipse2]] {{이중 타원}}","{{다중값}}(다치) 속성"],
+    ["[[ellipseU]] {{밑줄 타원}}","{{기본키}} 속성"],
+    ["[[line]] {{선}}·링크","개체·속성·관계 {{연결}}"],
   ]},
 ]},
 { no:"63~64", tag:"관계형·키", title:"관계형 DB 용어 · 키", blocks:[
@@ -578,8 +579,27 @@ function escapeHTML(s){
 }
 
 // turn a string with {{answer::hint}} into HTML + register blanks
+const SHAPES = {
+  rect:      '<svg class="shp" width="34" height="20" viewBox="0 0 34 20"><rect x="1.5" y="1.5" width="31" height="17" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+  roundrect: '<svg class="shp" width="34" height="20" viewBox="0 0 34 20"><rect x="1.5" y="1.5" width="31" height="17" rx="6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+  diamond:   '<svg class="shp" width="34" height="20" viewBox="0 0 34 20"><polygon points="17,1.5 32.5,10 17,18.5 1.5,10" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+  ellipse:   '<svg class="shp" width="34" height="20" viewBox="0 0 34 20"><ellipse cx="17" cy="10" rx="15" ry="8" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+  ellipse2:  '<svg class="shp" width="34" height="20" viewBox="0 0 34 20"><ellipse cx="17" cy="10" rx="15" ry="8" fill="none" stroke="currentColor" stroke-width="1.4"/><ellipse cx="17" cy="10" rx="11.5" ry="5.2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>',
+  ellipseU:  '<svg class="shp" width="34" height="20" viewBox="0 0 34 20"><ellipse cx="17" cy="10" rx="15" ry="8" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="10" y1="13.2" x2="24" y2="13.2" stroke="currentColor" stroke-width="1.5"/></svg>',
+  line:      '<svg class="shp" width="34" height="20" viewBox="0 0 34 20"><line x1="2" y1="10" x2="32" y2="10" stroke="currentColor" stroke-width="1.6"/></svg>',
+  circle:    '<svg class="shp" width="24" height="20" viewBox="0 0 24 20"><circle cx="12" cy="10" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+  arrow:     '<svg class="shp" width="34" height="20" viewBox="0 0 34 20"><line x1="2" y1="10" x2="26" y2="10" stroke="currentColor" stroke-width="1.6"/><polygon points="32.5,10 25,6.2 25,13.8" fill="currentColor"/></svg>',
+  parallel:  '<svg class="shp" width="34" height="20" viewBox="0 0 34 20"><line x1="2" y1="6" x2="32" y2="6" stroke="currentColor" stroke-width="1.6"/><line x1="2" y1="14" x2="32" y2="14" stroke="currentColor" stroke-width="1.6"/></svg>',
+  assoc:     '<svg class="shp" width="40" height="20" viewBox="0 0 40 20"><line x1="2" y1="10" x2="38" y2="10" stroke="currentColor" stroke-width="1.6"/></svg>',
+  diaOpen:   '<svg class="shp" width="40" height="20" viewBox="0 0 40 20"><line x1="2" y1="10" x2="26" y2="10" stroke="currentColor" stroke-width="1.6"/><polygon points="26,10 32,6 38,10 32,14" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
+  diaFill:   '<svg class="shp" width="40" height="20" viewBox="0 0 40 20"><line x1="2" y1="10" x2="26" y2="10" stroke="currentColor" stroke-width="1.6"/><polygon points="26,10 32,6 38,10 32,14" fill="currentColor"/></svg>',
+  arrOpen:   '<svg class="shp" width="40" height="20" viewBox="0 0 40 20"><line x1="2" y1="10" x2="28" y2="10" stroke="currentColor" stroke-width="1.6"/><polygon points="28,4.5 38,10 28,15.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
+  arrDash:   '<svg class="shp" width="40" height="20" viewBox="0 0 40 20"><line x1="2" y1="10" x2="30" y2="10" stroke="currentColor" stroke-width="1.6" stroke-dasharray="4 3"/><polyline points="30,5 38,10 30,15" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+  arrOpenDash:'<svg class="shp" width="40" height="20" viewBox="0 0 40 20"><line x1="2" y1="10" x2="28" y2="10" stroke="currentColor" stroke-width="1.6" stroke-dasharray="4 3"/><polygon points="28,4.5 38,10 28,15.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>'
+};
+
 function renderText(str){
-  const parts = str.split(/(\{\{.+?\}\})/g);
+  const parts = str.split(/(\{\{.+?\}\}|\[\[\w+\]\])/g);
   let html = '';
   for(const p of parts){
     const m = p.match(/^\{\{(.+?)\}\}$/);
@@ -590,7 +610,9 @@ function renderText(str){
       html += `<button type="button" class="blank" data-ans="${escapeHTML(ans)}" aria-pressed="false"><span class="ph">${ph}</span></button>`;
       total++;
     } else if(p){
-      html += escapeHTML(p);
+      const sm = p.match(/^\[\[(\w+)\]\]$/);
+      if(sm && SHAPES[sm[1]]){ html += SHAPES[sm[1]]; }
+      else html += escapeHTML(p);
     }
   }
   return html;
