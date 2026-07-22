@@ -11,7 +11,7 @@
 <style>
   :root{
     --bg:#E8E9E3;
-    --surface:#FCFCFA;
+    --surface:#ffffff;
     --ink:#15171C;
     --muted:#757a83;
     --faint:#a4a8ae;
@@ -21,6 +21,8 @@
     --accent-soft:#e6e8fb;
     --mark:#fbe25a;
     --mark-done:#a9e7bf;
+    --cream:#f7f5ea;
+    --cream-line:#d9e8d4;
     --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
     --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   }
@@ -67,9 +69,9 @@
   nav.chips{max-width:860px;margin:0 auto;padding:10px 20px 0;display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   nav.chips::-webkit-scrollbar{display:none}
   nav.chips a{
-    flex:0 0 auto;font-family:var(--mono);font-size:12px;font-weight:500;text-decoration:none;
-    color:var(--muted);border:1px solid var(--line-strong);background:var(--surface);
-    padding:5px 11px;border-radius:8px;transition:all .15s;white-space:nowrap;
+    flex:0 0 auto;font-family:var(--sans);font-size:12.5px;font-weight:600;text-decoration:none;
+    color:var(--ink);border:1px solid var(--line-strong);background:var(--surface);
+    padding:6px 13px;border-radius:999px;transition:all .15s;white-space:nowrap;
   }
   nav.chips a:hover{border-color:var(--accent);color:var(--accent)}
   nav.chips a.active{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -77,8 +79,8 @@
   /* ---------- content ---------- */
   main{max-width:860px;margin:0 auto;padding:8px 20px 0}
   section.lec{margin:30px 0}
-  .lechead{display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:4px}
-  .lecno{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.05em}
+  .lechead{display:flex;align-items:baseline;gap:10px;padding-bottom:2px;border-bottom:none;margin-bottom:2px}
+  .lecno{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:2px 9px;letter-spacing:0}
   .lectitle{font-size:18px;font-weight:700;letter-spacing:-.01em}
   .lecstat{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
 
@@ -94,14 +96,15 @@
   .line.indent{margin-left:20px}
   .line .txt{flex:1}
 
-  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:10px 13px;background:var(--accent-soft);border-radius:10px;font-size:13.5px}
-  .note .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;flex:0 0 auto;margin-top:3px}
+  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:12px 16px;background:var(--cream);border:1px solid var(--cream-line);border-radius:12px;font-size:13.5px}
+  .note .tag{font-family:var(--sans);font-size:12.5px;font-weight:700;color:var(--ink);flex:0 0 auto;margin-top:0}
+  .note .tag::before{content:"\1F4CC ";margin-right:2px}
 
   /* ---------- tables ---------- */
   .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 2px;border:1px solid var(--line);border-radius:10px}
   table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:380px}
-  thead th{background:#f3f3ee;text-align:left;font-weight:700;color:#3a3d44;padding:9px 12px;border-bottom:1px solid var(--line-strong);white-space:nowrap;font-size:12.5px}
-  tbody td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{background:#fafaf7;text-align:left;font-weight:600;color:var(--muted);padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:12.5px}
+  tbody td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
   tbody tr:last-child td{border-bottom:none}
   td:first-child{font-weight:600;white-space:nowrap}
 
@@ -530,7 +533,7 @@ const LECTURES = [
   {t:"li",x:"① 정보 제공·전달 {{물리적 제어}} 분야 (예: Google Glass, Wearable)"},
   {t:"li",x:"② 콘텐츠 상세 표현·전체 {{구성}} 분야 ③ 사용자 {{편의성}} 기능 분야"},
   {t:"h2",x:"UI 종류 (상호작용 방식)"},
-  {t:"li",x:"{{CLI}} (Command Line) · {{GUI}} (Graphical) · {{MUI}} (Multi-modal) · {{VUI}} (Voice) · {{OUI}} (Object)"},
+  {t:"li",x:"{{CLI/CUI}}: {{명령어(텍스트)}} 직접 입력 · {{GUI}}: {{그래픽}} 환경, 마우스로 아이콘·메뉴 · {{NUI}}: {{자연스러운}} 신체 움직임(터치·음성·제스처) · {{OUI}}: 유기적, 모든 사물이 입출력장치 · MUI(멀티모달)·VUI(음성)"},
   {t:"h2",x:"UI 기본 원칙 4가지"},
   {t:"li",x:"{{직관성}}(Intuitiveness) · {{유효성}}(Effectiveness) · {{학습성}}(Learnability) · {{유연성}}(Flexibility)"},
   {t:"note",tag:"참고",x:"UI 설계 지침은 12가지 (사용자 중심·일관성·단순성·가시성·표준화·접근성·명확성·오류 발생 해결 등)"},
