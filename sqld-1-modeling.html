@@ -367,6 +367,7 @@ const LECTURES = [
   {t:"h3",x:"개념"},
   {t:"li",x:"트랜잭션: 하나의 논리적 기능을 수행하는 업무 단위, 전부 수행되거나 전부 취소 → {{All or Nothing}}"},
   {t:"li",x:"트랜잭션에 의한 관계는 {{필수}}적 관계 형태를 가짐"},
+  {t:"li",x:"하나의 트랜잭션 안의 작업들은 서로 {{독립적}}으로 발생하면 안 됨 → 각각의 INSERT문으로 분리 개발 금지"},
 
   {t:"h2",x:"ACID 속성 (4가지)"},
   {t:"table",head:["속성","의미"],rows:[
@@ -380,6 +381,7 @@ const LECTURES = [
   {t:"h2",x:"주요 명령어"},
   {t:"li",x:"{{COMMIT}}: 모든 작업을 확정(영구 반영)"},
   {t:"li",x:"{{ROLLBACK}}: 모든 작업을 취소하고 시작 직전 상태로 복구"},
+  {t:"note",tag:"포인트",x:"계좌이체 예시 — A 잔액 -100과 B 잔액 +100 UPDATE는 한 단위: 부분 COMMIT {{불가}}, 동시 COMMIT 또는 ROLLBACK."},
 ]},
 
 { no:"09", tag:"NULL", title:"1-9. NULL 속성의 이해", blocks:[
@@ -395,6 +397,7 @@ const LECTURES = [
 
   {t:"h2",x:"NULL 정렬 (DBMS별)"},
   {t:"li",x:"오름차순 정렬 시 — {{Oracle}}: NULL을 마지막에 배치 / {{SQL Server}}: NULL을 처음에 배치"},
+  {t:"li",x:"ERD 표기: IE 표기법은 속성의 NULL 허용 여부를 {{표기하지 않음}}"},
   {t:"note",tag:"함정",x:"기본키는 NULL 불가, 외래키는 NULL {{가능}}, 고유키(UNIQUE)도 NULL {{가능}}."},
 ]},
 
