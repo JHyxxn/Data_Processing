@@ -10,19 +10,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
   :root{
-    --bg:#E8E9E3;
+    --bg:#FAFAF8;
     --surface:#ffffff;
     --ink:#15171C;
     --muted:#757a83;
     --faint:#a4a8ae;
-    --line:#dcddd6;
-    --line-strong:#cfd0c8;
+    --line:#e8e6e1;
+    --line-strong:#dbd9d3;
     --accent:#2438d6;
     --accent-soft:#e6e8fb;
     --mark:#fbe25a;
     --mark-done:#a9e7bf;
     --cream:#f7f5ea;
-    --cream-line:#d9e8d4;
+    --cream-line:#e6dfc8;
     --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
     --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   }
@@ -37,8 +37,8 @@
 
   /* ---------- top bar ---------- */
   header{
-    position:sticky;top:0;z-index:30;background:rgba(232,233,227,.86);
-    backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-strong);
+    position:sticky;top:0;z-index:30;background:rgba(250,250,248,.86);
+    backdrop-filter:saturate(1.4) blur(10px);
   }
   .bar{max-width:860px;margin:0 auto;padding:14px 20px 12px}
   .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:8px}
@@ -147,6 +147,22 @@
   }
 .shp{vertical-align:-4px;margin-right:5px}
 .shp-big{display:block;margin:6px 0}
+
+/* ===== review-map ref 표 스타일 (tone 팔레트 이식) ===== */
+:root{--g-ink:#1d6b45;--g-bg:#e3f2e8;--b-ink:#1d4fd6;--b-bg:#e4ebfb;--a-ink:#8a6410;--a-bg:#f7efd8;--r-ink:#a03535;--r-bg:#f9e6e3;--p-ink:#8a3f77;--p-bg:#f6e4f0}
+.tablewrap td.tterm{font-family:Georgia,'Times New Roman',serif;font-size:15.5px;font-weight:700;white-space:nowrap;padding-right:18px}
+tr.tr-g td.tterm{color:var(--g-ink)} tr.tr-b td.tterm{color:var(--b-ink)}
+tr.tr-a td.tterm{color:var(--a-ink)} tr.tr-r td.tterm{color:var(--r-ink)}
+tr.tr-p td.tterm{color:var(--p-ink)}
+tr.tr-g .chip{color:var(--g-ink);background:var(--g-bg)}
+tr.tr-b .chip{color:var(--b-ink);background:var(--b-bg)}
+tr.tr-a .chip{color:var(--a-ink);background:var(--a-bg)}
+tr.tr-r .chip{color:var(--r-ink);background:var(--r-bg)}
+tr.tr-p .chip{color:var(--p-ink);background:var(--p-bg)}
+.tablewrap .chip{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;margin:3px 4px 0 0}
+.tablewrap .rowchips{margin-top:3px}
+.tablewrap td{vertical-align:top}
+.tablewrap tbody tr:hover{background:#fafbff}
 </style>
 </head>
 <body>
@@ -207,9 +223,9 @@ const LECTURES = [
   {t:"h3",x:"트리 순회 (운행) — 같은 트리로 3종 비교 ★시뮬레이션"},
   {t:"li",x:"[[tree1]]"},
   {t:"table",head:["순회","규칙 (Root 위치)","이 트리의 방문 순서"],rows:[
-    ["{{전위}}(Preorder)","{{Root}}→Left→Right (Root 먼저)","{{A}} → B → {{D}} → E → {{C}}"],
-    ["{{중위}}(Inorder)","Left→{{Root}}→Right (Root 가운데)","{{D}} → B → {{E}} → {{A}} → C"],
-    ["{{후위}}(Postorder)","Left→Right→{{Root}} (Root 마지막)","D → {{E}} → {{B}} → C → {{A}}"],
+    ["{{전위}}(Preorder)","{{Root}}→Left→Right (Root 먼저)","{{A}} → B → {{D}} → E → {{C}}",["Root 먼저"]],
+    ["{{중위}}(Inorder)","Left→{{Root}}→Right (Root 가운데)","{{D}} → B → {{E}} → {{A}} → C",["Root 가운데"]],
+    ["{{후위}}(Postorder)","Left→Right→{{Root}} (Root 마지막)","D → {{E}} → {{B}} → C → {{A}}",["Root 마지막"]],
   ]},
   {t:"note",tag:"암기",x:"전·중·후 = {{Root}}가 앞·가운데·뒤 / 왼쪽 서브트리(B-D-E)는 항상 {{왼쪽부터}} 다 돌고 나서 오른쪽(C)으로"},
   {t:"li",x:"그래프 탐색: {{DFS}}(깊이 우선) = {{스택}}·재귀로 구현, 한 방향 끝까지 / {{BFS}}(너비 우선) = {{큐}}로 구현, 가까운 레벨부터"},
@@ -219,31 +235,31 @@ const LECTURES = [
   {t:"h2",x:"시간복잡도 (Big-O) ★서랍부터"},
   {t:"li",x:"빠른 순서: {{O(1)}} < {{O(log n)}} < {{O(n)}} < {{O(n log n)}} < {{O(n²)}} < O(2ⁿ)"},
   {t:"table",head:["표기 / 이름","설명 + 해당 알고리즘"],rows:[
-    ["O(1) {{상수}}","입력 n과 무관하게 항상 일정한 단계 — 배열 인덱스 접근·{{해시}} 탐색·스택 push/pop"],
-    ["O(log n) {{로그}}","단계마다 문제가 {{절반}}씩 줄어듦 — {{이분 탐색}}(Binary Search)"],
-    ["O(n) {{선형}}","단계 수와 입력 n이 {{1:1}} 관계 — {{순차 탐색}}·버블/삽입 정렬의 최선"],
-    ["O(n log n) 선형 로그","n개 처리 × 단계마다 log n번 비교 — {{힙}}·{{병합}}·퀵(평균) / 비교 기반 정렬의 {{이론적 하한}}"],
-    ["O(n²) {{2차}}","이중 반복문, n×n번 — {{버블}}·{{선택}}·{{삽입}} 정렬·퀵({{최악}})"],
-    ["O(2ⁿ) 지수","n이 1 늘 때마다 단계 {{2배}} 폭증 — 완전탐색·피보나치 단순 재귀"],
+    ["O(1) {{상수}}","입력 n과 무관하게 항상 일정한 단계 — 배열 인덱스 접근·{{해시}} 탐색·스택 push/pop",["push/pop"]],
+    ["O(log n) {{로그}}","단계마다 문제가 {{절반}}씩 줄어듦 — {{이분 탐색}}(Binary Search)",["백만 → 약 20번"]],
+    ["O(n) {{선형}}","단계 수와 입력 n이 {{1:1}} 관계 — {{순차 탐색}}·버블/삽입 정렬의 최선",["n 2배 = 시간 2배"]],
+    ["O(n log n) 선형 로그","n개 처리 × 단계마다 log n번 비교 — {{힙}}·{{병합}}·퀵(평균) / 비교 기반 정렬의 {{이론적 하한}}",["효율 정렬 3인방"]],
+    ["O(n²) {{2차}}","이중 반복문, n×n번 — {{버블}}·{{선택}}·{{삽입}} 정렬·퀵({{최악}})",["이중 반복문"]],
+    ["O(2ⁿ) 지수","n이 1 늘 때마다 단계 {{2배}} 폭증 — 완전탐색·피보나치 단순 재귀",["완전탐색"]],
   ]},
   {t:"note",tag:"단골",x:"비교 기반 정렬의 이론적 하한 = {{O(n log n)}} (이보다 빠른 비교 정렬 없음) / {{기수}} 정렬은 비교 없이 O(kn)으로 이 하한을 우회"},
   {t:"h2",x:"정렬 알고리즘 (평균 시간 복잡도)"},
   {t:"table",head:["정렬","핵심","평균 복잡도"],rows:[
-    ["{{삽입}} 정렬","순서화된 파일에 새 레코드 삽입","{{O(n²)}}"],
-    ["{{선택}} 정렬","최소값 찾아 앞에 배치","{{O(n²)}}"],
-    ["{{버블}} 정렬","인접 두 개 비교·교환","{{O(n²)}}"],
-    ["{{셸}} 정렬","h값 간격으로 부분 정렬","O(n log n)"],
-    ["{{퀵}} 정렬","피벗 기준 분할({{분할과 정복}}), 가장 빠름","{{O(n log₂n)}}"],
-    ["{{힙}} 정렬","전이진 트리 이용","O(n log₂n)"],
-    ["{{합병}} 정렬","두 키를 한 쌍으로 정렬 후 합병","O(n log₂n)"],
-    ["{{기수}} 정렬","{{큐}} 이용, 자릿수별 분배","{{O(n)}}"],
+    ["{{삽입}} 정렬","순서화된 파일에 새 레코드 삽입","{{O(n²)}}",["순서화 파일에 삽입"]],
+    ["{{선택}} 정렬","최소값 찾아 앞에 배치","{{O(n²)}}",["최소값 앞으로"]],
+    ["{{버블}} 정렬","인접 두 개 비교·교환","{{O(n²)}}",["인접 비교·교환"]],
+    ["{{셸}} 정렬","h값 간격으로 부분 정렬","O(n log n)",["h 간격 부분 정렬"]],
+    ["{{퀵}} 정렬","피벗 기준 분할({{분할과 정복}}), 가장 빠름","{{O(n log₂n)}}",["피벗 분할"]],
+    ["{{힙}} 정렬","전이진 트리 이용","O(n log₂n)",["전이진 트리"]],
+    ["{{합병}} 정렬","두 키를 한 쌍으로 정렬 후 합병","O(n log₂n)",["쌍으로 합병"]],
+    ["{{기수}} 정렬","{{큐}} 이용, 자릿수별 분배","{{O(n)}}",["자릿수별 분배"]],
   ]},
   {t:"note",tag:"시험 포인트",x:"① 최악에도 O(n log n) 보장 = {{힙·병합}}뿐 (퀵은 최악 {{O(n²)}}) ② 안정 정렬 = {{버블·삽입·병합·기수}}"},
   {t:"h3",x:"정렬 1회전(PASS 1) 시뮬레이션 — 같은 배열 [5, 3, 8, 1] ★빈출"},
   {t:"table",head:["정렬","1회전 동작","1회전 후 결과"],rows:[
-    ["버블","인접끼리 비교·교환하며 끝까지 → {{최댓값}}이 맨 {{뒤}}로","[ {{3, 5, 1, 8}} ]"],
-    ["선택","전체에서 {{최솟값}}(1)을 찾아 맨 {{앞}}과 교환","[ {{1, 3, 8, 5}} ]"],
-    ["삽입","{{두 번째}} 값(3)을 앞의 정렬된 부분에 삽입","[ {{3, 5, 8, 1}} ]"],
+    ["버블","인접끼리 비교·교환하며 끝까지 → {{최댓값}}이 맨 {{뒤}}로","[ {{3, 5, 1, 8}} ]",["끝까지 스캔"]],
+    ["선택","전체에서 {{최솟값}}(1)을 찾아 맨 {{앞}}과 교환","[ {{1, 3, 8, 5}} ]",["교환은 1회뿐"]],
+    ["삽입","{{두 번째}} 값(3)을 앞의 정렬된 부분에 삽입","[ {{3, 5, 8, 1}} ]",["앞부분 정렬 유지"]],
   ]},
   {t:"note",tag:"구분",x:"버블=최댓값이 뒤에 쌓임 / 선택=최솟값이 앞에 쌓임 / 삽입=앞부분만 정렬 상태 유지 — \"1회전 후 배열은?\" 문제는 이 셋 구분이 전부"},
   {t:"h2",x:"검색 알고리즘"},
@@ -293,7 +309,7 @@ const LECTURES = [
   {t:"li",x:"{{Git}}: 분산 버전 관리, 리누스 토발즈 개발, 명령어 Fetch·Clone·Push"},
   {t:"table",head:["구분","SVN","Git"],rows:[
     ["방식","{{클라이언트-서버}}","{{분산 저장소}}"],
-    ["버전 관리","{{서버}}에서","{{로컬}} 저장소에서"],
+    ["버전 관리","{{서버}}에서","{{로컬}} 저장소에서",["커밋 위치 차이"]],
     ["서버 문제 시","협업 중단","{{로컬 작업 가능}}"],
     ["속도","느림","{{빠름}}"],
   ]},
@@ -315,8 +331,8 @@ const LECTURES = [
   {t:"h3",x:"통합 테스트 (Integration) 4방식"},
   {t:"li",x:"비점진적: {{빅뱅}}(전체 한꺼번에) / 점진적: {{상향식}}(Bottom-Up, {{드라이버}} 사용)·{{하향식}}(Top-Down, {{스텁}} 사용)·샌드위치(혼합)"},
   {t:"table",head:["구분","Stub","Driver"],rows:[
-    ["사용 시점","{{상위}} 모듈 있고 하위 없을 때","{{하위}} 모듈 있고 상위 없을 때"],
-    ["역할","{{하위}} 모듈 대체","{{상위}} 모듈 대체"],
+    ["사용 시점","{{상위}} 모듈 있고 하위 없을 때","{{하위}} 모듈 있고 상위 없을 때",["하향식 Stub · 상향식 Driver"]],
+    ["역할","{{하위}} 모듈 대체","{{상위}} 모듈 대체",["가짜(더미) 모듈"]],
   ]},
   {t:"li",x:"{{시스템 테스트}}: 기능적(블랙박스)+비기능적(화이트박스) / {{인수 테스트}}: 사용자 요구사항 충족 검증"},
   {t:"li",x:"인수: {{Alpha}}(개발자 앞에서)·{{Beta}}(최종 사용자가 여러 명 앞에서)"},
@@ -434,7 +450,8 @@ function blockHTML(b){
     let h = '<div class="tablewrap"><table><thead><tr>';
     h += b.head.map(c=>`<th>${escapeHTML(c)}</th>`).join('');
     h += '</tr></thead><tbody>';
-    h += b.rows.map(r=>'<tr>'+r.map(c=>`<td>${renderText(c)}</td>`).join('')+'</tr>').join('');
+    const TONES=['tr-g','tr-b','tr-a','tr-r','tr-p'];
+    h += b.rows.map((r,ri)=>{const ch=Array.isArray(r[r.length-1])?r[r.length-1]:null;const cs=ch?r.slice(0,-1):r;return `<tr class="${TONES[ri%5]}">`+cs.map((c,ci)=>{const cx=(ch&&ci===cs.length-1)?'<div class="rowchips">'+ch.map(x=>`<span class="chip">${renderText(x)}</span>`).join('')+'</div>':'';return ci===0?`<td class="tterm">${renderText(c)}</td>`:`<td>${renderText(c)}${cx}</td>`;}).join('')+'</tr>';}).join('');
     h += '</tbody></table></div>';
     return h;
   }

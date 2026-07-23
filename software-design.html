@@ -10,19 +10,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
   :root{
-    --bg:#E8E9E3;
+    --bg:#FAFAF8;
     --surface:#ffffff;
     --ink:#15171C;
     --muted:#757a83;
     --faint:#a4a8ae;
-    --line:#dcddd6;
-    --line-strong:#cfd0c8;
+    --line:#e8e6e1;
+    --line-strong:#dbd9d3;
     --accent:#2438d6;
     --accent-soft:#e6e8fb;
     --mark:#fbe25a;
     --mark-done:#a9e7bf;
     --cream:#f7f5ea;
-    --cream-line:#d9e8d4;
+    --cream-line:#e6dfc8;
     --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
     --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   }
@@ -37,8 +37,8 @@
 
   /* ---------- top bar ---------- */
   header{
-    position:sticky;top:0;z-index:30;background:rgba(232,233,227,.86);
-    backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-strong);
+    position:sticky;top:0;z-index:30;background:rgba(250,250,248,.86);
+    backdrop-filter:saturate(1.4) blur(10px);
   }
   .bar{max-width:860px;margin:0 auto;padding:14px 20px 12px}
   .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:8px}
@@ -146,6 +146,22 @@
     .lecstat{display:none}
   }
 .shp{vertical-align:-4px;margin-right:5px;flex:none}
+
+/* ===== review-map ref 표 스타일 (tone 팔레트 이식) ===== */
+:root{--g-ink:#1d6b45;--g-bg:#e3f2e8;--b-ink:#1d4fd6;--b-bg:#e4ebfb;--a-ink:#8a6410;--a-bg:#f7efd8;--r-ink:#a03535;--r-bg:#f9e6e3;--p-ink:#8a3f77;--p-bg:#f6e4f0}
+.tablewrap td.tterm{font-family:Georgia,'Times New Roman',serif;font-size:15.5px;font-weight:700;white-space:nowrap;padding-right:18px}
+tr.tr-g td.tterm{color:var(--g-ink)} tr.tr-b td.tterm{color:var(--b-ink)}
+tr.tr-a td.tterm{color:var(--a-ink)} tr.tr-r td.tterm{color:var(--r-ink)}
+tr.tr-p td.tterm{color:var(--p-ink)}
+tr.tr-g .chip{color:var(--g-ink);background:var(--g-bg)}
+tr.tr-b .chip{color:var(--b-ink);background:var(--b-bg)}
+tr.tr-a .chip{color:var(--a-ink);background:var(--a-bg)}
+tr.tr-r .chip{color:var(--r-ink);background:var(--r-bg)}
+tr.tr-p .chip{color:var(--p-ink);background:var(--p-bg)}
+.tablewrap .chip{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;margin:3px 4px 0 0}
+.tablewrap .rowchips{margin-top:3px}
+.tablewrap td{vertical-align:top}
+.tablewrap tbody tr:hover{background:#fafbff}
 </style>
 </head>
 <body>
@@ -800,7 +816,8 @@ function blockHTML(b){
     let h = '<div class="tablewrap"><table><thead><tr>';
     h += b.head.map(c=>`<th>${escapeHTML(c)}</th>`).join('');
     h += '</tr></thead><tbody>';
-    h += b.rows.map(r=>'<tr>'+r.map(c=>`<td>${renderText(c)}</td>`).join('')+'</tr>').join('');
+    const TONES=['tr-g','tr-b','tr-a','tr-r','tr-p'];
+    h += b.rows.map((r,ri)=>{const ch=Array.isArray(r[r.length-1])?r[r.length-1]:null;const cs=ch?r.slice(0,-1):r;return `<tr class="${TONES[ri%5]}">`+cs.map((c,ci)=>{const cx=(ch&&ci===cs.length-1)?'<div class="rowchips">'+ch.map(x=>`<span class="chip">${renderText(x)}</span>`).join('')+'</div>':'';return ci===0?`<td class="tterm">${renderText(c)}</td>`:`<td>${renderText(c)}${cx}</td>`;}).join('')+'</tr>';}).join('');
     h += '</tbody></table></div>';
     return h;
   }

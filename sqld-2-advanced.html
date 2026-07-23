@@ -10,17 +10,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
   :root{
-    --bg:#E8E9E3;
-    --surface:#FCFCFA;
+    --bg:#FAFAF8;
+    --surface:#ffffff;
     --ink:#15171C;
     --muted:#757a83;
     --faint:#a4a8ae;
-    --line:#dcddd6;
-    --line-strong:#cfd0c8;
+    --line:#e8e6e1;
+    --line-strong:#dbd9d3;
     --accent:#2438d6;
     --accent-soft:#e6e8fb;
     --mark:#fbe25a;
     --mark-done:#a9e7bf;
+    --cream:#f7f5ea;
+    --cream-line:#e6dfc8;
     --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
     --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   }
@@ -35,8 +37,8 @@
 
   /* ---------- top bar ---------- */
   header{
-    position:sticky;top:0;z-index:30;background:rgba(232,233,227,.86);
-    backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-strong);
+    position:sticky;top:0;z-index:30;background:rgba(250,250,248,.86);
+    backdrop-filter:saturate(1.4) blur(10px);
   }
   .bar{max-width:860px;margin:0 auto;padding:14px 20px 12px}
   .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:8px}
@@ -67,9 +69,9 @@
   nav.chips{max-width:860px;margin:0 auto;padding:10px 20px 0;display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   nav.chips::-webkit-scrollbar{display:none}
   nav.chips a{
-    flex:0 0 auto;font-family:var(--mono);font-size:12px;font-weight:500;text-decoration:none;
-    color:var(--muted);border:1px solid var(--line-strong);background:var(--surface);
-    padding:5px 11px;border-radius:8px;transition:all .15s;white-space:nowrap;
+    flex:0 0 auto;font-family:var(--sans);font-size:12.5px;font-weight:600;text-decoration:none;
+    color:var(--ink);border:1px solid var(--line-strong);background:var(--surface);
+    padding:6px 13px;border-radius:999px;transition:all .15s;white-space:nowrap;
   }
   nav.chips a:hover{border-color:var(--accent);color:var(--accent)}
   nav.chips a.active{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -77,8 +79,8 @@
   /* ---------- content ---------- */
   main{max-width:860px;margin:0 auto;padding:8px 20px 0}
   section.lec{margin:30px 0}
-  .lechead{display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:4px}
-  .lecno{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.05em}
+  .lechead{display:flex;align-items:baseline;gap:10px;padding-bottom:2px;border-bottom:none;margin-bottom:2px}
+  .lecno{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:2px 9px;letter-spacing:0}
   .lectitle{font-size:18px;font-weight:700;letter-spacing:-.01em}
   .lecstat{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
 
@@ -94,14 +96,15 @@
   .line.indent{margin-left:20px}
   .line .txt{flex:1}
 
-  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:10px 13px;background:var(--accent-soft);border-radius:10px;font-size:13.5px}
-  .note .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;flex:0 0 auto;margin-top:3px}
+  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:12px 16px;background:var(--cream);border:1px solid var(--cream-line);border-radius:12px;font-size:13.5px}
+  .note .tag{font-family:var(--sans);font-size:12.5px;font-weight:700;color:var(--ink);flex:0 0 auto;margin-top:0}
+  .note .tag::before{content:"\1F4CC ";margin-right:2px}
 
   /* ---------- tables ---------- */
   .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 2px;border:1px solid var(--line);border-radius:10px}
   table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:380px}
-  thead th{background:#f3f3ee;text-align:left;font-weight:700;color:#3a3d44;padding:9px 12px;border-bottom:1px solid var(--line-strong);white-space:nowrap;font-size:12.5px}
-  tbody td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{background:#fafaf7;text-align:left;font-weight:600;color:var(--muted);padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:12.5px}
+  tbody td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
   tbody tr:last-child td{border-bottom:none}
   td:first-child{font-weight:600;white-space:nowrap}
 
@@ -142,6 +145,44 @@
     main,.bar,nav.chips,footer{padding-left:14px;padding-right:14px}
     .lecstat{display:none}
   }
+.shp{vertical-align:-4px;margin-right:5px;flex:none}
+
+/* ===== review-map tone 팔레트 이식 (가시성 강화) ===== */
+:root{--g-ink:#1d6b45;--g-bg:#e3f2e8;--b-ink:#1d4fd6;--b-bg:#e4ebfb;--a-ink:#8a6410;--a-bg:#f7efd8;--r-ink:#a03535;--r-bg:#f9e6e3;--p-ink:#8a3f77;--p-bg:#f6e4f0}
+/* note = 크림 고정(연두 테두리) — 색은 태그 글씨에만 (기준 디자인 문법) */
+.note{background:var(--cream);border:1px solid #e6dfc8;border-radius:12px}
+.note.nt-빈출 .tag{color:var(--r-ink)}
+.note.nt-함정 .tag{color:var(--a-ink)}
+.note.nt-포인트 .tag{color:var(--b-ink)}
+.note.nt-암기 .tag{color:var(--p-ink)}
+/* 표 행 톤 → 칩 자동 착색 (예시 칩용) */
+tr.tr-g .chip{color:var(--g-ink);background:var(--g-bg)}
+tr.tr-b .chip{color:var(--b-ink);background:var(--b-bg)}
+tr.tr-a .chip{color:var(--a-ink);background:var(--a-bg)}
+tr.tr-r .chip{color:var(--r-ink);background:var(--r-bg)}
+tr.tr-p .chip{color:var(--p-ink);background:var(--p-bg)}
+.tablewrap .chip{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;margin:3px 4px 0 0}
+.tablewrap .rowchips{margin-top:3px}
+/* h3 톤 = 출제 위험도 (★★=빨강 최빈출 / ★=앰버 / 무표=초록) */
+h3.blk{display:flex;align-items:center;gap:8px}
+h3.blk::before{content:"";width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+h3.h3-hot::before{background:var(--r-ink)}
+h3.h3-hot{color:var(--r-ink)}
+h3.h3-warm::before{background:var(--a-ink)}
+h3.h3-cool::before{background:var(--g-ink)}
+/* 표 → 리뷰맵 ref 스타일: 첫 컬럼 세리프 대형 + 행별 톤 */
+.tablewrap td.tterm{font-family:Georgia,'Times New Roman',serif;font-size:15.5px;font-weight:700;white-space:nowrap;padding-right:18px}
+tr.tr-g td.tterm{color:var(--g-ink)} tr.tr-b td.tterm{color:var(--b-ink)}
+tr.tr-a td.tterm{color:var(--a-ink)} tr.tr-r td.tterm{color:var(--r-ink)}
+tr.tr-p td.tterm{color:var(--p-ink)}
+.tablewrap td{padding:12px 14px;vertical-align:top}
+.tablewrap tbody tr:hover{background:#fafbff}
+/* 소주제 사이 숨 쉬는 여백 */
+h3.blk{margin-top:22px;padding-top:14px;border-top:1px dashed var(--line)}
+h3.blk:first-of-type{margin-top:6px;padding-top:0;border-top:none}
+/* 칩 네비 활성색 유지하되 hover 톤 */
+.chips .chip:hover{background:var(--b-bg);color:var(--b-ink)}
+
 </style>
 </head>
 <body>
@@ -192,18 +233,18 @@ const LECTURES = [{ no:"09", tag:"서브쿼리", title:"2-9. 서브쿼리", bloc
   {t:"note",tag:"빈출",x:"기출 정답 패턴: '연관 서브쿼리는 메인쿼리 컬럼을 참조하므로 {{독립적으로 수행될 수 없다}}' = 옳은 설명"},
   {t:"h3",x:"위치에 따른 분류"},
   {t:"table",head:["종류","위치","핵심"],rows:[
-    ["스칼라 서브쿼리","{{SELECT}} 절","단일 행·단일 컬럼 필수, 컬럼처럼 사용"],
-    ["인라인뷰","{{FROM}} 절","결과를 {{가상 테이블}}처럼 사용, 조인 시 별칭 필수"],
-    ["일반 서브쿼리","WHERE 절","비교 {{상수}} 자리 대체"],
+    ["스칼라 서브쿼리","{{SELECT}} 절","단일 행·단일 컬럼 필수, 컬럼처럼 사용",["단일 행·컬럼 필수"]],
+    ["인라인뷰","{{FROM}} 절","결과를 {{가상 테이블}}처럼 사용, 조인 시 별칭 필수",["별칭 필수"]],
+    ["일반 서브쿼리","WHERE 절","비교 {{상수}} 자리 대체",["IN·EXISTS 동반"]],
   ]},
   {t:"note",tag:"함정",x:"스칼라 서브쿼리는 {{OUTER JOIN}}이 기본 — 일치 대상 없어도 행이 생략되지 않고 {{NULL}} 출력 (KING의 MGR 기출)"},
   {t:"h3",x:"WHERE 절 서브쿼리 — 단일행 vs 다중행"},
   {t:"li",x:"다중행 결과에 =, >, < 비교 연산자 사용 시 {{에러}} → 집계로 요약하거나 다중행 연산자(IN·ANY·ALL·EXISTS) 사용"},
   {t:"table",head:["연산자","해석"],rows:[
-    ["> ANY(서브쿼리)","{{최소값}}보다 크면 참"],
-    ["< ANY(서브쿼리)","{{최대값}}보다 작으면 참"],
-    ["> ALL(서브쿼리)","{{최대값}}보다 커야 참"],
-    ["< ALL(서브쿼리)","{{최소값}}보다 작아야 참"],
+    ["> ANY(서브쿼리)","{{최소값}}보다 크면 참",["하나라도 만족"]],
+    ["< ANY(서브쿼리)","{{최대값}}보다 작으면 참",["SOME = ANY"]],
+    ["> ALL(서브쿼리)","{{최대값}}보다 커야 참",["모두 만족"]],
+    ["< ALL(서브쿼리)","{{최소값}}보다 작아야 참",["AND 성격"]],
   ]},
   {t:"note",tag:"빈출",x:"NOT IN 서브쿼리 결과에 {{NULL}}이 포함되면 전체 비교가 UNKNOWN → 결과 {{0건}} (단골 기출)"},
   {t:"note",tag:"포인트",x:"풀이팁① 🟠서브쿼리부터 확정({{안쪽부터}}, SEDAN→{1,2}) → 🟡추가 조건 표시(날짜) → 🔵메인 테이블 대조 → 🟢카운트 검증"},
@@ -217,10 +258,10 @@ const LECTURES = [{ no:"09", tag:"서브쿼리", title:"2-9. 서브쿼리", bloc
   {t:"li",x:"ORDER BY는 {{마지막}} SELECT 문 뒤에 한 번만"},
   {t:"h3",x:"종류 ★"},
   {t:"table",head:["연산자","동작","중복/정렬"],rows:[
-    ["UNION","합집합","중복 {{제거}} (내부적으로 DISTINCT+SORT)"],
-    ["UNION ALL","합집합 그대로","중복·정렬 없음 → 성능 {{최고}}"],
-    ["INTERSECT","{{교집합}}","중복 제거"],
-    ["MINUS(EXCEPT)","{{차집합}}","A-B와 B-A는 결과 {{다름}}, 순서 주의"],
+    ["UNION","합집합","중복 {{제거}} (내부적으로 DISTINCT+SORT)",["DISTINCT+SORT"]],
+    ["UNION ALL","합집합 그대로","중복·정렬 없음 → 성능 {{최고}}",["정렬 없음"]],
+    ["INTERSECT","{{교집합}}","중복 제거",["정렬 발생"]],
+    ["MINUS(EXCEPT)","{{차집합}}","A-B와 B-A는 결과 {{다름}}, 순서 주의",["순서 주의"]],
   ]},
   {t:"note",tag:"빈출",x:"행 수 계산 기출: UNION은 중복 제거 후 카운트, UNION ALL은 {{전부}} 카운트 — 두 결과 차이를 묻는 유형"},
 ]},
@@ -229,11 +270,11 @@ const LECTURES = [{ no:"09", tag:"서브쿼리", title:"2-9. 서브쿼리", bloc
   {t:"li",x:"여러 수준의 집계를 {{한 번의 SQL}}로 처리 — 모두 {{UNION ALL}}로 대체 가능"},
   {t:"h3",x:"시험 출제 공식 ★★ (통암기)"},
   {t:"table",head:["작성","출력 집계"],rows:[
-    ["ROLLUP(A,B)","(A,B) + (A) + {{전체}}"],
-    ["A, ROLLUP(B)","(A,B) + (A) — 전체 {{없음}}"],
-    ["CUBE(A,B)","(A,B) + (A) + (B) + {{전체}} — 모든 조합"],
-    ["GROUPING SETS(A,B)","{{(A) + (B)}} — 각각 따로"],
-    ["GROUPING SETS((A,B),(A))","(A,B) + (A)"],
+    ["ROLLUP(A,B)","(A,B) + (A) + {{전체}}",["계층 소계"]],
+    ["A, ROLLUP(B)","(A,B) + (A) — 전체 {{없음}}",["A는 고정"]],
+    ["CUBE(A,B)","(A,B) + (A) + (B) + {{전체}} — 모든 조합",["모든 조합"]],
+    ["GROUPING SETS(A,B)","{{(A) + (B)}} — 각각 따로",["각각 따로"]],
+    ["GROUPING SETS((A,B),(A))","(A,B) + (A)",["괄호 = 한 묶음"]],
   ]},
   {t:"li",x:"ROLLUP은 컬럼 {{순서}}에 따라 결과 달라짐 / CUBE·GROUPING SETS는 순서 {{무관}}"},
   {t:"note",tag:"빈출",x:"'출력 결과가 다른 하나' 기출: A,ROLLUP(B) = GROUPING SETS((A,B),(A)) = A,CUBE(B)는 동일, {{ROLLUP(A,B)}}만 전체 총계 포함이라 다름"},
@@ -250,8 +291,8 @@ const LECTURES = [{ no:"09", tag:"서브쿼리", title:"2-9. 서브쿼리", bloc
   {t:"h3",x:"연산 범위 (ROWS vs RANGE) ★★"},
   {t:"li",x:"프레임 생략 시 기본값: {{RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW}}"},
   {t:"table",head:["구분","기준","동일 값 처리"],rows:[
-    ["ROWS","{{물리적 행}} 개수","같은 값도 한 행씩 {{따로}} 누적"],
-    ["RANGE","ORDER BY 컬럼 {{값}} 범위","같은 값은 {{동시에}} 누적 → 누적합 동일"],
+    ["ROWS","{{물리적 행}} 개수","같은 값도 한 행씩 {{따로}} 누적",["CURRENT ROW 프레임"]],
+    ["RANGE","ORDER BY 컬럼 {{값}} 범위","같은 값은 {{동시에}} 누적 → 누적합 동일",["누적합 동일"]],
   ]},
   {t:"note",tag:"빈출",x:"급여 같은 직원(WARD·MARTIN)의 누적합: 기본(RANGE)이면 {{같고}}, ROWS UNBOUNDED PRECEDING이면 {{다름}} — 값 차이 묻는 단골"},
   {t:"li",x:"시작점: UNBOUNDED PRECEDING(기본)·N PRECEDING·CURRENT ROW / 끝점: CURRENT ROW(기본)·N FOLLOWING·UNBOUNDED FOLLOWING"},
@@ -265,8 +306,8 @@ const LECTURES = [{ no:"09", tag:"서브쿼리", title:"2-9. 서브쿼리", bloc
   {t:"h3",x:"개념"},
   {t:"li",x:"{{ORDER BY}} 기준으로 상위 N개 행 추출 — {{페이징}} 처리에 사용"},
   {t:"table",head:["DBMS","추출 방법"],rows:[
-    ["Oracle","{{ROWNUM}}(행 제한) · RANK 함수 · {{FETCH}}(12c 이후)"],
-    ["SQL Server","{{TOP N}} · RANK 함수 · OFFSET-FETCH"],
+    ["Oracle","{{ROWNUM}}(행 제한) · RANK 함수 · {{FETCH}}(12c 이후)",["정렬 먼저 → 인라인 뷰"]],
+    ["SQL Server","{{TOP N}} · RANK 함수 · OFFSET-FETCH",["OFFSET-FETCH"]],
   ]},
   {t:"h3",x:"ROWNUM (Oracle 전용) ★"},
   {t:"li",x:"출력 순서대로 부여되는 {{가상의 행 번호}} — 절대적 행 번호로 사용 {{불가}}"},
@@ -293,8 +334,8 @@ const LECTURES = [{ no:"09", tag:"서브쿼리", title:"2-9. 서브쿼리", bloc
   {t:"li",x:"{{NOCYCLE}}: 순환 발생 시 무한루프 방지 (순환 구조에서도 출력 가능)"},
   {t:"h3",x:"조건 위치 ★★ (실행순서: START WITH → CONNECT BY → WHERE)"},
   {t:"table",head:["위치","동작"],rows:[
-    ["CONNECT BY 절 조건","탐색 {{중}} 필터 — 불성립 시 그 행 기준 {{하위 연결 차단}}"],
-    ["WHERE 절 조건","계층 {{생성 후}} 필터 — {{START WITH}} 지정 행(루트)도 조건 안 맞으면 제외"],
+    ["CONNECT BY 절 조건","탐색 {{중}} 필터 — 불성립 시 그 행 기준 {{하위 연결 차단}}",["PRIOR 방향 주의"]],
+    ["WHERE 절 조건","계층 {{생성 후}} 필터 — {{START WITH}} 지정 행(루트)도 조건 안 맞으면 제외",["루트도 제외될 수 있음"]],
   ]},
   {t:"note",tag:"빈출",x:"WHERE TEAM='경영지원' 기출: 루트(공통)는 계층엔 포함되지만 결과에서 {{제외}} → 하위부터 출력 (정답 유형)"},
   {t:"h3",x:"가상 컬럼 · 함수"},
@@ -307,8 +348,8 @@ const LECTURES = [{ no:"09", tag:"서브쿼리", title:"2-9. 서브쿼리", bloc
 { no:"15", tag:"PIVOT", title:"2-15. PIVOT / UNPIVOT", blocks:[
   {t:"h3",x:"데이터 구조"},
   {t:"table",head:["구조","특징"],rows:[
-    ["LONG (Tidy)","속성 1개=컬럼 1개, 값은 행으로 누적 — RDBMS 기본, {{정규화}} 형태, {{조인}} 가능, 분석·집계 유리"],
-    ["WIDE (Cross table)","교차표, 속성값이 여러 컬럼으로 분리 — 조인 사실상 {{불가능}}, 요약·보고서용"],
+    ["LONG (Tidy)","속성 1개=컬럼 1개, 값은 행으로 누적 — RDBMS 기본, {{정규화}} 형태, {{조인}} 가능, 분석·집계 유리",["분석·집계 유리"]],
+    ["WIDE (Cross table)","교차표, 속성값이 여러 컬럼으로 분리 — 조인 사실상 {{불가능}}, 요약·보고서용",["요약·보고서용"]],
   ]},
   {t:"li",x:"PIVOT: {{LONG → WIDE}} / UNPIVOT: {{WIDE → LONG}}"},
   {t:"h3",x:"PIVOT — 3요소 구분이 핵심 ★"},
@@ -378,18 +419,19 @@ function renderText(str){
 
 function blockHTML(b){
   if(b.t==='h2') return `<h2 class="blk">${escapeHTML(b.x)}</h2>`;
-  if(b.t==='h3') return `<h3 class="blk">${escapeHTML(b.x)}</h3>`;
+  if(b.t==='h3'){const s=(b.x.match(/★/g)||[]).length;const tone=s>=2?'h3-hot':(s===1?'h3-warm':'h3-cool');return `<h3 class="blk ${tone}">${escapeHTML(b.x)}</h3>`;}
   if(b.t==='li'){
     return `<div class="line"><span class="bul">▸</span><span class="txt">${renderText(b.x)}</span></div>`;
   }
   if(b.t==='note'){
-    return `<div class="note"><span class="tag">${escapeHTML(b.tag||'TIP')}</span><span class="txt">${renderText(b.x)}</span></div>`;
+    return `<div class="note nt-${escapeHTML(b.tag||'TIP')}"><span class="tag">${escapeHTML(b.tag||'TIP')}</span><span class="txt">${renderText(b.x)}</span></div>`;
   }
   if(b.t==='table'){
     let h = '<div class="tablewrap"><table><thead><tr>';
     h += b.head.map(c=>`<th>${escapeHTML(c)}</th>`).join('');
     h += '</tr></thead><tbody>';
-    h += b.rows.map(r=>'<tr>'+r.map(c=>`<td>${renderText(c)}</td>`).join('')+'</tr>').join('');
+    const TONES=['tr-g','tr-b','tr-a','tr-r','tr-p'];
+    h += b.rows.map((r,ri)=>{const ch=Array.isArray(r[r.length-1])?r[r.length-1]:null;const cs=ch?r.slice(0,-1):r;return `<tr class="${TONES[ri%5]}">`+cs.map((c,ci)=>{const cx=(ch&&ci===cs.length-1)?'<div class="rowchips">'+ch.map(x=>`<span class="chip">${renderText(x)}</span>`).join('')+'</div>':'';return ci===0?`<td class="tterm">${renderText(c)}</td>`:`<td>${renderText(c)}${cx}</td>`;}).join('')+'</tr>';}).join('');
     h += '</tbody></table></div>';
     return h;
   }
@@ -512,7 +554,7 @@ toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 (function(){
   const lecOnly = LECTURES.filter(l=>l.no!=='★');
   const sl = document.getElementById('subline');
-  if(sl) sl.textContent = `요구사항·화면·아키텍처·객체지향·인터페이스 전 범위 · 주제 ${lecOnly.length}개 · 빈칸 ${blanks.length}개 — 같은 과목 수업이 오면 이어 붙어요.`;
+  if(sl) sl.textContent = `SQL 활용 전 범위 · 서브쿼리~윈도우·계층형·PIVOT · 주제 ${lecOnly.length}개 · 빈칸 ${blanks.length}개 — 같은 과목 수업이 오면 이어 붙어요.`;
 })();
 
 updateProgress();

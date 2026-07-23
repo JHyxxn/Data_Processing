@@ -10,17 +10,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
   :root{
-    --bg:#E8E9E3;
-    --surface:#FCFCFA;
+    --bg:#FAFAF8;
+    --surface:#ffffff;
     --ink:#15171C;
     --muted:#757a83;
     --faint:#a4a8ae;
-    --line:#dcddd6;
-    --line-strong:#cfd0c8;
+    --line:#e8e6e1;
+    --line-strong:#dbd9d3;
     --accent:#2438d6;
     --accent-soft:#e6e8fb;
     --mark:#fbe25a;
     --mark-done:#a9e7bf;
+    --cream:#f7f5ea;
+    --cream-line:#e6dfc8;
     --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
     --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   }
@@ -35,8 +37,8 @@
 
   /* ---------- top bar ---------- */
   header{
-    position:sticky;top:0;z-index:30;background:rgba(232,233,227,.86);
-    backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-strong);
+    position:sticky;top:0;z-index:30;background:rgba(250,250,248,.86);
+    backdrop-filter:saturate(1.4) blur(10px);
   }
   .bar{max-width:860px;margin:0 auto;padding:14px 20px 12px}
   .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:8px}
@@ -67,9 +69,9 @@
   nav.chips{max-width:860px;margin:0 auto;padding:10px 20px 0;display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   nav.chips::-webkit-scrollbar{display:none}
   nav.chips a{
-    flex:0 0 auto;font-family:var(--mono);font-size:12px;font-weight:500;text-decoration:none;
-    color:var(--muted);border:1px solid var(--line-strong);background:var(--surface);
-    padding:5px 11px;border-radius:8px;transition:all .15s;white-space:nowrap;
+    flex:0 0 auto;font-family:var(--sans);font-size:12.5px;font-weight:600;text-decoration:none;
+    color:var(--ink);border:1px solid var(--line-strong);background:var(--surface);
+    padding:6px 13px;border-radius:999px;transition:all .15s;white-space:nowrap;
   }
   nav.chips a:hover{border-color:var(--accent);color:var(--accent)}
   nav.chips a.active{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -77,8 +79,8 @@
   /* ---------- content ---------- */
   main{max-width:860px;margin:0 auto;padding:8px 20px 0}
   section.lec{margin:30px 0}
-  .lechead{display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:4px}
-  .lecno{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.05em}
+  .lechead{display:flex;align-items:baseline;gap:10px;padding-bottom:2px;border-bottom:none;margin-bottom:2px}
+  .lecno{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:2px 9px;letter-spacing:0}
   .lectitle{font-size:18px;font-weight:700;letter-spacing:-.01em}
   .lecstat{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
 
@@ -94,14 +96,15 @@
   .line.indent{margin-left:20px}
   .line .txt{flex:1}
 
-  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:10px 13px;background:var(--accent-soft);border-radius:10px;font-size:13.5px}
-  .note .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;flex:0 0 auto;margin-top:3px}
+  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:12px 16px;background:var(--cream);border:1px solid var(--cream-line);border-radius:12px;font-size:13.5px}
+  .note .tag{font-family:var(--sans);font-size:12.5px;font-weight:700;color:var(--ink);flex:0 0 auto;margin-top:0}
+  .note .tag::before{content:"\1F4CC ";margin-right:2px}
 
   /* ---------- tables ---------- */
   .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 2px;border:1px solid var(--line);border-radius:10px}
   table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:380px}
-  thead th{background:#f3f3ee;text-align:left;font-weight:700;color:#3a3d44;padding:9px 12px;border-bottom:1px solid var(--line-strong);white-space:nowrap;font-size:12.5px}
-  tbody td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{background:#fafaf7;text-align:left;font-weight:600;color:var(--muted);padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:12.5px}
+  tbody td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
   tbody tr:last-child td{border-bottom:none}
   td:first-child{font-weight:600;white-space:nowrap}
 
@@ -142,6 +145,44 @@
     main,.bar,nav.chips,footer{padding-left:14px;padding-right:14px}
     .lecstat{display:none}
   }
+.shp{vertical-align:-4px;margin-right:5px;flex:none}
+
+/* ===== review-map tone 팔레트 이식 (가시성 강화) ===== */
+:root{--g-ink:#1d6b45;--g-bg:#e3f2e8;--b-ink:#1d4fd6;--b-bg:#e4ebfb;--a-ink:#8a6410;--a-bg:#f7efd8;--r-ink:#a03535;--r-bg:#f9e6e3;--p-ink:#8a3f77;--p-bg:#f6e4f0}
+/* note = 크림 고정(연두 테두리) — 색은 태그 글씨에만 (기준 디자인 문법) */
+.note{background:var(--cream);border:1px solid #e6dfc8;border-radius:12px}
+.note.nt-빈출 .tag{color:var(--r-ink)}
+.note.nt-함정 .tag{color:var(--a-ink)}
+.note.nt-포인트 .tag{color:var(--b-ink)}
+.note.nt-암기 .tag{color:var(--p-ink)}
+/* 표 행 톤 → 칩 자동 착색 (예시 칩용) */
+tr.tr-g .chip{color:var(--g-ink);background:var(--g-bg)}
+tr.tr-b .chip{color:var(--b-ink);background:var(--b-bg)}
+tr.tr-a .chip{color:var(--a-ink);background:var(--a-bg)}
+tr.tr-r .chip{color:var(--r-ink);background:var(--r-bg)}
+tr.tr-p .chip{color:var(--p-ink);background:var(--p-bg)}
+.tablewrap .chip{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;margin:3px 4px 0 0}
+.tablewrap .rowchips{margin-top:3px}
+/* h3 톤 = 출제 위험도 (★★=빨강 최빈출 / ★=앰버 / 무표=초록) */
+h3.blk{display:flex;align-items:center;gap:8px}
+h3.blk::before{content:"";width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+h3.h3-hot::before{background:var(--r-ink)}
+h3.h3-hot{color:var(--r-ink)}
+h3.h3-warm::before{background:var(--a-ink)}
+h3.h3-cool::before{background:var(--g-ink)}
+/* 표 → 리뷰맵 ref 스타일: 첫 컬럼 세리프 대형 + 행별 톤 */
+.tablewrap td.tterm{font-family:Georgia,'Times New Roman',serif;font-size:15.5px;font-weight:700;white-space:nowrap;padding-right:18px}
+tr.tr-g td.tterm{color:var(--g-ink)} tr.tr-b td.tterm{color:var(--b-ink)}
+tr.tr-a td.tterm{color:var(--a-ink)} tr.tr-r td.tterm{color:var(--r-ink)}
+tr.tr-p td.tterm{color:var(--p-ink)}
+.tablewrap td{padding:12px 14px;vertical-align:top}
+.tablewrap tbody tr:hover{background:#fafbff}
+/* 소주제 사이 숨 쉬는 여백 */
+h3.blk{margin-top:22px;padding-top:14px;border-top:1px dashed var(--line)}
+h3.blk:first-of-type{margin-top:6px;padding-top:0;border-top:none}
+/* 칩 네비 활성색 유지하되 hover 톤 */
+.chips .chip:hover{background:var(--b-bg);color:var(--b-ink)}
+
 </style>
 </head>
 <body>
@@ -192,16 +233,16 @@ const LECTURES = [
   {t:"li",x:"유의점: {{중복}}(한 곳에서만 관리) · {{비유연성}}(구조와 프로세스 분리) · {{비일관성}}(중복 없어도 규칙 미정의로 발생 가능)"},
   {t:"h3",x:"모델링 3단계 ★★"},
   {t:"table",head:["단계","핵심"],rows:[
-    ["{{개념적}}","전사적·업무 중심, 핵심 엔터티 식별, 추상화 {{최고}}, ERD 초안"],
-    ["{{논리적}}","속성·식별자·관계 구체화, {{정규화}} 수행, {{재사용성}}·표준화 핵심"],
-    ["{{물리적}}","실제 DB 구현, 성능·저장구조·보안, 추상화 {{최저}}"],
+    ["{{개념적}}","전사적·업무 중심, 핵심 엔터티 식별, 추상화 {{최고}}, ERD 초안",["전사적 관점","ERD 초안"]],
+    ["{{논리적}}","속성·식별자·관계 구체화, {{정규화}} 수행, {{재사용성}}·표준화 핵심",["식별자·관계 구체화","표준화"]],
+    ["{{물리적}}","실제 DB 구현, 성능·저장구조·보안, 추상화 {{최저}}",["성능·저장구조","구현 단계"]],
   ]},
   {t:"note",tag:"빈출",x:"'재사용성·표준화를 높이는 단계' = {{논리적}} 모델링 (단원문제 3번) / 모델링은 DB {{자동 생성·튜닝}} 기능은 포함 안 함 (4번 ④)"},
   {t:"h3",x:"스키마 3단계 구조 ★"},
   {t:"table",head:["스키마","정의"],rows:[
-    ["{{외부}}","개별 사용자·응용 관점, 필요한 데이터만 ({{View}}가 대표 예)"],
-    ["{{개념}}","외부 스키마 통합, DB 전체의 {{논리적}} 구조·제약 정의"],
-    ["{{내부}}","물리적 저장 방법 — 저장·파일 구조, {{인덱스}}"],
+    ["{{외부}}","개별 사용자·응용 관점, 필요한 데이터만 ({{View}}가 대표 예)",["사용자 관점","필요한 것만"]],
+    ["{{개념}}","외부 스키마 통합, DB 전체의 {{논리적}} 구조·제약 정의",["통합 스키마","전체 구조"]],
+    ["{{내부}}","물리적 저장 방법 — 저장·파일 구조, {{인덱스}}",["저장 방법","파일 구조"]],
   ]},
   {t:"li",x:"{{논리적 독립성}}: 개념 스키마 변경 → 외부·응용에 영향 없음 / {{물리적 독립성}}: 내부 변경 → 개념·외부에 영향 없음"},
   {t:"h3",x:"ERD"},
@@ -240,9 +281,9 @@ const LECTURES = [
   {t:"li",x:"{{완전}} FD: 복합키 {{전체}}에 종속 (주문번호+제품번호 → 수량) / {{부분}} FD: 복합키 {{일부}}에만 종속 (학번+과목 중 과목 → 강사)"},
   {t:"h3",x:"속성의 분류 ★★"},
   {t:"table",head:["기준","종류","예시·판별"],rows:[
-    ["특성","{{기본}} / {{설계}} / {{파생}}","원래 존재·직접 입력 / 시스템 편의용 {{가상}} 데이터(코드·여부·번호) / 다른 값으로 {{계산}}(나이·이자·매출금액)"],
-    ["구성방식","{{PK}} / {{FK}} / 일반","식별 / 참조 / 나머지"],
-    ["분해 여부","{{단일}} / {{복합}} / {{다중값}}","하나의 값 / 주소(도·시·구) / 전화번호 여러 개 → 엔터티 {{분리}}"],
+    ["특성","{{기본}} / {{설계}} / {{파생}}","원래 존재·직접 입력 / 시스템 편의용 {{가상}} 데이터(코드·여부·번호) / 다른 값으로 {{계산}}(나이·이자·매출금액)",["코드·여부·번호 주의"]],
+    ["구성방식","{{PK}} / {{FK}} / 일반","식별 / 참조 / 나머지",["식별 vs 참조"]],
+    ["분해 여부","{{단일}} / {{복합}} / {{다중값}}","하나의 값 / 주소(도·시·구) / 전화번호 여러 개 → 엔터티 {{분리}}",["주소 = 도·시·구"]],
   ]},
   {t:"note",tag:"빈출",x:"'유형 다른 하나' 유형: 단가·수량·상품명={{기본}}, 매출금액={{파생}} (단원문제 3번) / '일반 속성'은 {{분해}} 분류에 없음 (2번)"},
   {t:"note",tag:"함정",x:"설계 vs 파생 구분: 삭제여부·정렬코드·생성일시={{설계}}(관리 편의) / 신용점수={{파생}}(다른 값으로 산출) — 단원문제 4번 핵심"},
@@ -268,10 +309,10 @@ const LECTURES = [
   {t:"li",x:"인스턴스를 유일하게 식별하는 속성 — 논리 모델의 {{주식별자}} = 물리 모델의 {{기본키(PK)}}"},
   {t:"h3",x:"식별자 분류 4축 ★★"},
   {t:"table",head:["기준","종류","핵심"],rows:[
-    ["대표성","{{주}} / {{보조}}","참조관계 연결 기준 / 유일·최소는 만족하나 {{대표성}}✗ (주민번호·이메일)"],
-    ["생성 여부","{{내부}} / {{외부}}","자체 생성 / 다른 엔터티 상속 → {{FK}}로 구현"],
-    ["속성 수","{{단일}} / {{복합}}","1개 / 2개 이상 (주문번호+상품번호)"],
-    ["대체 여부","{{본질}} / {{인조}}","업무에서 자연 발생(학번·ISBN·바코드·계좌번호) / 시스템이 {{인위}} 생성(자동증가 주문번호)"],
+    ["대표성","{{주}} / {{보조}}","참조관계 연결 기준 / 유일·최소는 만족하나 {{대표성}}✗ (주민번호·이메일)",["주민번호·이메일"]],
+    ["생성 여부","{{내부}} / {{외부}}","자체 생성 / 다른 엔터티 상속 → {{FK}}로 구현",["다른 엔터티 상속"]],
+    ["속성 수","{{단일}} / {{복합}}","1개 / 2개 이상 (주문번호+상품번호)",["주문번호+상품번호"]],
+    ["대체 여부","{{본질}} / {{인조}}","업무에서 자연 발생(학번·ISBN·바코드·계좌번호) / 시스템이 {{인위}} 생성(자동증가 주문번호)",["학번·ISBN·바코드"]],
   ]},
   {t:"note",tag:"빈출",x:"'특성 다른 하나' 유형: 계좌번호·바코드·사원번호={{본질}}, 시스템 자동 부여 주문번호={{인조}} (단원문제 3번)"},
   {t:"h3",x:"주식별자 특징 4가지 ★"},
@@ -279,8 +320,8 @@ const LECTURES = [
   {t:"li",x:"도출 기준: 자주 사용되는 속성 우선 / {{명칭·이름}} 기반 속성 피하기(코드형 생성) / 속성 {{7~8개}} 이상 필요하면 {{인조식별자}} 생성"},
   {t:"h3",x:"식별 vs 비식별 관계 ★★"},
   {t:"table",head:["구분","부모 PK 위치","특징"],rows:[
-    ["{{식별}} 관계","자식의 {{주식별자}}에 포함","부모 없이 식별 불가 → {{약한}} 개체, 복합키 多"],
-    ["{{비식별}} 관계","자식의 {{일반 속성(FK)}}으로만","자식이 독립 PK 보유 → {{강한}} 개체"],
+    ["{{식별}} 관계","자식의 {{주식별자}}에 포함","부모 없이 식별 불가 → {{약한}} 개체, 복합키 多",["복합키 많음"]],
+    ["{{비식별}} 관계","자식의 {{일반 속성(FK)}}으로만","자식이 독립 PK 보유 → {{강한}} 개체",["독립 PK 보유"]],
   ]},
   {t:"h3",x:"Key 종류 ★"},
   {t:"li",x:"{{슈퍼키}}: 유일성 O, 최소성 {{불만족 가능}} ('최소성 만족·유일성 불만족'은 거꾸로 쓴 함정 — 단원문제 2번 ④)"},
@@ -298,9 +339,9 @@ const LECTURES = [
   {t:"li",x:"{{삽입}} 이상: 불필요한 데이터를 억지로 함께 입력 / {{갱신}} 이상: 중복 중 한 곳만 수정 → 불일치 / {{삭제}} 이상: 의도치 않은 정보까지 함께 삭제"},
   {t:"h3",x:"정규화 단계 ★★ (판별법 통암기)"},
   {t:"table",head:["단계","제거 대상","판별 신호"],rows:[
-    ["1NF","{{원자성}} 위반","한 속성에 여러 값 / 반복 속성(품목1·품목2…)"],
-    ["2NF","{{부분}} 함수 종속","기본키가 {{복합키}}일 때만 발생 — 일부에만 종속"],
-    ["3NF","{{이행}} 함수 종속","PK 아닌 속성 → PK 아닌 속성 결정 (A→B→C)"],
+    ["1NF","{{원자성}} 위반","한 속성에 여러 값 / 반복 속성(품목1·품목2…)",["품목1·품목2 반복"]],
+    ["2NF","{{부분}} 함수 종속","기본키가 {{복합키}}일 때만 발생 — 일부에만 종속",["단일키면 자동 충족"]],
+    ["3NF","{{이행}} 함수 종속","PK 아닌 속성 → PK 아닌 속성 결정 (A→B→C)",["A→B→C"]],
   ]},
   {t:"note",tag:"빈출",x:"'어떤 정규화 사례인가' 유형 판별: 복합키 일부 종속 제거 = {{2NF}} / 일반속성 간 종속 분리(계좌번호→관리점코드→관리점) = {{3NF}} / 원자성 = 1NF"},
   {t:"note",tag:"함정",x:"'원자성을 갖도록 분해' = {{1NF}} 설명 — 2NF 설명에 섞으면 틀린 보기 (단원문제 2번 ④)"},
@@ -329,10 +370,10 @@ const LECTURES = [
 
   {t:"h2",x:"ACID 속성 (4가지)"},
   {t:"table",head:["속성","의미"],rows:[
-    ["{{원자성(Atomicity)}}","모든 연산은 전부 수행 또는 전부 ROLLBACK (부분 완료 없음)"],
-    ["{{일관성(Consistency)}}","수행 전후 데이터가 일관된 상태 유지 (제약·규칙 만족)"],
-    ["{{격리성(Isolation)}}","동시 수행 트랜잭션이 서로 간섭하지 않도록 분리"],
-    ["{{지속성(Durability)}}","COMMIT되면 결과가 영구 저장, 장애에도 보존"],
+    ["{{원자성(Atomicity)}}","모든 연산은 전부 수행 또는 전부 ROLLBACK (부분 완료 없음)",["All or Nothing"]],
+    ["{{일관성(Consistency)}}","수행 전후 데이터가 일관된 상태 유지 (제약·규칙 만족)",["제약·규칙 만족"]],
+    ["{{격리성(Isolation)}}","동시 수행 트랜잭션이 서로 간섭하지 않도록 분리",["동시 수행 분리"]],
+    ["{{지속성(Durability)}}","COMMIT되면 결과가 영구 저장, 장애에도 보존",["COMMIT 후 영구"]],
   ]},
   {t:"note",tag:"함정",x:"ACID = 원자성·일관성·격리성·지속성. {{독립성/휘발성}}은 트랜잭션 성질이 아니다(단골 오답)."},
 
@@ -407,18 +448,19 @@ function renderText(str){
 
 function blockHTML(b){
   if(b.t==='h2') return `<h2 class="blk">${escapeHTML(b.x)}</h2>`;
-  if(b.t==='h3') return `<h3 class="blk">${escapeHTML(b.x)}</h3>`;
+  if(b.t==='h3'){const s=(b.x.match(/★/g)||[]).length;const tone=s>=2?'h3-hot':(s===1?'h3-warm':'h3-cool');return `<h3 class="blk ${tone}">${escapeHTML(b.x)}</h3>`;}
   if(b.t==='li'){
     return `<div class="line"><span class="bul">▸</span><span class="txt">${renderText(b.x)}</span></div>`;
   }
   if(b.t==='note'){
-    return `<div class="note"><span class="tag">${escapeHTML(b.tag||'TIP')}</span><span class="txt">${renderText(b.x)}</span></div>`;
+    return `<div class="note nt-${escapeHTML(b.tag||'TIP')}"><span class="tag">${escapeHTML(b.tag||'TIP')}</span><span class="txt">${renderText(b.x)}</span></div>`;
   }
   if(b.t==='table'){
     let h = '<div class="tablewrap"><table><thead><tr>';
     h += b.head.map(c=>`<th>${escapeHTML(c)}</th>`).join('');
     h += '</tr></thead><tbody>';
-    h += b.rows.map(r=>'<tr>'+r.map(c=>`<td>${renderText(c)}</td>`).join('')+'</tr>').join('');
+    const TONES=['tr-g','tr-b','tr-a','tr-r','tr-p'];
+    h += b.rows.map((r,ri)=>{const ch=Array.isArray(r[r.length-1])?r[r.length-1]:null;const cs=ch?r.slice(0,-1):r;return `<tr class="${TONES[ri%5]}">`+cs.map((c,ci)=>{const cx=(ch&&ci===cs.length-1)?'<div class="rowchips">'+ch.map(x=>`<span class="chip">${renderText(x)}</span>`).join('')+'</div>':'';return ci===0?`<td class="tterm">${renderText(c)}</td>`:`<td>${renderText(c)}${cx}</td>`;}).join('')+'</tr>';}).join('');
     h += '</tbody></table></div>';
     return h;
   }
@@ -541,7 +583,7 @@ toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 (function(){
   const lecOnly = LECTURES.filter(l=>l.no!=='★');
   const sl = document.getElementById('subline');
-  if(sl) sl.textContent = `요구사항·화면·아키텍처·객체지향·인터페이스 전 범위 · 주제 ${lecOnly.length}개 · 빈칸 ${blanks.length}개 — 같은 과목 수업이 오면 이어 붙어요.`;
+  if(sl) sl.textContent = `데이터 모델링 전 범위 · 모델링~정규화·식별자 · 주제 ${lecOnly.length}개 · 빈칸 ${blanks.length}개 — 같은 과목 수업이 오면 이어 붙어요.`;
 })();
 
 updateProgress();

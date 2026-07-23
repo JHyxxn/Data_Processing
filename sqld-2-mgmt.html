@@ -10,17 +10,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
   :root{
-    --bg:#E8E9E3;
-    --surface:#FCFCFA;
+    --bg:#FAFAF8;
+    --surface:#ffffff;
     --ink:#15171C;
     --muted:#757a83;
     --faint:#a4a8ae;
-    --line:#dcddd6;
-    --line-strong:#cfd0c8;
+    --line:#e8e6e1;
+    --line-strong:#dbd9d3;
     --accent:#2438d6;
     --accent-soft:#e6e8fb;
     --mark:#fbe25a;
     --mark-done:#a9e7bf;
+    --cream:#f7f5ea;
+    --cream-line:#e6dfc8;
     --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
     --sans:'Pretendard',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   }
@@ -35,8 +37,8 @@
 
   /* ---------- top bar ---------- */
   header{
-    position:sticky;top:0;z-index:30;background:rgba(232,233,227,.86);
-    backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-strong);
+    position:sticky;top:0;z-index:30;background:rgba(250,250,248,.86);
+    backdrop-filter:saturate(1.4) blur(10px);
   }
   .bar{max-width:860px;margin:0 auto;padding:14px 20px 12px}
   .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:8px}
@@ -67,9 +69,9 @@
   nav.chips{max-width:860px;margin:0 auto;padding:10px 20px 0;display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   nav.chips::-webkit-scrollbar{display:none}
   nav.chips a{
-    flex:0 0 auto;font-family:var(--mono);font-size:12px;font-weight:500;text-decoration:none;
-    color:var(--muted);border:1px solid var(--line-strong);background:var(--surface);
-    padding:5px 11px;border-radius:8px;transition:all .15s;white-space:nowrap;
+    flex:0 0 auto;font-family:var(--sans);font-size:12.5px;font-weight:600;text-decoration:none;
+    color:var(--ink);border:1px solid var(--line-strong);background:var(--surface);
+    padding:6px 13px;border-radius:999px;transition:all .15s;white-space:nowrap;
   }
   nav.chips a:hover{border-color:var(--accent);color:var(--accent)}
   nav.chips a.active{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -77,8 +79,8 @@
   /* ---------- content ---------- */
   main{max-width:860px;margin:0 auto;padding:8px 20px 0}
   section.lec{margin:30px 0}
-  .lechead{display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:4px}
-  .lecno{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.05em}
+  .lechead{display:flex;align-items:baseline;gap:10px;padding-bottom:2px;border-bottom:none;margin-bottom:2px}
+  .lecno{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:2px 9px;letter-spacing:0}
   .lectitle{font-size:18px;font-weight:700;letter-spacing:-.01em}
   .lecstat{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
 
@@ -94,14 +96,15 @@
   .line.indent{margin-left:20px}
   .line .txt{flex:1}
 
-  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:10px 13px;background:var(--accent-soft);border-radius:10px;font-size:13.5px}
-  .note .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;flex:0 0 auto;margin-top:3px}
+  .note{display:flex;gap:9px;align-items:flex-start;margin:12px 0 2px;padding:12px 16px;background:var(--cream);border:1px solid var(--cream-line);border-radius:12px;font-size:13.5px}
+  .note .tag{font-family:var(--sans);font-size:12.5px;font-weight:700;color:var(--ink);flex:0 0 auto;margin-top:0}
+  .note .tag::before{content:"\1F4CC ";margin-right:2px}
 
   /* ---------- tables ---------- */
   .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 2px;border:1px solid var(--line);border-radius:10px}
   table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:380px}
-  thead th{background:#f3f3ee;text-align:left;font-weight:700;color:#3a3d44;padding:9px 12px;border-bottom:1px solid var(--line-strong);white-space:nowrap;font-size:12.5px}
-  tbody td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{background:#fafaf7;text-align:left;font-weight:600;color:var(--muted);padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:12.5px}
+  tbody td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
   tbody tr:last-child td{border-bottom:none}
   td:first-child{font-weight:600;white-space:nowrap}
 
@@ -142,6 +145,44 @@
     main,.bar,nav.chips,footer{padding-left:14px;padding-right:14px}
     .lecstat{display:none}
   }
+.shp{vertical-align:-4px;margin-right:5px;flex:none}
+
+/* ===== review-map tone 팔레트 이식 (가시성 강화) ===== */
+:root{--g-ink:#1d6b45;--g-bg:#e3f2e8;--b-ink:#1d4fd6;--b-bg:#e4ebfb;--a-ink:#8a6410;--a-bg:#f7efd8;--r-ink:#a03535;--r-bg:#f9e6e3;--p-ink:#8a3f77;--p-bg:#f6e4f0}
+/* note = 크림 고정(연두 테두리) — 색은 태그 글씨에만 (기준 디자인 문법) */
+.note{background:var(--cream);border:1px solid #e6dfc8;border-radius:12px}
+.note.nt-빈출 .tag{color:var(--r-ink)}
+.note.nt-함정 .tag{color:var(--a-ink)}
+.note.nt-포인트 .tag{color:var(--b-ink)}
+.note.nt-암기 .tag{color:var(--p-ink)}
+/* 표 행 톤 → 칩 자동 착색 (예시 칩용) */
+tr.tr-g .chip{color:var(--g-ink);background:var(--g-bg)}
+tr.tr-b .chip{color:var(--b-ink);background:var(--b-bg)}
+tr.tr-a .chip{color:var(--a-ink);background:var(--a-bg)}
+tr.tr-r .chip{color:var(--r-ink);background:var(--r-bg)}
+tr.tr-p .chip{color:var(--p-ink);background:var(--p-bg)}
+.tablewrap .chip{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;margin:3px 4px 0 0}
+.tablewrap .rowchips{margin-top:3px}
+/* h3 톤 = 출제 위험도 (★★=빨강 최빈출 / ★=앰버 / 무표=초록) */
+h3.blk{display:flex;align-items:center;gap:8px}
+h3.blk::before{content:"";width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+h3.h3-hot::before{background:var(--r-ink)}
+h3.h3-hot{color:var(--r-ink)}
+h3.h3-warm::before{background:var(--a-ink)}
+h3.h3-cool::before{background:var(--g-ink)}
+/* 표 → 리뷰맵 ref 스타일: 첫 컬럼 세리프 대형 + 행별 톤 */
+.tablewrap td.tterm{font-family:Georgia,'Times New Roman',serif;font-size:15.5px;font-weight:700;white-space:nowrap;padding-right:18px}
+tr.tr-g td.tterm{color:var(--g-ink)} tr.tr-b td.tterm{color:var(--b-ink)}
+tr.tr-a td.tterm{color:var(--a-ink)} tr.tr-r td.tterm{color:var(--r-ink)}
+tr.tr-p td.tterm{color:var(--p-ink)}
+.tablewrap td{padding:12px 14px;vertical-align:top}
+.tablewrap tbody tr:hover{background:#fafbff}
+/* 소주제 사이 숨 쉬는 여백 */
+h3.blk{margin-top:22px;padding-top:14px;border-top:1px dashed var(--line)}
+h3.blk:first-of-type{margin-top:6px;padding-top:0;border-top:none}
+/* 칩 네비 활성색 유지하되 hover 톤 */
+.chips .chip:hover{background:var(--b-bg);color:var(--b-ink)}
+
 </style>
 </head>
 <body>
@@ -199,8 +240,8 @@ const LECTURES = [
   {t:"li",x:"MERGE INTO {{수정 대상}} USING {{참조 테이블}} ON (조건) — ON 절 괄호 {{필수}}"},
   {t:"li",x:"UPDATE 절엔 테이블명 명시 {{안 함}} / SET 왼쪽={{수정 테이블}} 컬럼, 오른쪽=참조 컬럼 / INSERT는 INTO 없이 {{VALUES}}만"},
   {t:"table",head:["절","가능한 작업"],rows:[
-    ["WHEN MATCHED","{{UPDATE}}만 or UPDATE+DELETE (DELETE 단독 {{불가}})"],
-    ["WHEN NOT MATCHED","{{INSERT}}만 · 절 자체는 {{생략 가능}}"],
+    ["WHEN MATCHED","{{UPDATE}}만 or UPDATE+DELETE (DELETE 단독 {{불가}})",["MERGE INTO … USING"]],
+    ["WHEN NOT MATCHED","{{INSERT}}만 · 절 자체는 {{생략 가능}}",["VALUES 절로 삽입"]],
   ]},
   {t:"note",tag:"빈출",x:"UPDATE+DELETE 함께 쓰면 {{UPDATE가 먼저}} 수행 → 수정된 행 대상으로만 DELETE 평가 (단원문제 3번 정답 ④)"},
   {t:"note",tag:"빈출",x:"P3 단원종합: UPDATE SET (SAL,COMM)=(5000,300) 처럼 다중컬럼에 {{상수 괄호}} 직접 대입은 불가 — 다중컬럼 SET은 {{서브쿼리}}로만"},
@@ -210,10 +251,10 @@ const LECTURES = [
   {t:"li",x:"분할할 수 없는 {{논리적 연산 단위}}, SQL 1문장 이상 포함 — {{ALL OR NOTHING}}"},
   {t:"li",x:"DML 수행 후 트랜잭션을 안 끝내면 {{LOCK}} 발생 가능"},
   {t:"table",head:["특성","의미"],rows:[
-    ["{{원자성}}(Atomicity)","모두 실행되거나 전혀 실행되지 않아야"],
-    ["{{일관성}}(Consistency)","실행 전 문제 없으면 실행 후에도 문제 없어야"],
-    ["{{고립성}}(Isolation)","다른 트랜잭션의 영향 받으면 안 됨 — '격리가 없다'는 {{틀린}} 설명"],
-    ["{{지속성}}(Durability)","성공 결과는 영구 저장"],
+    ["{{원자성}}(Atomicity)","모두 실행되거나 전혀 실행되지 않아야",["All or Nothing"]],
+    ["{{일관성}}(Consistency)","실행 전 문제 없으면 실행 후에도 문제 없어야",["무결성 유지"]],
+    ["{{고립성}}(Isolation)","다른 트랜잭션의 영향 받으면 안 됨 — '격리가 없다'는 {{틀린}} 설명",["동시성 제어"]],
+    ["{{지속성}}(Durability)","성공 결과는 영구 저장",["영구 저장"]],
   ]},
   {t:"h3",x:"COMMIT · ROLLBACK · SAVEPOINT ★"},
   {t:"li",x:"COMMIT 후엔 ROLLBACK으로 {{되돌릴 수 없음}} / DDL은 자동 COMMIT이라 트랜잭션 제어 {{대상 아님}}"},
@@ -238,11 +279,11 @@ const LECTURES = [
   {t:"li",x:"DROP: 객체 자체 삭제 → {{RECYCLEBIN}} 임시 보관, {{FLASHBACK}}으로 복구 가능"},
   {t:"h3",x:"제약조건 5종 ★★"},
   {t:"table",head:["제약","핵심"],rows:[
-    ["PRIMARY KEY","NULL✗·중복✗ / 테이블 단위 선언으로 {{복합 PK}} 가능"],
-    ["UNIQUE","중복✗ but {{NULL 허용}} ('NULL도 불허'=틀린 설명 기출) / 자동 {{INDEX}} 생성"],
-    ["NOT NULL","컬럼 {{속성}}이라 CTAS에도 복제됨 / ADD가 아닌 {{MODIFY}}로 설정"],
-    ["FOREIGN KEY","참조키에 {{PK/UK}} 선행 필수 / {{NULL 허용}} / 참조 중이면 부모 삭제 불가"],
-    ["CHECK","조건 TRUE만 입력 ({{NULL}}은 입력 가능)"],
+    ["PRIMARY KEY","NULL✗·중복✗ / 테이블 단위 선언으로 {{복합 PK}} 가능",["NULL·중복 모두 불가"]],
+    ["UNIQUE","중복✗ but {{NULL 허용}} ('NULL도 불허'=틀린 설명 기출) / 자동 {{INDEX}} 생성",["여러 개 선언 가능"]],
+    ["NOT NULL","컬럼 {{속성}}이라 CTAS에도 복제됨 / ADD가 아닌 {{MODIFY}}로 설정",["CTAS에도 복제"]],
+    ["FOREIGN KEY","참조키에 {{PK/UK}} 선행 필수 / {{NULL 허용}} / 참조 중이면 부모 삭제 불가",["부모 행 삭제 제한"]],
+    ["CHECK","조건 TRUE만 입력 ({{NULL}}은 입력 가능)",["TRUE만 입력"]],
   ]},
   {t:"note",tag:"함정",x:"자식에 NULL 행이 있어도 같은 부모키를 참조하는 {{다른 자식 행}}이 있으면 부모 삭제 불가 — 'NULL이면 항상 삭제 가능'은 틀림 (단원문제 4번)"},
   {t:"h3",x:"뷰(VIEW)"},
@@ -250,9 +291,9 @@ const LECTURES = [
   {t:"li",x:"뷰 수정 → {{기본 테이블}} 변경됨 / 기본 테이블 삭제해도 뷰는 자동 삭제 {{안 됨}}(사용만 불가, 기출) / 뷰에 {{인덱스}} 생성 불가"},
   {t:"h3",x:"DELETE vs TRUNCATE vs DROP ★"},
   {t:"table",head:["명령","분류","특징"],rows:[
-    ["DELETE","{{DML}}","WHERE 가능·ROLLBACK {{가능}}"],
-    ["TRUNCATE","{{DDL}}","전체 삭제·ROLLBACK {{불가}} ('DML이라 복구 가능'=틀린 설명 기출)"],
-    ["DROP","DDL","{{구조+데이터}} 모두 제거"],
+    ["DELETE","{{DML}}","WHERE 가능·ROLLBACK {{가능}}",["WHERE로 일부만"]],
+    ["TRUNCATE","{{DDL}}","전체 삭제·ROLLBACK {{불가}} ('DML이라 복구 가능'=틀린 설명 기출)",["속도 빠름"]],
+    ["DROP","DDL","{{구조+데이터}} 모두 제거",["CASCADE CONSTRAINTS"]],
   ]},
   {t:"note",tag:"포인트",x:"⏭️ PASS(7/18): FK 옵션(ON DELETE CASCADE·SET NULL)과 '뷰를 통한 데이터 수정' 상세는 스킵 — 기출에 나오면 그 문제만 암기"},
 ]},
@@ -266,8 +307,8 @@ const LECTURES = [
   {t:"note",tag:"빈출",x:"롤로 부여된 권한은 사용자에게 {{직접 REVOKE 불가}}(오류) → 롤에서 권한 제거 or {{롤 자체}} 회수로만"},
   {t:"h3",x:"권한부여 옵션 (중간관리자) ★"},
   {t:"table",head:["옵션","대상","회수 방식"],rows:[
-    ["WITH {{GRANT}} OPTION","{{오브젝트}} 권한","중간관리자 권한 회수 시 제3자 권한 {{함께}} 회수(연쇄)"],
-    ["WITH {{ADMIN}} OPTION","{{시스템}} 권한·롤","중간관리자 회수해도 제3자 권한 {{유지}}(개별 회수 필요)"],
+    ["WITH {{GRANT}} OPTION","{{오브젝트}} 권한","중간관리자 권한 회수 시 제3자 권한 {{함께}} 회수(연쇄)",["연쇄 회수"]],
+    ["WITH {{ADMIN}} OPTION","{{시스템}} 권한·롤","중간관리자 회수해도 제3자 권한 {{유지}}(개별 회수 필요)",["개별 회수 필요"]],
   ]},
   {t:"note",tag:"포인트",x:"풀이팁(권한 문제): 🟠누가(소유자/관리자) → 🟡무엇을(오브젝트/시스템) → 🔵몇 개를(사용자·권한 O / 객체 ✗) → 🟢옵션 연쇄 여부 순서로 보기 소거"},
 ]},
@@ -307,18 +348,19 @@ function renderText(str){
 
 function blockHTML(b){
   if(b.t==='h2') return `<h2 class="blk">${escapeHTML(b.x)}</h2>`;
-  if(b.t==='h3') return `<h3 class="blk">${escapeHTML(b.x)}</h3>`;
+  if(b.t==='h3'){const s=(b.x.match(/★/g)||[]).length;const tone=s>=2?'h3-hot':(s===1?'h3-warm':'h3-cool');return `<h3 class="blk ${tone}">${escapeHTML(b.x)}</h3>`;}
   if(b.t==='li'){
     return `<div class="line"><span class="bul">▸</span><span class="txt">${renderText(b.x)}</span></div>`;
   }
   if(b.t==='note'){
-    return `<div class="note"><span class="tag">${escapeHTML(b.tag||'TIP')}</span><span class="txt">${renderText(b.x)}</span></div>`;
+    return `<div class="note nt-${escapeHTML(b.tag||'TIP')}"><span class="tag">${escapeHTML(b.tag||'TIP')}</span><span class="txt">${renderText(b.x)}</span></div>`;
   }
   if(b.t==='table'){
     let h = '<div class="tablewrap"><table><thead><tr>';
     h += b.head.map(c=>`<th>${escapeHTML(c)}</th>`).join('');
     h += '</tr></thead><tbody>';
-    h += b.rows.map(r=>'<tr>'+r.map(c=>`<td>${renderText(c)}</td>`).join('')+'</tr>').join('');
+    const TONES=['tr-g','tr-b','tr-a','tr-r','tr-p'];
+    h += b.rows.map((r,ri)=>{const ch=Array.isArray(r[r.length-1])?r[r.length-1]:null;const cs=ch?r.slice(0,-1):r;return `<tr class="${TONES[ri%5]}">`+cs.map((c,ci)=>{const cx=(ch&&ci===cs.length-1)?'<div class="rowchips">'+ch.map(x=>`<span class="chip">${renderText(x)}</span>`).join('')+'</div>':'';return ci===0?`<td class="tterm">${renderText(c)}</td>`:`<td>${renderText(c)}${cx}</td>`;}).join('')+'</tr>';}).join('');
     h += '</tbody></table></div>';
     return h;
   }
@@ -441,7 +483,7 @@ toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 (function(){
   const lecOnly = LECTURES.filter(l=>l.no!=='★');
   const sl = document.getElementById('subline');
-  if(sl) sl.textContent = `요구사항·화면·아키텍처·객체지향·인터페이스 전 범위 · 주제 ${lecOnly.length}개 · 빈칸 ${blanks.length}개 — 같은 과목 수업이 오면 이어 붙어요.`;
+  if(sl) sl.textContent = `관리 구문 전 범위 · DML·TCL·DDL·DCL · 주제 ${lecOnly.length}개 · 빈칸 ${blanks.length}개 — 같은 과목 수업이 오면 이어 붙어요.`;
 })();
 
 updateProgress();
