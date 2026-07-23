@@ -247,7 +247,7 @@ const LECTURES = [
 
 { no:"02", tag:"SELECT", title:"2-2. SELECT 문", blocks:[
   {t:"h3",x:"SQL의 종류"},
-  {t:"li",x:"{{DDL}}(CREATE·ALTER·DROP·TRUNCATE) / {{DML}}(INSERT·UPDATE·DELETE·SELECT) / {{DCL}}(GRANT·REVOKE) / {{TCL}}(COMMIT·ROLLBACK)"},
+  {t:"li",x:"{{DDL}}(CREATE·ALTER·DROP·TRUNCATE) / {{DML}}(INSERT·UPDATE·DELETE·SELECT) / DCL(GRANT·REVOKE) / TCL(COMMIT·ROLLBACK)"},
   {t:"note",tag:"함정",x:"{{TRUNCATE}}는 DDL, {{DELETE}}는 DML. SELECT만 조회 전용이라 {{DQL}}로 따로 구분하기도 함."},
   {t:"note",tag:"포인트",x:"DDL은 {{AUTO COMMIT}}이라 실행 즉시 반영 → ROLLBACK 불가(되돌리려면 테이블 재생성). DML은 COMMIT/ROLLBACK으로 제어."},
 
@@ -288,7 +288,7 @@ const LECTURES = [
     ["{{REPLACE}}","문자열(단어) 치환, 바꿀문자열 생략 시 삭제",["생략 시 삭제"]],
     ["TRANSLATE","문자(글자) {{1:1}} 치환",["글자 단위"]],
   ]},
-  {t:"note",tag:"빈출",x:"SUBSTR('SQL SERVER', 2)={{'QL SERVER'}}, SUBSTR(…,-2)={{'ER'}} / INSTR('SQL SERVER','R')={{7}}, 못 찾으면 0. INSTR 시작위치가 음수면 {{뒤에서}} 왼쪽으로 검색."},
+  {t:"note",tag:"빈출",x:"SUBSTR('SQL SERVER', 2)={{'QL SERVER'}}, SUBSTR(…,-2)={{'ER'}} / INSTR('SQL SERVER','R')=7, 못 찾으면 0. INSTR 시작위치가 음수면 뒤에서 왼쪽으로 검색."},
 
   {t:"h2",x:"숫자 함수"},
   {t:"table",head:["함수","기능"],rows:[
