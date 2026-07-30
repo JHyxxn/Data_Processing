@@ -155,6 +155,39 @@ footer{margin-top:44px;font-size:11.5px;color:var(--muted)}
       DELETE만 DML이라 트랜잭션 제어 가능. SELECT를 DML로 분류하는 것도 자주 나옴.
     </div>
   </div>
+  <div class="note"><b class="h"><span class="pin">📌</span>자동 커밋 기출 시나리오 (내 오답)</b>
+  DDL은 실행 즉시 <b>자동 커밋(Auto-Commit)</b> → <b>그 이전의 DML 작업까지 영구 저장</b>, 이후 ROLLBACK 무효.<br>
+  예1) INSERT(2) → TRUNCATE → ROLLBACK → COUNT(*)= <b>0</b> · 예2) INSERT(20) → CREATE TABLE → ROLLBACK → <b>10과 20 모두 존재</b></div>
+  <div class="card" style="margin-top:12px">
+    <table class="ref">
+      <thead><tr><th>삭제 3형제</th><th>구분 ★기출 최다</th></tr></thead>
+      <tbody>
+        <tr class="tone-b"><td class="term"><div class="t">DELETE</div><div class="n">DML</div></td><td><b>WHERE로 특정 행만</b> 선택 삭제 · ROLLBACK <b>가능</b> · 구조 유지</td></tr>
+        <tr class="tone-a"><td class="term"><div class="t">TRUNCATE</div><div class="n">DDL</div></td><td><b>WHERE절 사용 불가</b>(전체 행) · 로그 최소화로 DELETE보다 <b>빠름</b> · ROLLBACK 불가 · 구조 유지</td></tr>
+        <tr class="tone-r"><td class="term"><div class="t">DROP</div><div class="n">DDL</div></td><td><b>구조와 데이터 모두</b> 영구 삭제 · ROLLBACK 불가 / FK가 참조 중인 부모는 DROP 불가 → <b>CASCADE CONSTRAINTS</b>(참조 외래키 제약까지 삭제)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <table class="ref">
+      <thead><tr><th>헷갈린 문법</th><th>정리 (기출 오답 기반)</th></tr></thead>
+      <tbody>
+        <tr class="tone-g"><td class="term"><div class="t">제약조건</div></td><td>PK=NULL 불가+고유 식별 / <b>UNIQUE=중복 불가지만 NULL 허용</b>(PK와 차이!) / FK=다른 테이블 참조 / <b>CHECK=자기 컬럼 값만 검사</b></td></tr>
+        <tr class="tone-b"><td class="term"><div class="t">ALTER 하위</div></td><td>컬럼명 변경 = <b>RENAME COLUMN</b> A TO B / MODIFY=타입·제약 변경(이름 X) / CHANGE는 Oracle에 없음 / <b>UPDATE는 DML</b>(행 데이터 값)</td></tr>
+        <tr class="tone-p"><td class="term"><div class="t">권한(DCL)</div></td><td>객체 권한: GRANT 권한 <b>ON</b> 객체 TO 사용자(FROM 쓰면 문법 오류) / <b>WITH GRANT OPTION 회수 → 파생 권한 자동 연쇄 회수</b>, CASCADE·RESTRICT 안 씀(Oracle)</td></tr>
+        <tr class="tone-a"><td class="term"><div class="t">COMMIT</div></td><td><b>DML</b> 변경을 영구 반영(DDL 아님) / COMMIT <b>이전</b> 데이터는 ROLLBACK <b>가능</b>(함정: "없다") / 실행 시 <b>Lock 해제</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tabs" id="q-modes" style="margin-top:16px"></div>
+  <div class="card widget">
+    <h3>명령어 분류 퀴즈 (DDL·DML·DCL·TCL)</h3>
+    <p class="desc">명령어를 보고 어디에 속하는지 탭! — [오답만 다시]로 틀린 것만 반복</p>
+    <div style="text-align:center;font-family:Georgia,serif;font-size:34px;font-weight:700;padding:18px 0" id="q-cmd"></div>
+    <div class="tabs" id="q-answers" style="justify-content:center"></div>
+    <div class="msg" id="q-msg"></div>
+    <div class="ctrl"><button id="q-reset" style="font-family:inherit;font-size:13.5px;font-weight:600;background:#fff;border:1px solid #e4e5df;border-radius:10px;padding:8px 16px;cursor:pointer">초기화</button><span class="cnt" id="q-score"></span></div>
+  </div>
 </section>
 
 <section id="fn">
@@ -394,5 +427,53 @@ footer{margin-top:44px;font-size:11.5px;color:var(--muted)}
 </section>
 
 </div>
+<script>
+const QPOOL=[
+ {c:'CREATE',k:'DDL',n:'테이블 생성 — 실행 즉시 자동 커밋'},
+ {c:'ALTER',k:'DDL',n:'구조 변경 (RENAME COLUMN·MODIFY)'},
+ {c:'DROP',k:'DDL',n:'구조+데이터 영구 삭제, ROLLBACK 불가'},
+ {c:'RENAME',k:'DDL',n:'객체 이름 변경'},
+ {c:'TRUNCATE',k:'DDL',n:'전체 행 삭제 — WHERE 불가, DELETE보다 빠름, DDL!'},
+ {c:'SELECT',k:'DML',n:'조회도 DML! (헷갈림 단골)'},
+ {c:'INSERT',k:'DML',n:'행 삽입 — COMMIT 전까지 임시'},
+ {c:'UPDATE',k:'DML',n:'행의 데이터 값 변경 (구조는 ALTER)'},
+ {c:'DELETE',k:'DML',n:'WHERE로 선택 삭제, ROLLBACK 가능'},
+ {c:'GRANT',k:'DCL',n:'권한 부여 — GRANT 권한 ON 객체 TO 사용자'},
+ {c:'REVOKE',k:'DCL',n:'권한 회수 — REVOKE ~ ON 객체 FROM 사용자'},
+ {c:'COMMIT',k:'TCL',n:'영구 반영 + Lock 해제'},
+ {c:'ROLLBACK',k:'TCL',n:'COMMIT 이전 상태로 복구'},
+ {c:'SAVEPOINT',k:'TCL',n:'부분 복구 지점'},
+];
+let qMode='all',qList=[],qIdx=0,qRight=0,qWrongSet=[],qAnswered=false;
+const qShuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t;}return a;};
+function qStart(m){qMode=m;
+  qList=qShuffle(m==='wrong'?QPOOL.filter(p=>qWrongSet.indexOf(p.c)>-1):QPOOL);
+  document.querySelectorAll('#q-modes button').forEach(b=>b.classList.toggle('on',b.dataset.m===qMode));
+  if(!qList.length){document.getElementById('q-msg').textContent='오답이 없어요! 전체 모드로 풀어보세요.';return;}
+  qIdx=0;qRight=0;qAnswered=false;qRender();}
+function qRender(){
+  document.getElementById('q-cmd').textContent=qList[qIdx].c;
+  document.getElementById('q-msg').textContent='이 명령어는 어디에 속할까요?';
+  document.getElementById('q-score').textContent=qIdx+' / '+qList.length+' · 맞춤 '+qRight;}
+function qAnswer(k){if(qAnswered)return;qAnswered=true;
+  const cur=qList[qIdx],ok=k===cur.k;
+  if(ok){qRight++;if(qMode==='wrong')qWrongSet=qWrongSet.filter(c=>c!==cur.c);}
+  else if(qWrongSet.indexOf(cur.c)<0)qWrongSet.push(cur.c);
+  document.getElementById('q-msg').textContent=(ok?'⭕ 정답! ':'❌ 오답 — 정답은 '+cur.k+'. ')+cur.c+' = '+cur.n;
+  document.getElementById('q-score').textContent=(qIdx+1)+' / '+qList.length+' · 맞춤 '+qRight;
+  setTimeout(function(){qAnswered=false;
+    if(qIdx<qList.length-1){qIdx++;qRender();}
+    else{document.getElementById('q-cmd').textContent='완료!';
+      document.getElementById('q-msg').textContent='끝! '+qList.length+'문제 중 '+qRight+'개 정답 · 오답 '+qWrongSet.length+'개 — [오답만 다시]로 복습!';}
+  },1600);}
+const qm=document.getElementById('q-modes');
+[['all','전체 랜덤'],['wrong','오답만 다시']].forEach(function(p){
+  const b=document.createElement('button');b.textContent=p[1];b.dataset.m=p[0];b.onclick=function(){qStart(p[0])};qm.appendChild(b);});
+const qa=document.getElementById('q-answers');
+['DDL','DML','DCL','TCL'].forEach(function(k){
+  const b=document.createElement('button');b.textContent=k;b.onclick=function(){qAnswer(k)};qa.appendChild(b);});
+document.getElementById('q-reset').onclick=function(){qStart(qMode)};
+qStart('all');
+</script>
 </body>
 </html>
